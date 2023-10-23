@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+public/sw.js
+public/workbox-*.js
+
+# Local Netlify folder
+.netlify
+*.DS_Store
