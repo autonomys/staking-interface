@@ -12,12 +12,12 @@ export const Intro: React.FC = () => {
       </HStack>
       <Text>
         tSSC holders (Gemini 3h tesntet network only) can stake their tSSC to add more security to the protocol and earn{' '}
-        <u>Staking Incentives.</u>
+        <u><Link href='https://docs.subspace.network/docs/operators_and_staking/intro#staking'>Staking Incentives</Link></u>.
       </Text>
       <Text>
         Currently Staking Wars is active, please read this{' '}
         <u>
-          <Link href='/information'>information</Link>
+          <Link href='https://docs.subspace.network/docs/operators_and_staking/staking'>information</Link>
         </u>{' '}
         on how to participate and earn even more rewards!
       </Text>
