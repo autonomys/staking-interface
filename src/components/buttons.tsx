@@ -6,7 +6,7 @@ const Connect = dynamic(() => import('./wallet').then((m) => m.ConnectWallet), {
   ssr: false
 })
 
-export const FormButton: React.FC<ButtonProps> = ({ children }) => {
+export const FormButton: React.FC<ButtonProps> = ({ children, onClick }) => {
   return (
     <Button
       bgGradient='linear(to-r, #846F87, #4D397A)'
@@ -18,6 +18,7 @@ export const FormButton: React.FC<ButtonProps> = ({ children }) => {
       pt='8px'
       pb='7px'
       w='228px'
+      onClick={onClick}
       _hover={{
         bgGradient: 'linear(to-r, #4D397A, #846F87)'
       }}>
@@ -26,7 +27,7 @@ export const FormButton: React.FC<ButtonProps> = ({ children }) => {
   )
 }
 
-export const ConnectWallet: React.FC = () => {
+export const ConnectWallet: React.FC<ButtonProps> = ({ onClick }) => {
   const [clientSide, setClientSide] = useState(false)
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export const ConnectWallet: React.FC = () => {
         pr='16px'
         pt='8px'
         pb='7px'
+        onClick={onClick}
         _hover={{
           bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
         }}>

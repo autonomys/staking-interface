@@ -1,21 +1,16 @@
-import { Box, Heading, Text, useColorMode } from '@chakra-ui/react'
+import { Box, Heading, Text } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { FormButton } from '../components/buttons'
+import React from 'react'
+import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
+import { EXTERNAL_ROUTES, ROUTES } from '../constants'
+import { useClientSide } from '../hooks/useClientSide'
+import { useWallet } from '../hooks/useWallet'
 
 const Page: React.FC = () => {
-  const [clientSide, setClientSide] = useState(false)
-  const { colorMode, toggleColorMode } = useColorMode()
-
-  useEffect(() => {
-    setClientSide(true)
-  }, [])
-
-  useEffect(() => {
-    if (colorMode === 'dark') toggleColorMode()
-  }, [colorMode, toggleColorMode])
+  const clientSide = useClientSide()
+  const { extension, handleConnect } = useWallet()
 
   if (!clientSide) return null
 
@@ -26,7 +21,7 @@ const Page: React.FC = () => {
         <Heading size='lg' fontWeight='700' fontSize='30px' ml='2' mt='66px'>
           1. Setup a node
         </Heading>
-        <Link href='/learnMore'>
+        <Link href={EXTERNAL_ROUTES.OPERATORS_DOCS} target='_blank'>
           <Text textDecoration='underline' color='#4524C1' mt='4'>
             Please follow the docs to setup a node
           </Text>
@@ -34,9 +29,16 @@ const Page: React.FC = () => {
         <Box mt='4'>
           <Image src='/images/SetupANode.png' width='561' height='326' alt='Setup a Node Readme' />
         </Box>
-        <Link href='/register'>
-          <FormButton>Next</FormButton>
-        </Link>
+
+        {extension.data ? (
+          <Link href={ROUTES.REGISTER}>
+            <FormButton>Next</FormButton>
+          </Link>
+        ) : (
+          <Box mt='8'>
+            <ConnectWallet onClick={handleConnect} />
+          </Box>
+        )}
       </Box>
     </Box>
   )

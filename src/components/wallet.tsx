@@ -12,88 +12,18 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  VStack,
-  useDisclosure
+  VStack
 } from '@chakra-ui/react'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import Image from 'next/image'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
-type TExtensionState = {
-  loading: boolean
-  data?: {
-    accounts: InjectedAccountWithMeta[]
-    defaultAccount: InjectedAccountWithMeta
-  }
-  error: null | Error
-}
-
-const initialExtensionState: TExtensionState = {
-  loading: false,
-  data: undefined,
-  error: null
-}
+import { useRef } from 'react'
+import { useConnect } from '../hooks/useConnect'
+import { useExtension } from '../states/extension'
+import { formatAddress } from '../utils'
 
 export const ConnectWallet = () => {
-  const [state, setState] = useState(initialExtensionState)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const extension = useExtension((state) => state.extension)
+  const { handleSelectWallet, handleClick, isConnectOpen, onConnectClose } = useConnect()
   const finalRef = useRef(null)
-
-  const handleConnect = useCallback(() => {
-    setState({ ...initialExtensionState, loading: true })
-
-    web3Enable('subspace-staking-interface')
-      .then((injectedExtensions) => {
-        if (!injectedExtensions.length) return Promise.reject(new Error('NO_INJECTED_EXTENSIONS'))
-
-        return web3Accounts()
-      })
-      .then((accounts) => {
-        if (!accounts.length) return Promise.reject(new Error('NO_ACCOUNTS'))
-
-        setState({
-          error: null,
-          loading: false,
-          data: {
-            accounts: accounts,
-            defaultAccount: accounts[0]
-          }
-        })
-      })
-      .catch((error) => {
-        console.error('Error with connect', error)
-        setState({ error, loading: false, data: undefined })
-      })
-  }, [])
-
-  const handleSelectWallet = useCallback(
-    (source: string) => {
-      const mainAccount = state.data?.accounts.find((account) => account.meta.source === source)
-      console.log('mainAccount', mainAccount)
-      if (mainAccount && state.data)
-        setState({
-          ...state,
-          data: {
-            ...state.data,
-            defaultAccount: mainAccount
-          }
-        })
-      onClose()
-    },
-    [onClose, state]
-  )
-
-  const handleClick = useCallback(() => {
-    handleConnect()
-    onOpen()
-  }, [handleConnect, onOpen])
-
-  useEffect(() => {
-    handleConnect()
-  }, [handleConnect])
-
-  const formatAddress = useCallback((address: string) => `${address.slice(0, 4)}...${address.slice(-6)}`, [])
 
   return (
     <>
@@ -105,15 +35,15 @@ export const ConnectWallet = () => {
         pr='16px'
         pt='8px'
         pb='7px'
-        isLoading={state.loading}
-        onClick={handleClick}
+        isLoading={extension.loading}
+        onClick={extension.data?.defaultAccount && handleClick}
         _hover={{
           bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
         }}>
-        {state.data?.defaultAccount ? formatAddress(state.data.defaultAccount.address) : 'Connect Wallet'}
+        {extension.data?.defaultAccount ? formatAddress(extension.data.defaultAccount.address) : 'Connect Wallet'}
       </Button>
 
-      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+      <Modal finalFocusRef={finalRef} isOpen={isConnectOpen} onClose={onConnectClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Connect your wallet</ModalHeader>
@@ -158,7 +88,7 @@ export const ConnectWallet = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='brand' mr={3} onClick={onClose}>
+            <Button colorScheme='brand' mr={3} onClick={onConnectClose}>
               Close
             </Button>
           </ModalFooter>
