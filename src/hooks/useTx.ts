@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { useCallback } from 'react'
+import { ERROR_WALLET_NOT_FOUND, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { Registration } from '../types'
 
@@ -13,11 +14,9 @@ export const useTx = () => {
     async (registration: Registration) => {
       if (!api || !extension.data || !injectedExtension)
         return toast({
-          title: 'Error: Wallet provider not found',
-          description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true
+          ...ERROR_WALLET_NOT_FOUND,
+          ...toastConfig,
+          status: 'error'
         })
       console.log('RegisterOperator')
       if (extension.data) {
@@ -41,11 +40,9 @@ export const useTx = () => {
     async (operatorId: string) => {
       if (!api || !extension.data || !injectedExtension)
         return toast({
-          title: 'Error: Wallet provider not found',
-          description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true
+          ...ERROR_WALLET_NOT_FOUND,
+          ...toastConfig,
+          status: 'error'
         })
       console.log('Deregister')
       if (extension.data) {
@@ -65,11 +62,9 @@ export const useTx = () => {
     async (operatorId: string) => {
       if (!api || !extension.data || !injectedExtension)
         return toast({
-          title: 'Error: Wallet provider not found',
-          description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true
+          ...ERROR_WALLET_NOT_FOUND,
+          ...toastConfig,
+          status: 'error'
         })
       console.log('AddFund')
       if (extension.data) {
@@ -89,11 +84,9 @@ export const useTx = () => {
     async (operatorId: string, amount: string) => {
       if (!api || !extension.data || !injectedExtension)
         return toast({
-          title: 'Error: Wallet provider not found',
-          description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true
+          ...ERROR_WALLET_NOT_FOUND,
+          ...toastConfig,
+          status: 'error'
         })
       console.log('Withdraw')
       if (extension.data) {

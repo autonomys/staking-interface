@@ -32,3 +32,8 @@ export type ActionInput = {
   operatorId: string
   amount: string
 }
+
+export type Error = {
+  title: string
+  description: string
+}

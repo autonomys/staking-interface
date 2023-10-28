@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
-import { ActionType } from '../constants'
+import { ActionType, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { ActionInput } from '../types'
 import { capitalizeFirstLetter } from '../utils'
 import { useTx } from './useTx'
@@ -49,10 +49,9 @@ export const useManage = () => {
       } catch (error) {
         toast({
           title: 'Error: ' + capitalizeFirstLetter(actionType) + ' failed',
-          description: `Please make sure the information you provided is correct and try again.`,
+          description: ERROR_DESC_INFORMATION_INCORRECT,
           status: 'error',
-          duration: 9000,
-          isClosable: true
+          ...toastConfig
         })
       }
     },

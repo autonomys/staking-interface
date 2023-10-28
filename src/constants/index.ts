@@ -1,4 +1,5 @@
 import { ExtensionState, NetworkConstants, Registration } from '../types'
+export * from './errors'
 
 export const ROUTES = {
   HOME: '/',
@@ -39,4 +40,9 @@ export const initialNetworkConstants: NetworkConstants = {
   minOperatorStake: BigInt(0),
   stakeEpochDuration: 0,
   stakeWithdrawalLockingPeriod: 0
+}
+
+export const toastConfig = {
+  duration: 9000,
+  isClosable: true
 }

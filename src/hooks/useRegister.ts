@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import React, { useCallback } from 'react'
-import { ROUTES } from '../constants'
+import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
 import { useRegistration } from '../states/registration'
 import { useTx } from './useTx'
 
@@ -29,11 +29,9 @@ export const useRegister = () => {
       push(ROUTES.MANAGE)
     } catch (error) {
       toast({
-        title: 'Error: Registration failed',
-        description: `Please make sure the information you provided is correct and try again.`,
+        ...ERROR_REGISTRATION_FAILED,
         status: 'error',
-        duration: 9000,
-        isClosable: true
+        ...toastConfig
       })
     }
   }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
