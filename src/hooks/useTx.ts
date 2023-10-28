@@ -1,12 +1,41 @@
 import { useToast } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { useExtension } from '../states/extension'
+import { Registration } from '../types'
 
 export const useTx = () => {
   const toast = useToast()
   const api = useExtension((state) => state.api)
   const extension = useExtension((state) => state.extension)
   const injectedExtension = useExtension((state) => state.injectedExtension)
+
+  const handleRegisterOperator = useCallback(
+    async (registration: Registration) => {
+      if (!api || !extension.data || !injectedExtension)
+        return toast({
+          title: 'Error: Wallet provider not found',
+          description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true
+        })
+      console.log('RegisterOperator')
+      if (extension.data) {
+        const result = await api.tx.domains
+          .registerOperator(registration.domainId, registration.amountToStake, {
+            signingKey: registration.signingKey,
+            minimumNominatorStake: registration.minimumNominatorStake,
+            nominationTax: registration.nominatorTax
+          })
+          .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
+            console.log('status', status)
+          })
+        console.log('result', result)
+      }
+      return
+    },
+    [api, extension.data, injectedExtension, toast]
+  )
 
   const handleDeregister = useCallback(
     async (operatorId: string) => {
@@ -81,6 +110,7 @@ export const useTx = () => {
   )
 
   return {
+    handleRegisterOperator,
     handleDeregister,
     handleAddFund,
     handleWithdraw

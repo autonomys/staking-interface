@@ -2,8 +2,8 @@ import { useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import React, { useCallback } from 'react'
 import { ROUTES } from '../constants'
-import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
+import { useTx } from './useTx'
 
 export const useRegister = () => {
   const toast = useToast()
@@ -12,9 +12,7 @@ export const useRegister = () => {
   const saveCurrentRegistration = useRegistration((state) => state.saveCurrentRegistration)
   const addRegistration = useRegistration((state) => state.addRegistration)
   const setErrorsField = useRegistration((state) => state.setErrorsField)
-  const extension = useExtension((state) => state.extension)
-  const api = useExtension((state) => state.api)
-  const injectedExtension = useExtension((state) => state.injectedExtension)
+  const { handleRegisterOperator } = useTx()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -24,27 +22,8 @@ export const useRegister = () => {
 
   const handleSubmit = useCallback(async () => {
     console.log('currentRegistration', currentRegistration)
-    if (!api || !extension.data || !injectedExtension) {
-      toast({
-        title: 'Error: Wallet provider not found',
-        description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true
-      })
-      return
-    }
     try {
-      const result = await api.tx.domains
-        .registerOperator(currentRegistration.domainId, currentRegistration.amountToStake, {
-          signingKey: currentRegistration.signingKey,
-          minimumNominatorStake: currentRegistration.minimumNominatorStake,
-          nominationTax: currentRegistration.nominatorTax
-        })
-        .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
-          console.log('status', status)
-        })
-      console.log('result', result)
+      await handleRegisterOperator(currentRegistration)
 
       addRegistration(currentRegistration)
       push(ROUTES.MANAGE)
@@ -57,7 +36,7 @@ export const useRegister = () => {
         isClosable: true
       })
     }
-  }, [addRegistration, api, currentRegistration, extension.data, injectedExtension, push, toast])
+  }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
 
   const detectError = (key: string, value: string) => {
     // To do: Improve the validation
