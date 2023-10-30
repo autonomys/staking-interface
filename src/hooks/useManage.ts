@@ -55,7 +55,7 @@ export const useManage = () => {
         })
       }
     },
-    [addFund, deregister, handleAddFund, handleDeregister, handleWithdraw, toast, withdraw]
+    [addFund, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdraw]
   )
 
   return {
