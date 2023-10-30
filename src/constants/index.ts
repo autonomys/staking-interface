@@ -15,6 +15,8 @@ export const EXTERNAL_ROUTES = {
 
 export const PROVIDER_URL = 'wss://rpc-0.devnet.subspace.network/ws'
 
+export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
+
 export enum ActionType {
   Deregister = 'deregister',
   AddFund = 'addFund',

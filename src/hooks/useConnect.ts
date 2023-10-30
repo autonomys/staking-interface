@@ -3,7 +3,7 @@ import { ApiPromise } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { WsProvider } from '@polkadot/rpc-provider'
 import { useCallback } from 'react'
-import { PROVIDER_URL, initialExtensionValues } from '../constants'
+import { PROVIDER_URL, SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
 import { useExtension } from '../states/extension'
 
 export const useConnect = () => {
@@ -36,7 +36,7 @@ export const useConnect = () => {
       console.log(error)
     }
 
-    web3Enable('subspace-staking-interface')
+    web3Enable(SUBSPACE_EXTENSION_ID)
       .then((injectedExtensions) => {
         if (!injectedExtensions.length) return Promise.reject(new Error('NO_INJECTED_EXTENSIONS'))
 
