@@ -58,8 +58,8 @@ export const useTx = () => {
     [api, extension.data, injectedExtension, toast]
   )
 
-  const handleAddFund = useCallback(
-    async (operatorId: string) => {
+  const handleAddFunds = useCallback(
+    async (operatorId: string, amount: string) => {
       if (!api || !extension.data || !injectedExtension)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
@@ -69,7 +69,7 @@ export const useTx = () => {
       console.log('AddFund')
       if (extension.data) {
         const result = await api.tx.domains
-          .autoStakeBlock(operatorId)
+          .nominateOperator(operatorId, amount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
@@ -105,7 +105,7 @@ export const useTx = () => {
   return {
     handleRegisterOperator,
     handleDeregister,
-    handleAddFund,
+    handleAddFunds,
     handleWithdraw
   }
 }

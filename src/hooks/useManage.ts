@@ -16,7 +16,7 @@ export const useManage = () => {
     operatorId: '',
     amount: ''
   })
-  const { handleDeregister, handleAddFund, handleWithdraw } = useTx()
+  const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
 
   const handleChange = useCallback(
     (actionType: ActionType, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ export const useManage = () => {
           case ActionType.Deregister:
             return await handleDeregister(deregister)
           case ActionType.AddFund:
-            return await handleAddFund(addFund.operatorId)
+            return await handleAddFunds(addFund.operatorId, addFund.amount)
           case ActionType.Withdraw:
             return await handleWithdraw(withdraw.operatorId, withdraw.amount)
         }
