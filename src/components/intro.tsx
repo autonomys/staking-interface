@@ -12,7 +12,7 @@ export const Intro: React.FC = () => {
         <Heading ml='2'>Staking as a pool operator</Heading>
       </HStack>
       <Text>
-        tSSC holders (Gemini 3h testnet network only) can stake their tSSC to add more security to the protocol and earn{' '}
+        tSSC holders (Gemini 3g testnet network only) can stake their tSSC to add more security to the protocol and earn{' '}
         <u>
           <Link href={EXTERNAL_ROUTES.STAKING_INCENTIVES}>Staking Incentives</Link>
         </u>
