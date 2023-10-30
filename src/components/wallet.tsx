@@ -36,7 +36,7 @@ export const ConnectWallet = () => {
         pt='8px'
         pb='7px'
         isLoading={extension.loading}
-        onClick={extension.data?.defaultAccount && handleClick}
+        onClick={handleClick}
         _hover={{
           bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
         }}>
