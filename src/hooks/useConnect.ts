@@ -22,8 +22,6 @@ export const useConnect = () => {
       const _api = await ApiPromise.create({ provider: wsProvider })
       if (_api) {
         console.log('Connection Success', _api)
-        const minDom = _api.consts.domains.minOperatorStake
-        console.log('minDom', minDom.toString())
         setApi(_api)
         setNetworkConstants({
           maxNominators: Number(_api.consts.staking.maxNominatorsCount.toString()),
