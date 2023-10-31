@@ -11,7 +11,7 @@ export const useConnect = () => {
   const setApi = useExtension((state) => state.setApi)
   const setExtension = useExtension((state) => state.setExtension)
   const setInjectedExtension = useExtension((state) => state.setInjectedExtension)
-  const setNetworkConstants = useExtension((state) => state.setNetworkConstants)
+  const setStakingConstants = useExtension((state) => state.setStakingConstants)
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
 
   const handleConnect = useCallback(async () => {
@@ -25,11 +25,13 @@ export const useConnect = () => {
       if (_api) {
         console.log('Connection Success', _api)
         setApi(_api)
-        setNetworkConstants({
-          maxNominators: Number(_api.consts.staking.maxNominatorsCount.toString()),
-          minOperatorStake: BigInt(_api.consts.domains.minOperatorStake.toString()),
-          stakeEpochDuration: Number(_api.consts.staking.stakeEpochDuration.toString()),
-          stakeWithdrawalLockingPeriod: Number(_api.consts.staking.stakeWithdrawalLockingPeriod.toString())
+        const { maxNominatorsCount, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } =
+          _api.consts.staking
+        setStakingConstants({
+          maxNominators: Number(maxNominatorsCount.toString()),
+          minOperatorStake: BigInt(minOperatorStake.toString()),
+          stakeEpochDuration: Number(stakeEpochDuration.toString()),
+          stakeWithdrawalLockingPeriod: Number(stakeWithdrawalLockingPeriod.toString())
         })
       }
     } catch (error) {
@@ -62,7 +64,7 @@ export const useConnect = () => {
         console.error('Error with connect', error)
         setExtension({ error, loading: false, data: undefined })
       })
-  }, [setApi, setExtension, setInjectedExtension, setNetworkConstants])
+  }, [setApi, setExtension, setInjectedExtension, setStakingConstants])
 
   const handleSelectFirstWalletFromExtension = useCallback(
     (source: string) => {

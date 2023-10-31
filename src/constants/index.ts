@@ -1,4 +1,4 @@
-import { ExtensionState, NetworkConstants, Registration } from '../types'
+import { ExtensionState, Registration, StakingConstants } from '../types'
 export * from './errors'
 
 export const ROUTES = {
@@ -35,7 +35,7 @@ export const initialExtensionValues: ExtensionState = {
   error: null
 }
 
-export const initialNetworkConstants: NetworkConstants = {
+export const initialStakingConstants: StakingConstants = {
   maxNominators: 0,
   minOperatorStake: BigInt(0),
   stakeEpochDuration: 0,
