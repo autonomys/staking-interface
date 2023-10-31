@@ -20,16 +20,15 @@ import { Wallet } from '../components/icons'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
 import { ActionType } from '../constants'
-import { useClientSide } from '../hooks/useClientSide'
 import { useManage } from '../hooks/useManage'
+import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
+import { formatAddress } from '../utils'
 
 const Page: React.FC = () => {
-  const clientSide = useClientSide()
   const isErrorsField = useRegistration((state) => state.isErrorsField)
+  const extension = useExtension((state) => state.extension)
   const { handleChange, handleSubmit } = useManage()
-
-  if (!clientSide) return null
 
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
@@ -42,9 +41,11 @@ const Page: React.FC = () => {
           <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
             Information across operators
           </Heading>
-          <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
-            on SigningKey st9450943...04953
-          </Heading>
+          {extension.data && (
+            <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
+              on SigningKey {formatAddress(extension.data.defaultAccount.address)}
+            </Heading>
+          )}
         </HStack>
       </Box>
       <OperatorsList />
