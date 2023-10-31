@@ -12,35 +12,22 @@ import {
   Heading,
   Input,
   Spacer,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorMode
+  Text
 } from '@chakra-ui/react'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FormButton } from '../components/buttons'
 import { Wallet } from '../components/icons'
+import { OperatorsList } from '../components/operatorsList'
+import { OperatorsTotal } from '../components/operatorsTotal'
+import { ActionType } from '../constants'
+import { useClientSide } from '../hooks/useClientSide'
+import { useManage } from '../hooks/useManage'
 import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
-  const [clientSide, setClientSide] = useState(false)
-  const { colorMode, toggleColorMode } = useColorMode()
-  const registration = useRegistration((state) => state.registration)
+  const clientSide = useClientSide()
   const isErrorsField = useRegistration((state) => state.isErrorsField)
-
-  useEffect(() => {
-    setClientSide(true)
-  }, [])
-
-  useEffect(() => {
-    if (colorMode === 'dark') toggleColorMode()
-  }, [colorMode, toggleColorMode])
+  const { handleChange, handleSubmit } = useManage()
 
   if (!clientSide) return null
 
@@ -60,49 +47,7 @@ const Page: React.FC = () => {
           </Heading>
         </HStack>
       </Box>
-      <TableContainer>
-        <Table borderColor='#B9B9B9' border='1' variant='striped' size='sm'>
-          <Thead bg='rgba(0, 0, 0, 0.06)'>
-            <Tr>
-              <Th isNumeric>DomainID</Th>
-              <Th>OperatorID</Th>
-              <Th isNumeric>NominatorTax</Th>
-              <Th isNumeric>Min Nominator Stake</Th>
-              <Th isNumeric>Funds in stake</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td isNumeric>{registration.domainId}</Td>
-              <Td>{registration.signingKey}</Td>
-              <Td isNumeric>{registration.nominatorTax}</Td>
-              <Td isNumeric>{registration.minimumNominatorStake}</Td>
-              <Td isNumeric>{registration.amountToStake}</Td>
-            </Tr>
-            <Tr>
-              <Td isNumeric>3</Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-            </Tr>
-            <Tr>
-              <Td isNumeric>4</Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-            </Tr>
-            <Tr>
-              <Td isNumeric>4</Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
-            </Tr>
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <OperatorsList />
       <Flex>
         <Spacer />
         <Box>
@@ -122,6 +67,7 @@ const Page: React.FC = () => {
               pr='16px'
               pt='8px'
               pb='7px'
+              onChange={(e) => handleChange(ActionType.Deregister, e)}
               _placeholder={{
                 color: '#7D7D7D'
               }}
@@ -136,7 +82,8 @@ const Page: React.FC = () => {
               pl='16px'
               pr='16px'
               pt='8px'
-              pb='7px'>
+              pb='7px'
+              onClick={() => handleSubmit(ActionType.Deregister)}>
               De-register
             </Button>
           </HStack>
@@ -151,38 +98,7 @@ const Page: React.FC = () => {
             on SigningKey st9450943...04953
           </Heading>
         </HStack>
-        <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
-          <GridItem w='100%'>
-            <Text fontWeight='500' fontSize='30px' color='#5B5252'>
-              Funds in Stake, tSSC
-            </Text>
-            <Text fontWeight='700' fontSize='30px' color='#5B5252'>
-              1000.00
-            </Text>
-
-            <Text fontWeight='500' fontSize='30px' color='#5B5252' mt='8'>
-              Number of Nominators
-            </Text>
-            <Text fontWeight='700' fontSize='30px' color='#5B5252'>
-              1000
-            </Text>
-          </GridItem>
-          <GridItem w='100%'>
-            <Text fontWeight='500' fontSize='30px' color='#5B5252'>
-              Available for withdrawal, tSSC
-            </Text>
-            <Text fontWeight='700' fontSize='30px' color='#5B5252'>
-              1000.00
-            </Text>
-
-            <Text fontWeight='500' fontSize='30px' color='#5B5252' mt='8'>
-              Nominator’s funds, tSSC
-            </Text>
-            <Text fontWeight='700' fontSize='30px' color='#5B5252'>
-              1000.00
-            </Text>
-          </GridItem>
-        </Grid>
+        <OperatorsTotal />
         <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12' mb='24'>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['operatorId']}>
@@ -196,6 +112,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Operator ID'
+                onChange={(e) => handleChange(ActionType.AddFunds, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['operatorId'] ? (
@@ -211,6 +128,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Amount, tSSC'
+                onChange={(e) => handleChange(ActionType.AddFunds, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['amount'] ? (
@@ -219,9 +137,7 @@ const Page: React.FC = () => {
                 <FormHelperText h='10'></FormHelperText>
               )}
             </FormControl>
-            <Link href='/manage'>
-              <FormButton>Add more funds</FormButton>
-            </Link>
+            <FormButton onClick={() => handleSubmit(ActionType.AddFunds)}>Add more funds</FormButton>
           </GridItem>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['operatorId']}>
@@ -235,6 +151,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Operator ID'
+                onChange={(e) => handleChange(ActionType.Withdraw, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['operatorId'] ? (
@@ -250,6 +167,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Amount, tSSC'
+                onChange={(e) => handleChange(ActionType.Withdraw, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['amount'] ? (
@@ -258,9 +176,7 @@ const Page: React.FC = () => {
                 <FormHelperText h='10'></FormHelperText>
               )}
             </FormControl>
-            <Link href='/manage'>
-              <FormButton>Submit</FormButton>
-            </Link>
+            <FormButton onClick={() => handleSubmit(ActionType.Withdraw)}>Submit</FormButton>
           </GridItem>
         </Grid>
       </Box>

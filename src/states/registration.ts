@@ -1,39 +1,25 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-export type Registration = {
-  domainId: string
-  minimumNominatorStake: string
-  amountToStake: string
-  nominatorTax: number
-  signingKey: string
-}
-
-export type ErrorsField = {
-  [key: string]: boolean
-}
-
-export const initialRegistrationValues: Registration = {
-  domainId: '',
-  minimumNominatorStake: '',
-  amountToStake: '',
-  nominatorTax: 0,
-  signingKey: ''
-}
+import { initialRegistrationValues } from '../constants'
+import { ErrorsField, Registration } from '../types'
 
 interface RegistrationState {
-  registration: Registration
+  registrations: Registration[]
+  currentRegistration: Registration
   isErrorsField: ErrorsField
-  saveRegistration: (registration: Registration) => void
+  saveCurrentRegistration: (registration: Registration) => void
+  addRegistration: (registration: Registration) => void
   setErrorsField: (errorsField: string, isError: boolean) => void
 }
 
 export const useRegistration = create<RegistrationState>()(
   persist(
     (set) => ({
-      registration: initialRegistrationValues,
+      registrations: [],
+      currentRegistration: initialRegistrationValues,
       isErrorsField: {},
-      saveRegistration: (registration) => set(() => ({ registration })),
+      saveCurrentRegistration: (currentRegistration) => set(() => ({ currentRegistration })),
+      addRegistration: (registration) => set((states) => ({ registrations: [...states.registrations, registration] })),
       setErrorsField: (errorsField, isError) =>
         set((state) => ({ isErrorsField: { ...state.isErrorsField, [errorsField]: isError } }))
     }),
