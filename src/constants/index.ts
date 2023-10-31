@@ -19,7 +19,7 @@ export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
 
 export enum ActionType {
   Deregister = 'deregister',
-  AddFund = 'addFund',
+  AddFunds = 'addFunds',
   Withdraw = 'withdraw'
 }
 

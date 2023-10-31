@@ -67,7 +67,7 @@ const Page: React.FC = () => {
           </GridItem>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['minimumNominatorStake']}>
-              <FormLabel>Minimum Nominator Stake, tSCC</FormLabel>
+              <FormLabel>Minimum Nominator Stake, tSSC</FormLabel>
               <Input
                 name='minimumNominatorStake'
                 value={currentRegistration.minimumNominatorStake}
