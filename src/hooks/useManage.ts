@@ -8,7 +8,7 @@ import { useTx } from './useTx'
 export const useManage = () => {
   const toast = useToast()
   const [deregister, setDeregister] = useState<string>('')
-  const [addFund, setAddFund] = useState<ActionInput>({
+  const [addFunds, setAddFunds] = useState<ActionInput>({
     operatorId: '',
     amount: ''
   })
@@ -24,15 +24,15 @@ export const useManage = () => {
         case ActionType.Deregister:
           setDeregister(e.target.value)
           break
-        case ActionType.AddFund:
-          setAddFund({ ...addFund, [e.target.name]: e.target.value })
+        case ActionType.AddFunds:
+          setAddFunds({ ...addFunds, [e.target.name]: e.target.value })
           break
         case ActionType.Withdraw:
           setWithdraw({ ...withdraw, [e.target.name]: e.target.value })
           break
       }
     },
-    [addFund, withdraw]
+    [addFunds, withdraw]
   )
 
   const handleSubmit = useCallback(
@@ -41,8 +41,8 @@ export const useManage = () => {
         switch (actionType) {
           case ActionType.Deregister:
             return await handleDeregister(deregister)
-          case ActionType.AddFund:
-            return await handleAddFunds(addFund.operatorId, addFund.amount)
+          case ActionType.AddFunds:
+            return await handleAddFunds(addFunds.operatorId, addFunds.amount)
           case ActionType.Withdraw:
             return await handleWithdraw(withdraw.operatorId, withdraw.amount)
         }
@@ -55,7 +55,7 @@ export const useManage = () => {
         })
       }
     },
-    [addFund, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdraw]
+    [addFunds, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdraw]
   )
 
   return {

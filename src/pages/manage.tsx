@@ -112,7 +112,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Operator ID'
-                onChange={(e) => handleChange(ActionType.AddFund, e)}
+                onChange={(e) => handleChange(ActionType.AddFunds, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['operatorId'] ? (
@@ -128,7 +128,7 @@ const Page: React.FC = () => {
                 border='1px'
                 w='479px'
                 placeholder='Amount, tSSC'
-                onChange={(e) => handleChange(ActionType.AddFund, e)}
+                onChange={(e) => handleChange(ActionType.AddFunds, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />
               {isErrorsField['amount'] ? (
@@ -137,7 +137,7 @@ const Page: React.FC = () => {
                 <FormHelperText h='10'></FormHelperText>
               )}
             </FormControl>
-            <FormButton onClick={() => handleSubmit(ActionType.AddFund)}>Add more funds</FormButton>
+            <FormButton onClick={() => handleSubmit(ActionType.AddFunds)}>Add more funds</FormButton>
           </GridItem>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['operatorId']}>
