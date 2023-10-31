@@ -4,7 +4,7 @@ export const ERROR_DESC_INFORMATION_INCORRECT = `Please make sure the informatio
 
 export const ERROR_WALLET_NOT_FOUND: Error = {
   title: 'Error: Wallet provider not found',
-  description: `Please make sure you have the Polkadot{.js} extension installed and setup or an other wallet provider and that you connected your wallet to the app.`
+  description: `Please ensure you have installed and set up the Polkadot{.js} extension or another wallet provider. Additionally, make sure that you have connected your wallet to the app.`
 }
 
 export const ERROR_REGISTRATION_FAILED: Error = {
