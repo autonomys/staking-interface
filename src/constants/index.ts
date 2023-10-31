@@ -13,8 +13,6 @@ export const EXTERNAL_ROUTES = {
   STAKING_INFORMATION: 'https://docs.subspace.network/docs/operators_and_staking/staking'
 }
 
-export const PROVIDER_URL = 'wss://rpc-0.devnet.subspace.network/ws'
-
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
 
 export enum ActionType {

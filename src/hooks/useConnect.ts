@@ -3,7 +3,7 @@ import { ApiPromise } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { WsProvider } from '@polkadot/rpc-provider'
 import { useCallback } from 'react'
-import { PROVIDER_URL, SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
+import { SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
 import { useExtension } from '../states/extension'
 
 export const useConnect = () => {
@@ -18,7 +18,9 @@ export const useConnect = () => {
     setExtension({ ...initialExtensionValues, loading: true })
 
     try {
-      const wsProvider = new WsProvider(PROVIDER_URL)
+      if (!process.env.NEXT_PUBLIC_PROVIDER_URL) throw new Error('NEXT_PUBLIC_PROVIDER_URL not set')
+
+      const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_PROVIDER_URL)
       const _api = await ApiPromise.create({ provider: wsProvider })
       if (_api) {
         console.log('Connection Success', _api)
