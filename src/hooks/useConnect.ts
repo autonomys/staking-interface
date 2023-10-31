@@ -62,8 +62,9 @@ export const useConnect = () => {
       })
   }, [setApi, setExtension, setInjectedExtension, setNetworkConstants])
 
-  const handleSelectWallet = useCallback(
+  const handleSelectFirstWalletFromExtension = useCallback(
     (source: string) => {
+      handleConnect()
       const mainAccount = extension.data?.accounts.find((account) => account.meta.source === source)
       console.log('mainAccount', mainAccount)
       if (mainAccount && extension.data)
@@ -76,18 +77,33 @@ export const useConnect = () => {
         })
       onConnectClose()
     },
-    [extension, setExtension, onConnectClose]
+    [handleConnect, extension, setExtension, onConnectClose]
   )
 
-  const handleClick = useCallback(() => {
-    handleConnect()
-    onConnectOpen()
-  }, [handleConnect, onConnectOpen])
+  const handleSelectWallet = useCallback(
+    (address: string) => {
+      const mainAccount = extension.data?.accounts.find((account) => account.address === address)
+      console.log('mainAccount', mainAccount)
+      if (mainAccount && extension.data)
+        setExtension({
+          ...extension,
+          data: {
+            ...extension.data,
+            defaultAccount: mainAccount
+          }
+        })
+    },
+    [extension, setExtension]
+  )
+
+  const handleDisconnect = useCallback(() => setExtension(initialExtensionValues), [setExtension])
 
   return {
     handleConnect,
+    handleSelectFirstWalletFromExtension,
     handleSelectWallet,
-    handleClick,
+    handleDisconnect,
+    onConnectOpen,
     isConnectOpen,
     onConnectClose
   }
