@@ -9,7 +9,7 @@ export type ExtensionState = {
   error: null | Error
 }
 
-export type NetworkConstants = {
+export type StakingConstants = {
   maxNominators: number
   minOperatorStake: bigint
   stakeEpochDuration: number

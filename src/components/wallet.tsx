@@ -1,9 +1,15 @@
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Button,
   Center,
   Grid,
   GridItem,
   Heading,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,28 +26,96 @@ import { useConnect } from '../hooks/useConnect'
 import { useExtension } from '../states/extension'
 import { formatAddress } from '../utils'
 
+interface ExtensionIconProps {
+  extension: string
+}
+
+const ExtensionIcon: React.FC<ExtensionIconProps> = ({ extension }) => {
+  switch (extension) {
+    case 'polkadot-js':
+      return <Image src={'/images/polkadot-dot.svg'} width={20} height={20} alt={'metamask'} />
+    case 'subwallet-js':
+      return <Image src={'/images/subwallet.svg'} width={20} height={20} alt={'metamask'} />
+    case 'metamask':
+      return <Image src={'/images/metamask.svg'} width={20} height={20} alt={'metamask'} />
+    default:
+      return null
+  }
+}
+
 export const ConnectWallet = () => {
   const extension = useExtension((state) => state.extension)
-  const { handleSelectWallet, handleClick, isConnectOpen, onConnectClose } = useConnect()
+  const {
+    handleSelectFirstWalletFromExtension,
+    handleSelectWallet,
+    handleDisconnect,
+    onConnectOpen,
+    isConnectOpen,
+    onConnectClose
+  } = useConnect()
   const finalRef = useRef(null)
 
   return (
     <>
-      <Button
-        bgGradient='linear(to-r, #EA71F9, #4D397A)'
-        color='#FFFFFF'
-        borderRadius='0'
-        pl='16px'
-        pr='16px'
-        pt='8px'
-        pb='7px'
-        isLoading={extension.loading}
-        onClick={handleClick}
-        _hover={{
-          bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
-        }}>
-        {extension.data?.defaultAccount ? formatAddress(extension.data.defaultAccount.address) : 'Connect Wallet'}
-      </Button>
+      {!extension.data ? (
+        <Button
+          bgGradient='linear(to-r, #EA71F9, #4D397A)'
+          color='#FFFFFF'
+          borderRadius='0'
+          pl='16px'
+          pr='16px'
+          pt='8px'
+          pb='7px'
+          onClick={onConnectOpen}
+          _hover={{
+            bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
+          }}>
+          Connect Wallet
+        </Button>
+      ) : (
+        <Menu>
+          <MenuButton
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+            bgGradient='linear(to-r, #EA71F9, #4D397A)'
+            color='#FFFFFF'
+            borderRadius='0'
+            pl='16px'
+            pr='16px'
+            pt='8px'
+            pb='7px'
+            _active={{
+              bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
+            }}
+            _hover={{
+              bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
+            }}>
+            {formatAddress(extension.data.defaultAccount.address)}
+          </MenuButton>
+          <MenuList>
+            {extension.data.accounts.map((account) => (
+              <MenuItem
+                key={account.address}
+                onClick={() => handleSelectWallet(account.address)}
+                _hover={{
+                  bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
+                }}>
+                <ExtensionIcon extension={account.meta.source} />
+                <Text ml='2'>{formatAddress(account.address)}</Text>
+              </MenuItem>
+            ))}
+            <MenuDivider />
+            <MenuItem
+              onClick={handleDisconnect}
+              _hover={{
+                bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
+              }}>
+              <Image src={'/images/disconnect.svg'} width={20} height={20} alt={'disconnect'} />
+              <Text ml='2'>Disconnect</Text>
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      )}
 
       <Modal finalFocusRef={finalRef} isOpen={isConnectOpen} onClose={onConnectClose}>
         <ModalOverlay />
@@ -60,8 +134,8 @@ export const ConnectWallet = () => {
                       variant='outline'
                       w='200px'
                       borderColor='brand'
-                      onClick={() => handleSelectWallet('polkadot-js')}>
-                      <Image src={'/images/polkadot-dot.svg'} width={20} height={20} alt={'metamask'} />
+                      onClick={() => handleSelectFirstWalletFromExtension('polkadot-js')}>
+                      <ExtensionIcon extension='polkadot-js' />
                       <Text ml='2'>Polkadot.js</Text>
                     </Button>
                   </GridItem>
@@ -70,15 +144,15 @@ export const ConnectWallet = () => {
                       variant='outline'
                       w='200px'
                       borderColor='brand'
-                      onClick={() => handleSelectWallet('subwallet-js')}>
-                      <Image src={'/images/subwallet.svg'} width={20} height={20} alt={'metamask'} />
+                      onClick={() => handleSelectFirstWalletFromExtension('subwallet-js')}>
+                      <ExtensionIcon extension='subwallet-js' />
                       <Text ml='2'>SubWallet</Text>
                     </Button>
                   </GridItem>
                   {/* Uncomment when metamask snap is ready */}
                   {/* <GridItem>
                     <Button variant='outline' w='200px' borderColor='brand' onClick={() => handleSelectWallet('')}>
-                      <Image src={'/images/metamask.svg'} width={20} height={20} alt={'metamask'} />
+                      <ExtensionIcon extension='metamask' />
                       <Text ml='2'>MetaMask Snap</Text>
                     </Button>
                   </GridItem> */}

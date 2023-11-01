@@ -1,4 +1,4 @@
-import { ExtensionState, NetworkConstants, Registration } from '../types'
+import { ExtensionState, Registration, StakingConstants } from '../types'
 export * from './errors'
 
 export const ROUTES = {
@@ -12,8 +12,6 @@ export const EXTERNAL_ROUTES = {
   STAKING_INCENTIVES: 'https://docs.subspace.network/docs/operators_and_staking/intro#staking',
   STAKING_INFORMATION: 'https://docs.subspace.network/docs/operators_and_staking/staking'
 }
-
-export const PROVIDER_URL = 'wss://rpc-0.devnet.subspace.network/ws'
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
 
@@ -37,7 +35,7 @@ export const initialExtensionValues: ExtensionState = {
   error: null
 }
 
-export const initialNetworkConstants: NetworkConstants = {
+export const initialStakingConstants: StakingConstants = {
   maxNominators: 0,
   minOperatorStake: BigInt(0),
   stakeEpochDuration: 0,

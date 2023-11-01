@@ -1,27 +1,27 @@
 import { ApiPromise } from '@polkadot/api'
 import { InjectedExtension } from '@polkadot/extension-inject/types'
 import { create } from 'zustand'
-import { initialExtensionValues, initialNetworkConstants } from '../constants'
-import { ExtensionState, NetworkConstants } from '../types'
+import { initialExtensionValues, initialStakingConstants } from '../constants'
+import { ExtensionState, StakingConstants } from '../types'
 
 interface RegistrationState {
   api: ApiPromise | undefined
   extension: ExtensionState
   injectedExtension: InjectedExtension | undefined
-  networkConstants: NetworkConstants
+  stakingConstants: StakingConstants
   setApi: (api: ApiPromise) => void
   setExtension: (registration: ExtensionState) => void
   setInjectedExtension: (injectedExtension: InjectedExtension) => void
-  setNetworkConstants: (networkConstants: NetworkConstants) => void
+  setStakingConstants: (networkConstants: StakingConstants) => void
 }
 
 export const useExtension = create<RegistrationState>((set) => ({
   api: undefined,
   extension: initialExtensionValues,
   injectedExtension: undefined,
-  networkConstants: initialNetworkConstants,
+  stakingConstants: initialStakingConstants,
   setApi: (api) => set(() => ({ api })),
   setExtension: (extension) => set(() => ({ extension })),
   setInjectedExtension: (injectedExtension) => set(() => ({ injectedExtension })),
-  setNetworkConstants: (networkConstants) => set(() => ({ networkConstants }))
+  setStakingConstants: (stakingConstants) => set(() => ({ stakingConstants }))
 }))
