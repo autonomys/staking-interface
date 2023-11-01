@@ -1,5 +1,6 @@
 import { ExtensionState, Registration, StakingConstants } from '../types'
 export * from './errors'
+export * from './styles'
 
 export const ROUTES = {
   HOME: '/',
