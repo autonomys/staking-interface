@@ -22,7 +22,7 @@ export const OperatorsTotal: React.FC = () => {
         <Text style={textStyles.heading} mt='8'>
           Number of Nominators
         </Text>
-        <Text style={textStyles.value}>{formatNumber(totalNominators)}</Text>
+        <Text style={textStyles.value}>{totalNominators}</Text>
       </GridItem>
       <GridItem w='100%'>
         <Text style={textStyles.heading}>Available for withdrawal, tSSC</Text>
