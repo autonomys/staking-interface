@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback } from 'react'
 import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
 import { useRegistration } from '../states/registration'
+import { isValidSr25519PublicKey } from '../utils/signingKey'
 import { useTx } from './useTx'
 
 export const useRegister = () => {
@@ -48,7 +49,7 @@ export const useRegister = () => {
       case 'nominatorTax':
         return parseInt(value) < 0 && parseInt(value) > 100 && value.length < 1 && !isNaN(parseInt(value))
       case 'signingKey':
-        return value.length < 1
+        return value.length < 1 && isValidSr25519PublicKey(value)
       default:
         return false
     }
