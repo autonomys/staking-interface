@@ -26,7 +26,7 @@ export const useConnect = () => {
         console.log('Connection Success', _api)
         setApi(_api)
         const { maxNominatorsCount, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } =
-          _api.consts.staking
+          _api.consts.domains
         setStakingConstants({
           maxNominators: Number(maxNominatorsCount.toString()),
           minOperatorStake: BigInt(minOperatorStake.toString()),
