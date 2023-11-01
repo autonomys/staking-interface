@@ -5,14 +5,10 @@ import React from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
 import { EXTERNAL_ROUTES, ROUTES } from '../constants'
-import { useClientSide } from '../hooks/useClientSide'
 import { useWallet } from '../hooks/useWallet'
 
 const Page: React.FC = () => {
-  const clientSide = useClientSide()
   const { extension, handleConnect } = useWallet()
-
-  if (!clientSide) return null
 
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>

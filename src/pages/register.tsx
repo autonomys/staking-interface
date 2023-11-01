@@ -14,20 +14,16 @@ import Link from 'next/link'
 import React from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { useClientSide } from '../hooks/useClientSide'
 import { useRegister } from '../hooks/useRegister'
 import { useWallet } from '../hooks/useWallet'
 import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
-  const clientSide = useClientSide()
   const { extension, handleConnect } = useWallet()
   const { handleChange, handleSubmit } = useRegister()
   const currentRegistration = useRegistration((state) => state.currentRegistration)
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
-
-  if (!clientSide) return null
 
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
