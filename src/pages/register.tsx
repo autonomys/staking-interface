@@ -21,8 +21,7 @@ import { useRegistration } from '../states/registration'
 const Page: React.FC = () => {
   const { extension, handleConnect } = useWallet()
   const { handleChange, handleSubmit } = useRegister()
-  const currentRegistration = useRegistration((state) => state.currentRegistration)
-  const isErrorsField = useRegistration((state) => state.isErrorsField)
+  const { currentRegistration, isErrorsField } = useRegistration((state) => state)
   const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
 
   return (
