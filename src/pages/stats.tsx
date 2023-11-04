@@ -18,13 +18,6 @@ const Page: React.FC = () => {
         <Wallet />
         <Heading ml='2'>Stats</Heading>
       </HStack>
-      <Box mt='6'>
-        <HStack mb='6'>
-          <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Information across operators
-          </Heading>
-        </HStack>
-      </Box>
       <OperatorsList />
       <OperatorsTotal />
     </Box>

@@ -23,7 +23,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
       <Box mt='6'>
         <HStack mb='6'>
           <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Aggregated data
+            Information across operators
           </Heading>
           {operatorOwner && (
             <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
