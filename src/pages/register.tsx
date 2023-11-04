@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -8,6 +9,8 @@ import {
   GridItem,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Text
 } from '@chakra-ui/react'
 import Link from 'next/link'
@@ -20,7 +23,7 @@ import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
   const { extension, handleConnect } = useWallet()
-  const { handleChange, handleSubmit } = useRegister()
+  const { handleChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { currentRegistration, isErrorsField } = useRegistration((state) => state)
   const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
 
@@ -44,7 +47,16 @@ const Page: React.FC = () => {
             </FormControl>
             <FormControl isInvalid={isErrorsField['amountToStake']}>
               <FormLabel>Amount to stake, tSSC</FormLabel>
-              <Input name='amountToStake' value={amountToStake} onChange={handleChange} mt='4' />
+
+              <InputGroup size='md' mt='4'>
+                <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
+                <InputRightElement>
+                  <Button m={1} onClick={handleMaxAmountToStake}>
+                    Max
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              {/* <Input name='amountToStake' value={amountToStake} onChange={handleChange} mt='4' /> */}
               {isErrorsField['amountToStake'] ? (
                 <FormErrorMessage h='10'>The amount to stake you enter is not valid</FormErrorMessage>
               ) : (

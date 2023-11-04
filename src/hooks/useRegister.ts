@@ -2,6 +2,7 @@ import { useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import React, { useCallback } from 'react'
 import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
+import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { isValidSr25519PublicKey } from '../utils/signingKey'
 import { useTx } from './useTx'
@@ -13,13 +14,39 @@ export const useRegister = () => {
   const saveCurrentRegistration = useRegistration((state) => state.saveCurrentRegistration)
   const addRegistration = useRegistration((state) => state.addRegistration)
   const setErrorsField = useRegistration((state) => state.setErrorsField)
+  const accountDetails = useExtension((state) => state.accountDetails)
   const { handleRegisterOperator } = useTx()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    saveCurrentRegistration({ ...currentRegistration, [name]: value })
-    setErrorsField(name, detectError(name, value))
-  }
+  const detectError = useCallback((key: string, value: string) => {
+    switch (key) {
+      case 'domainId':
+        return value.length < 1
+      case 'minimumNominatorStake':
+        return parseInt(value) < 0
+      case 'amountToStake':
+        return value.length < 1
+      case 'nominatorTax':
+        return parseInt(value) < 0 && parseInt(value) > 100 && value.length < 1 && !isNaN(parseInt(value))
+      case 'signingKey':
+        return value.length < 1 && isValidSr25519PublicKey(value)
+      default:
+        return false
+    }
+  }, [])
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      saveCurrentRegistration({ ...currentRegistration, [name]: value })
+      setErrorsField(name, detectError(name, value))
+    },
+    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField]
+  )
+
+  const handleMaxAmountToStake = useCallback(() => {
+    if (!accountDetails) return
+    saveCurrentRegistration({ ...currentRegistration, amountToStake: accountDetails.data.free })
+  }, [accountDetails, currentRegistration, saveCurrentRegistration])
 
   const handleSubmit = useCallback(async () => {
     console.log('currentRegistration', currentRegistration)
@@ -37,26 +64,9 @@ export const useRegister = () => {
     }
   }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
 
-  const detectError = (key: string, value: string) => {
-    // To do: Improve the validation
-    switch (key) {
-      case 'domainId':
-        return value.length < 1
-      case 'minimumNominatorStake':
-        return parseInt(value) < 0
-      case 'amountToStake':
-        return value.length < 1
-      case 'nominatorTax':
-        return parseInt(value) < 0 && parseInt(value) > 100 && value.length < 1 && !isNaN(parseInt(value))
-      case 'signingKey':
-        return value.length < 1 && isValidSr25519PublicKey(value)
-      default:
-        return false
-    }
-  }
-
   return {
     handleChange,
+    handleMaxAmountToStake,
     handleSubmit
   }
 }
