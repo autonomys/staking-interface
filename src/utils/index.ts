@@ -3,3 +3,5 @@ export const formatAddress = (address: string) => `${address.slice(0, 4)}...${ad
 export const formatNumber = (number: number) => (Math.round(number * 100) / 100).toFixed(2).toLocaleString()
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
+
+export const hexToFormattedNumber = (hex: string, decimals = 4) => (parseInt(hex, 16) / 10 ** 16).toFixed(decimals)

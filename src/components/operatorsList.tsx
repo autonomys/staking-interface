@@ -1,9 +1,22 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
-import React from 'react'
-import { useRegistration } from '../states/registration'
+import React, { useMemo } from 'react'
+import { useExtension } from '../states/extension'
+import { hexToFormattedNumber } from '../utils'
 
-export const OperatorsList: React.FC = () => {
-  const registrations = useRegistration((state) => state.registrations)
+interface OperatorsListProps {
+  operatorOwner?: string
+}
+
+export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
+  const stakingConstants = useExtension((state) => state.stakingConstants)
+
+  const operators = useMemo(() => {
+    if (operatorOwner)
+      return stakingConstants.operators
+        .map((_, key) => stakingConstants.operatorIdOwner[key][key] === operatorOwner)
+        .map((_, key) => stakingConstants.operators[key])
+    return stakingConstants.operators
+  }, [operatorOwner, stakingConstants.operatorIdOwner, stakingConstants.operators])
 
   return (
     <TableContainer>
@@ -17,7 +30,7 @@ export const OperatorsList: React.FC = () => {
             <Th isNumeric>Funds in stake</Th>
           </Tr>
         </Thead>
-        {registrations.length === 0 ? (
+        {operators.length === 0 ? (
           <Tbody>
             {[0, 1, 2, 3].map((_, key) => (
               <Tr key={key}>
@@ -31,13 +44,13 @@ export const OperatorsList: React.FC = () => {
           </Tbody>
         ) : (
           <Tbody>
-            {registrations.map((registration, key) => (
+            {operators.map((operator, key) => (
               <Tr key={key}>
-                <Td isNumeric>{registration.domainId}</Td>
-                <Td>{registration.signingKey}</Td>
-                <Td isNumeric>{registration.nominatorTax}</Td>
-                <Td isNumeric>{registration.minimumNominatorStake}</Td>
-                <Td isNumeric>{registration.amountToStake}</Td>
+                <Td isNumeric>{operator.currentDomainId}</Td>
+                <Td>{key}</Td>
+                <Td isNumeric>{operator.nominationTax}</Td>
+                <Td isNumeric>{hexToFormattedNumber(operator.minimumNominatorStake)}</Td>
+                <Td isNumeric>{hexToFormattedNumber(operator.currentTotalStake)}</Td>
               </Tr>
             ))}
           </Tbody>
