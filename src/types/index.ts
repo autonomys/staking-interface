@@ -15,9 +15,9 @@ export type AccountDetails = {
   providers: number
   sufficients: number
   data: {
-    free: number | bigint
-    reserved: number | bigint
-    frozen: number | bigint
+    free: string
+    reserved: string
+    frozen: string
     flags: string
   }
 }
