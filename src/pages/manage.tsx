@@ -28,7 +28,7 @@ import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
   const isErrorsField = useRegistration((state) => state.isErrorsField)
-  const extension = useExtension((state) => state.extension)
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const { handleChange, handleMaxAmountToAddFunds, handleSubmit } = useManage()
 
   return (
@@ -37,7 +37,7 @@ const Page: React.FC = () => {
         <Wallet />
         <Heading ml='2'>Manage the stake</Heading>
       </HStack>
-      <OperatorsList operatorOwner={extension.data ? extension.data.defaultAccount.address : undefined} />
+      <OperatorsList operatorOwner={subspaceAccount} />
       <Flex>
         <Spacer />
         <Box>
@@ -80,7 +80,7 @@ const Page: React.FC = () => {
         </Box>
       </Flex>
       <Box>
-        <OperatorsTotal operatorOwner={extension.data ? extension.data.defaultAccount.address : undefined} />
+        <OperatorsTotal operatorOwner={subspaceAccount} />
         <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12' mb='24'>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['operatorId']}>

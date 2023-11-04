@@ -1,6 +1,7 @@
 import { useDisclosure } from '@chakra-ui/react'
 import { ApiPromise } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import { encodeAddress } from '@polkadot/keyring'
 import { WsProvider } from '@polkadot/rpc-provider'
 import { useCallback, useEffect } from 'react'
 import { SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
@@ -19,6 +20,7 @@ export const useConnect = () => {
   const api = useExtension((state) => state.api)
   const setApi = useExtension((state) => state.setApi)
   const setExtension = useExtension((state) => state.setExtension)
+  const setSubspaceAccount = useExtension((state) => state.setSubspaceAccount)
   const setInjectedExtension = useExtension((state) => state.setInjectedExtension)
   const setAccountDetails = useExtension((state) => state.setAccountDetails)
   const setStakingConstants = useExtension((state) => state.setStakingConstants)
@@ -120,7 +122,7 @@ export const useConnect = () => {
       await handleConnect()
       const mainAccount = extension.data?.accounts.find((account) => account.meta.source === source)
       console.log('mainAccount', mainAccount)
-      if (mainAccount && extension.data)
+      if (mainAccount && extension.data) {
         setExtension({
           ...extension,
           data: {
@@ -128,16 +130,18 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
+        setSubspaceAccount(encodeAddress(mainAccount.address, 2258))
+      }
       onConnectClose()
     },
-    [handleConnect, extension, setExtension, onConnectClose]
+    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount]
   )
 
   const handleSelectWallet = useCallback(
     async (address: string) => {
       const mainAccount = extension.data?.accounts.find((account) => account.address === address)
       console.log('mainAccount', mainAccount)
-      if (mainAccount && extension.data)
+      if (mainAccount && extension.data) {
         setExtension({
           ...extension,
           data: {
@@ -145,8 +149,10 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
+        setSubspaceAccount(encodeAddress(mainAccount.address, 2258))
+      }
     },
-    [extension, setExtension]
+    [extension, setExtension, setSubspaceAccount]
   )
 
   const handleRefreshBalance = useCallback(async () => {
