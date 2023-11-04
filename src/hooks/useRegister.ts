@@ -1,9 +1,12 @@
 import { useToast } from '@chakra-ui/react'
+import type { SingleValue } from 'chakra-react-select'
 import { useRouter } from 'next/navigation'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
+import { Option } from '../types'
+import { capitalizeFirstLetter } from '../utils'
 import { isValidSr25519PublicKey } from '../utils/signingKey'
 import { useTx } from './useTx'
 
@@ -15,6 +18,7 @@ export const useRegister = () => {
   const addRegistration = useRegistration((state) => state.addRegistration)
   const setErrorsField = useRegistration((state) => state.setErrorsField)
   const accountDetails = useExtension((state) => state.accountDetails)
+  const stakingConstants = useExtension((state) => state.stakingConstants)
   const { handleRegisterOperator } = useTx()
 
   const detectError = useCallback((key: string, value: string) => {
@@ -34,11 +38,31 @@ export const useRegister = () => {
     }
   }, [])
 
+  const domainsOptions = useMemo(
+    () =>
+      stakingConstants.domainRegistry
+        ? stakingConstants.domainRegistry.map((domain, key) => ({
+            label: `${key} - ${capitalizeFirstLetter(domain.domainConfig.domainName)}`,
+            value: key
+          }))
+        : [],
+    [stakingConstants.domainRegistry]
+  )
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
       saveCurrentRegistration({ ...currentRegistration, [name]: value })
       setErrorsField(name, detectError(name, value))
+    },
+    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField]
+  )
+
+  const handleDomainChange = useCallback(
+    (domainSelected: SingleValue<Option<number>>) => {
+      const domainId = domainSelected != null ? domainSelected.value.toString() : ''
+      saveCurrentRegistration({ ...currentRegistration, domainId })
+      setErrorsField('domainId', detectError('domainId', domainId))
     },
     [currentRegistration, detectError, saveCurrentRegistration, setErrorsField]
   )
@@ -65,7 +89,9 @@ export const useRegister = () => {
   }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
 
   return {
+    domainsOptions,
     handleChange,
+    handleDomainChange,
     handleMaxAmountToStake,
     handleSubmit
   }
