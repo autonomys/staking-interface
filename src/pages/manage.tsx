@@ -25,7 +25,6 @@ import { ActionType, SYMBOL } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
-import { formatAddress } from '../utils'
 
 const Page: React.FC = () => {
   const isErrorsField = useRegistration((state) => state.isErrorsField)
@@ -38,19 +37,7 @@ const Page: React.FC = () => {
         <Wallet />
         <Heading ml='2'>Manage the stake</Heading>
       </HStack>
-      <Box mt='6'>
-        <HStack mb='6'>
-          <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Information across operators
-          </Heading>
-          {extension.data && (
-            <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
-              on SigningKey {formatAddress(extension.data.defaultAccount.address)}
-            </Heading>
-          )}
-        </HStack>
-      </Box>
-      <OperatorsList />
+      <OperatorsList operatorOwner={extension.data ? extension.data.defaultAccount.address : undefined} />
       <Flex>
         <Spacer />
         <Box>
@@ -93,15 +80,7 @@ const Page: React.FC = () => {
         </Box>
       </Flex>
       <Box>
-        <HStack mb='6'>
-          <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Aggregated data
-          </Heading>
-          <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
-            on SigningKey st9450943...04953
-          </Heading>
-        </HStack>
-        <OperatorsTotal />
+        <OperatorsTotal operatorOwner={extension.data ? extension.data.defaultAccount.address : undefined} />
         <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12' mb='24'>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['operatorId']}>

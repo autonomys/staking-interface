@@ -2,6 +2,7 @@ import { Box, HStack, Heading } from '@chakra-ui/react'
 import React from 'react'
 import { Wallet } from '../components/icons'
 import { OperatorsList } from '../components/operatorsList'
+import { OperatorsTotal } from '../components/operatorsTotal'
 
 const Page: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const Page: React.FC = () => {
         </HStack>
       </Box>
       <OperatorsList />
+      <OperatorsTotal />
     </Box>
   )
 }
