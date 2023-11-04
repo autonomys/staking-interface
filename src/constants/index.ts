@@ -5,7 +5,8 @@ export * from './styles'
 export const ROUTES = {
   HOME: '/',
   REGISTER: '/register',
-  MANAGE: '/manage'
+  MANAGE: '/manage',
+  STATS: '/stats'
 }
 
 export const EXTERNAL_ROUTES = {
@@ -47,7 +48,8 @@ export const initialStakingConstants: StakingConstants = {
   domainStakingSummary: [],
   operatorIdOwner: [],
   operators: [],
-  pendingStakingOperationCount: []
+  pendingStakingOperationCount: [],
+  nominatorCount: []
 }
 
 export const toastConfig = {
