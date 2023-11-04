@@ -1,6 +1,6 @@
 import { Grid, GridItem, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
-import { textStyles } from '../constants'
+import { SYMBOL, textStyles } from '../constants'
 import { useRegistration } from '../states/registration'
 import { formatNumber } from '../utils'
 
@@ -16,7 +16,7 @@ export const OperatorsTotal: React.FC = () => {
   return (
     <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
       <GridItem w='100%'>
-        <Text style={textStyles.heading}>Funds in Stake, tSSC</Text>
+        <Text style={textStyles.heading}>Funds in Stake, {SYMBOL}</Text>
         <Text style={textStyles.value}>{formatNumber(totalFundsInStake)}</Text>
 
         <Text style={textStyles.heading} mt='8'>
@@ -25,11 +25,11 @@ export const OperatorsTotal: React.FC = () => {
         <Text style={textStyles.value}>{totalNominators}</Text>
       </GridItem>
       <GridItem w='100%'>
-        <Text style={textStyles.heading}>Available for withdrawal, tSSC</Text>
+        <Text style={textStyles.heading}>Available for withdrawal, {SYMBOL}</Text>
         <Text style={textStyles.value}>{formatNumber(totalFundsInStake)}</Text>
 
         <Text style={textStyles.heading} mt='8'>
-          Nominator’s funds, tSSC
+          Nominator’s funds, {SYMBOL}
         </Text>
         <Text style={textStyles.value}>{formatNumber(totalFundsInStake)}</Text>
       </GridItem>

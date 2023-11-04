@@ -18,6 +18,7 @@ import Link from 'next/link'
 import React from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
+import { SYMBOL } from '../constants'
 import { useRegister } from '../hooks/useRegister'
 import { useWallet } from '../hooks/useWallet'
 import { useRegistration } from '../states/registration'
@@ -54,7 +55,7 @@ const Page: React.FC = () => {
               )}
             </FormControl>
             <FormControl isInvalid={isErrorsField['amountToStake']}>
-              <FormLabel>Amount to stake, tSSC</FormLabel>
+              <FormLabel>Amount to stake, {SYMBOL}</FormLabel>
               <InputGroup size='md' mt='4'>
                 <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
                 <InputRightElement>
@@ -81,7 +82,7 @@ const Page: React.FC = () => {
           </GridItem>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['minimumNominatorStake']}>
-              <FormLabel>Minimum Nominator Stake, tSSC</FormLabel>
+              <FormLabel>Minimum Nominator Stake, {SYMBOL}</FormLabel>
               <Input name='minimumNominatorStake' value={minimumNominatorStake} onChange={handleChange} mt='4' />
               {isErrorsField['minimumNominatorStake'] ? (
                 <FormErrorMessage h='10'>The minimum nominator stake you enter is not valid</FormErrorMessage>

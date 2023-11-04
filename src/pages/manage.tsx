@@ -21,7 +21,7 @@ import { FormButton } from '../components/buttons'
 import { Wallet } from '../components/icons'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
-import { ActionType } from '../constants'
+import { ActionType, SYMBOL } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
@@ -131,7 +131,7 @@ const Page: React.FC = () => {
                   borderColor='#141414'
                   border='1px'
                   w='479px'
-                  placeholder='Amount, tSSC'
+                  placeholder={`Amount, ${SYMBOL}`}
                   onChange={(e) => handleChange(ActionType.AddFunds, e)}
                   _placeholder={{ color: '#7D7D7D' }}
                 />
@@ -176,7 +176,7 @@ const Page: React.FC = () => {
                 borderColor='#141414'
                 border='1px'
                 w='479px'
-                placeholder='Amount, tSSC'
+                placeholder={`Amount, ${SYMBOL}`}
                 onChange={(e) => handleChange(ActionType.Withdraw, e)}
                 _placeholder={{ color: '#7D7D7D' }}
               />

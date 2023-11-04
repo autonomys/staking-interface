@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
-import { EXTERNAL_ROUTES } from '../constants'
+import { EXTERNAL_ROUTES, SYMBOL } from '../constants'
 import { Wallet } from './icons'
 
 export const Intro: React.FC = () => {
@@ -12,7 +12,8 @@ export const Intro: React.FC = () => {
         <Heading ml='2'>Staking as a pool operator</Heading>
       </HStack>
       <Text>
-        tSSC holders (Gemini 3g testnet network only) can stake their tSSC to add more security to the protocol and earn{' '}
+        {SYMBOL} holders (Gemini 3g testnet network only) can stake their {SYMBOL} to add more security to the protocol
+        and earn{' '}
         <u>
           <Link href={EXTERNAL_ROUTES.STAKING_INCENTIVES}>Staking Incentives</Link>
         </u>
