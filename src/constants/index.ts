@@ -17,6 +17,8 @@ export const EXTERNAL_ROUTES = {
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
 
+export const SUBSPACE_ACCOUNT_FORMAT = 2254
+
 export const SYMBOL = 'tSSC'
 
 export enum ActionType {
