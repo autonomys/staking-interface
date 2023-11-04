@@ -47,7 +47,6 @@ const Page: React.FC = () => {
             </FormControl>
             <FormControl isInvalid={isErrorsField['amountToStake']}>
               <FormLabel>Amount to stake, tSSC</FormLabel>
-
               <InputGroup size='md' mt='4'>
                 <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
                 <InputRightElement>
@@ -56,7 +55,6 @@ const Page: React.FC = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {/* <Input name='amountToStake' value={amountToStake} onChange={handleChange} mt='4' /> */}
               {isErrorsField['amountToStake'] ? (
                 <FormErrorMessage h='10'>The amount to stake you enter is not valid</FormErrorMessage>
               ) : (
