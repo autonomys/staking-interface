@@ -1,14 +1,22 @@
 import { Box, Heading, Text } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
 import { EXTERNAL_ROUTES, ROUTES } from '../constants'
+import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
+import { useExtension } from '../states/extension'
 
 const Page: React.FC = () => {
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const { extension, handleConnect } = useWallet()
+  const { handleOnchainData } = useOnchainData()
+
+  useEffect(() => {
+    handleOnchainData()
+  }, [handleOnchainData, subspaceAccount])
 
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
