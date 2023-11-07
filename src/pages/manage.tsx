@@ -11,6 +11,8 @@ import {
   HStack,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Spacer,
   Text
 } from '@chakra-ui/react'
@@ -28,7 +30,7 @@ import { formatAddress } from '../utils'
 const Page: React.FC = () => {
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const extension = useExtension((state) => state.extension)
-  const { handleChange, handleSubmit } = useManage()
+  const { handleChange, handleMaxAmountToAddFunds, handleSubmit } = useManage()
 
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
@@ -123,15 +125,22 @@ const Page: React.FC = () => {
               )}
             </FormControl>
             <FormControl isInvalid={isErrorsField['amount']}>
-              <Input
-                name='amount'
-                borderColor='#141414'
-                border='1px'
-                w='479px'
-                placeholder='Amount, tSSC'
-                onChange={(e) => handleChange(ActionType.AddFunds, e)}
-                _placeholder={{ color: '#7D7D7D' }}
-              />
+              <InputGroup size='md' mt='4'>
+                <Input
+                  name='amount'
+                  borderColor='#141414'
+                  border='1px'
+                  w='479px'
+                  placeholder='Amount, tSSC'
+                  onChange={(e) => handleChange(ActionType.AddFunds, e)}
+                  _placeholder={{ color: '#7D7D7D' }}
+                />
+                <InputRightElement>
+                  <Button m={1} onClick={handleMaxAmountToAddFunds}>
+                    Max
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
               {isErrorsField['amount'] ? (
                 <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
               ) : (

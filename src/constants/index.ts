@@ -40,7 +40,12 @@ export const initialStakingConstants: StakingConstants = {
   maxNominators: 0,
   minOperatorStake: BigInt(0),
   stakeEpochDuration: 0,
-  stakeWithdrawalLockingPeriod: 0
+  stakeWithdrawalLockingPeriod: 0,
+  domainRegistry: [],
+  domainStakingSummary: [],
+  operatorIdOwner: [],
+  operators: [],
+  pendingStakingOperationCount: []
 }
 
 export const toastConfig = {

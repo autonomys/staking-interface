@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -8,8 +9,11 @@ import {
   GridItem,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Text
 } from '@chakra-ui/react'
+import { Select } from 'chakra-react-select'
 import Link from 'next/link'
 import React from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
@@ -20,7 +24,7 @@ import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
   const { extension, handleConnect } = useWallet()
-  const { handleChange, handleSubmit } = useRegister()
+  const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { currentRegistration, isErrorsField } = useRegistration((state) => state)
   const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
 
@@ -35,7 +39,14 @@ const Page: React.FC = () => {
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['domainId']}>
               <FormLabel>Domain ID</FormLabel>
-              <Input name='domainId' value={domainId} onChange={handleChange} mt='4' />
+              <Box mt='6'>
+                <Select
+                  name='domainId'
+                  value={domainsOptions.find((option) => option.value.toString() === domainId)}
+                  onChange={handleDomainChange}
+                  options={domainsOptions}
+                />
+              </Box>
               {isErrorsField['domainId'] ? (
                 <FormErrorMessage h='10'>The Domain ID you enter is not valid</FormErrorMessage>
               ) : (
@@ -44,7 +55,14 @@ const Page: React.FC = () => {
             </FormControl>
             <FormControl isInvalid={isErrorsField['amountToStake']}>
               <FormLabel>Amount to stake, tSSC</FormLabel>
-              <Input name='amountToStake' value={amountToStake} onChange={handleChange} mt='4' />
+              <InputGroup size='md' mt='4'>
+                <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
+                <InputRightElement>
+                  <Button m={1} onClick={handleMaxAmountToStake}>
+                    Max
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
               {isErrorsField['amountToStake'] ? (
                 <FormErrorMessage h='10'>The amount to stake you enter is not valid</FormErrorMessage>
               ) : (

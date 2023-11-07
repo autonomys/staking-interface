@@ -1,12 +1,14 @@
 import { useToast } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
 import { ActionType, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
+import { useExtension } from '../states/extension'
 import { ActionInput } from '../types'
 import { capitalizeFirstLetter } from '../utils'
 import { useTx } from './useTx'
 
 export const useManage = () => {
   const toast = useToast()
+  const accountDetails = useExtension((state) => state.accountDetails)
   const [deregister, setDeregister] = useState<string>('')
   const [addFunds, setAddFunds] = useState<ActionInput>({
     operatorId: '',
@@ -35,6 +37,11 @@ export const useManage = () => {
     [addFunds, withdraw]
   )
 
+  const handleMaxAmountToAddFunds = useCallback(() => {
+    if (!accountDetails) return
+    setAddFunds({ ...addFunds, amount: accountDetails.data.free })
+  }, [accountDetails, addFunds])
+
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {
       try {
@@ -60,6 +67,7 @@ export const useManage = () => {
 
   return {
     handleChange,
+    handleMaxAmountToAddFunds,
     handleSubmit
   }
 }
