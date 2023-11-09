@@ -1,91 +1,22 @@
 import { useDisclosure } from '@chakra-ui/react'
-import { ApiPromise } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import { WsProvider } from '@polkadot/rpc-provider'
+import { encodeAddress } from '@polkadot/keyring'
 import { useCallback, useEffect } from 'react'
-import { SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
+import { SUBSPACE_ACCOUNT_FORMAT, SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
 import { useExtension } from '../states/extension'
-import {
-  AccountDetails,
-  DomainRegistry,
-  DomainStakingSummary,
-  OperatorIdOwner,
-  Operators,
-  PendingStakingOperationCount
-} from '../types'
+import { AccountDetails } from '../types'
 
 export const useConnect = () => {
   const extension = useExtension((state) => state.extension)
   const api = useExtension((state) => state.api)
-  const setApi = useExtension((state) => state.setApi)
   const setExtension = useExtension((state) => state.setExtension)
+  const setSubspaceAccount = useExtension((state) => state.setSubspaceAccount)
   const setInjectedExtension = useExtension((state) => state.setInjectedExtension)
   const setAccountDetails = useExtension((state) => state.setAccountDetails)
-  const setStakingConstants = useExtension((state) => state.setStakingConstants)
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
 
   const handleConnect = useCallback(async () => {
     setExtension({ ...initialExtensionValues, loading: true })
-
-    try {
-      if (!process.env.NEXT_PUBLIC_PROVIDER_URL) throw new Error('NEXT_PUBLIC_PROVIDER_URL not set')
-
-      const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_PROVIDER_URL)
-      const _api = await ApiPromise.create({ provider: wsProvider })
-      if (_api) {
-        console.log('Connection Success')
-        setApi(_api)
-        const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } =
-          _api.consts.domains
-        console.log('stakimg', _api.consts.domains)
-
-        const domainRegistry = await _api.query.domains.domainRegistry.entries()
-        console.log(
-          'domainRegistry',
-          domainRegistry.map((domain) => domain[1].toJSON() as DomainRegistry)
-        )
-
-        const domainStakingSummary = await _api.query.domains.domainStakingSummary.entries()
-        console.log(
-          'domainStakingSummary',
-          domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary)
-        )
-
-        const operatorIdOwner = await _api.query.domains.operatorIdOwner.entries()
-        console.log(
-          'operatorIdOwner',
-          operatorIdOwner.map((operator) => operator[1].toJSON() as OperatorIdOwner)
-        )
-
-        const operators = await _api.query.domains.operators.entries()
-        console.log(
-          'operators',
-          operators.map((operator) => operator[1].toJSON() as Operators)
-        )
-
-        const pendingStakingOperationCount = await _api.query.domains.pendingStakingOperationCount.entries()
-        console.log(
-          'pendingStakingOperationCount',
-          pendingStakingOperationCount.map((operator) => operator[1].toJSON() as PendingStakingOperationCount)
-        )
-
-        setStakingConstants({
-          maxNominators: Number(maxNominators.toString()),
-          minOperatorStake: BigInt(minOperatorStake.toString()),
-          stakeEpochDuration: Number(stakeEpochDuration.toString()),
-          stakeWithdrawalLockingPeriod: Number(stakeWithdrawalLockingPeriod.toString()),
-          domainRegistry: domainRegistry.map((domain) => domain[1].toJSON() as DomainRegistry),
-          domainStakingSummary: domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary),
-          operatorIdOwner: operatorIdOwner.map((operator) => operator[1].toJSON() as OperatorIdOwner),
-          operators: operators.map((operator) => operator[1].toJSON() as Operators),
-          pendingStakingOperationCount: pendingStakingOperationCount.map(
-            (operator) => operator[1].toJSON() as PendingStakingOperationCount
-          )
-        })
-      }
-    } catch (error) {
-      console.log(error)
-    }
 
     web3Enable(SUBSPACE_EXTENSION_ID)
       .then((injectedExtensions) => {
@@ -106,6 +37,7 @@ export const useConnect = () => {
             defaultAccount: accounts[0]
           }
         })
+        setSubspaceAccount(encodeAddress(accounts[0].address, SUBSPACE_ACCOUNT_FORMAT))
 
         console.log('accounts', accounts)
       })
@@ -113,14 +45,14 @@ export const useConnect = () => {
         console.error('Error with connect', error)
         setExtension({ error, loading: false, data: undefined })
       })
-  }, [setApi, setExtension, setInjectedExtension, setStakingConstants])
+  }, [setExtension, setInjectedExtension, setSubspaceAccount])
 
   const handleSelectFirstWalletFromExtension = useCallback(
     async (source: string) => {
       await handleConnect()
       const mainAccount = extension.data?.accounts.find((account) => account.meta.source === source)
       console.log('mainAccount', mainAccount)
-      if (mainAccount && extension.data)
+      if (mainAccount && extension.data) {
         setExtension({
           ...extension,
           data: {
@@ -128,16 +60,18 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
+        setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+      }
       onConnectClose()
     },
-    [handleConnect, extension, setExtension, onConnectClose]
+    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount]
   )
 
   const handleSelectWallet = useCallback(
     async (address: string) => {
       const mainAccount = extension.data?.accounts.find((account) => account.address === address)
       console.log('mainAccount', mainAccount)
-      if (mainAccount && extension.data)
+      if (mainAccount && extension.data) {
         setExtension({
           ...extension,
           data: {
@@ -145,8 +79,10 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
+        setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+      }
     },
-    [extension, setExtension]
+    [extension, setExtension, setSubspaceAccount]
   )
 
   const handleRefreshBalance = useCallback(async () => {

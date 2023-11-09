@@ -20,8 +20,10 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react'
+import { encodeAddress } from '@polkadot/keyring'
 import Image from 'next/image'
 import { useRef } from 'react'
+import { SUBSPACE_ACCOUNT_FORMAT } from '../constants'
 import { useConnect } from '../hooks/useConnect'
 import { useExtension } from '../states/extension'
 import { formatAddress } from '../utils'
@@ -45,6 +47,7 @@ const ExtensionIcon: React.FC<ExtensionIconProps> = ({ extension }) => {
 
 export const ConnectWallet = () => {
   const extension = useExtension((state) => state.extension)
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const {
     handleSelectFirstWalletFromExtension,
     handleSelectWallet,
@@ -57,7 +60,7 @@ export const ConnectWallet = () => {
 
   return (
     <>
-      {!extension.data ? (
+      {!extension.data || !subspaceAccount ? (
         <Button
           bgGradient='linear(to-r, #EA71F9, #4D397A)'
           color='#FFFFFF'
@@ -90,7 +93,7 @@ export const ConnectWallet = () => {
             _hover={{
               bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
             }}>
-            {formatAddress(extension.data.defaultAccount.address)}
+            {formatAddress(subspaceAccount)}
           </MenuButton>
           <MenuList>
             {extension.data.accounts.map((account) => (
@@ -101,7 +104,7 @@ export const ConnectWallet = () => {
                   bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
                 }}>
                 <ExtensionIcon extension={account.meta.source} />
-                <Text ml='2'>{formatAddress(account.address)}</Text>
+                <Text ml='2'>{formatAddress(encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT))}</Text>
               </MenuItem>
             ))}
             <MenuDivider />

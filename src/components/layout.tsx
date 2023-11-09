@@ -1,6 +1,7 @@
 import { Box, Button, Center, HStack, Spacer, VStack } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
+import { ROUTES } from '../constants'
 import { ConnectWallet } from './buttons'
 import { Subspace } from './icons'
 
@@ -11,13 +12,25 @@ interface LayoutProps {
 export const Header: React.FC = () => {
   return (
     <HStack w='50vw' h='10vh' display='flex' flexDir='row'>
-      <Link href='/'>
+      <Link href={ROUTES.HOME}>
         <Subspace />
       </Link>
       <Spacer maxW='18px' />
-      <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-        Stake as a pool operator
-      </Button>
+      <Link href={ROUTES.REGISTER}>
+        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
+          Stake as a pool operator
+        </Button>
+      </Link>
+      <Link href={ROUTES.MANAGE}>
+        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
+          Manage your stake
+        </Button>
+      </Link>
+      <Link href={ROUTES.STATS}>
+        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
+          Stats
+        </Button>
+      </Link>
       <Spacer />
       <ConnectWallet />
     </HStack>
