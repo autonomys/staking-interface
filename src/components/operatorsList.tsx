@@ -1,4 +1,5 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber } from '../utils'
@@ -60,7 +61,11 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {operators.map((operator, key) => (
                 <Tr key={key}>
                   <Td isNumeric>{operator.currentDomainId}</Td>
-                  <Td>{formatAddress(stakingConstants.operatorIdOwner[key])}</Td>
+                  <Td>
+                    <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
+                      {formatAddress(stakingConstants.operatorIdOwner[key])}
+                    </Link>
+                  </Td>
                   <Td isNumeric>{operator.nominationTax}%</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.minimumNominatorStake)}</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.currentTotalStake)}</Td>
