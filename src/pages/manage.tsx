@@ -115,18 +115,17 @@ const Page: React.FC = () => {
                   )}
                 </FormControl>
                 <FormControl isInvalid={isErrorsField['amount']}>
-                  <InputGroup size='md' mt='4'>
+                  <InputGroup size='md' mt='4' w='479px'>
                     <Input
                       name='amount'
                       borderColor='#141414'
                       border='1px'
-                      w='479px'
                       placeholder={`Amount, ${SYMBOL}`}
                       onChange={(e) => handleChange(ActionType.AddFunds, e)}
                       _placeholder={{ color: '#7D7D7D' }}
                     />
                     <InputRightElement>
-                      <Button m={1} onClick={handleMaxAmountToAddFunds}>
+                      <Button m={1} onClick={handleMaxAmountToAddFunds} size='sm'>
                         Max
                       </Button>
                     </InputRightElement>
