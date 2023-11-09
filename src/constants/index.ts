@@ -21,6 +21,8 @@ export const SUBSPACE_ACCOUNT_FORMAT = 2254
 
 export const SYMBOL = 'tSSC'
 
+export const DECIMALS = 18
+
 export enum ActionType {
   Deregister = 'deregister',
   AddFunds = 'addFunds',
