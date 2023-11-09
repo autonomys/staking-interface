@@ -60,8 +60,8 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {operators.map((operator, key) => (
                 <Tr key={key}>
                   <Td isNumeric>{operator.currentDomainId}</Td>
-                  <Td>{key}</Td>
-                  <Td isNumeric>{operator.nominationTax}</Td>
+                  <Td>{formatAddress(stakingConstants.operatorIdOwner[key])}</Td>
+                  <Td isNumeric>{operator.nominationTax}%</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.minimumNominatorStake)}</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.currentTotalStake)}</Td>
                 </Tr>
