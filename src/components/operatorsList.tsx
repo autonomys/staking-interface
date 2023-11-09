@@ -13,7 +13,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
   const operators = useMemo(() => {
     if (operatorOwner)
       return stakingConstants.operators
-        .map((_, key) => stakingConstants.operatorIdOwner[key][key] === operatorOwner)
+        .filter((_, key) => stakingConstants.operatorIdOwner[key] === operatorOwner)
         .map((_, key) => stakingConstants.operators[key])
     return stakingConstants.operators
   }, [operatorOwner, stakingConstants.operatorIdOwner, stakingConstants.operators])
