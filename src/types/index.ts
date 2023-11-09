@@ -30,7 +30,7 @@ export type StakingConstants = {
   stakeWithdrawalLockingPeriod: number
   domainRegistry: DomainRegistry[]
   domainStakingSummary: DomainStakingSummary[]
-  operatorIdOwner: OperatorIdOwner[]
+  operatorIdOwner: string[]
   operators: Operators[]
   pendingStakingOperationCount: PendingStakingOperationCount[]
 }
@@ -65,10 +65,6 @@ export type DomainStakingSummary = {
   currentEpochRewards: {
     [key: string]: string
   }
-}
-
-export type OperatorIdOwner = {
-  [key: string]: string
 }
 
 export type Operators = {
