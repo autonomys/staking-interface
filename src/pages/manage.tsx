@@ -57,7 +57,7 @@ const Page: React.FC = () => {
                 <Text color='#6C6666' pt='2' pb='2'>
                   Operator deregistration
                 </Text>
-                <OperatorSelector />
+                <OperatorSelector actionType={ActionType.Deregister} />
                 <Button
                   bg='#999393'
                   borderColor='#EAEBEF'
@@ -83,7 +83,7 @@ const Page: React.FC = () => {
                   <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
                     Add more funds
                   </FormLabel>
-                  <OperatorSelector />
+                  <OperatorSelector actionType={ActionType.AddFunds} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
                   ) : (
@@ -119,7 +119,7 @@ const Page: React.FC = () => {
                   <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
                     Initiate a withdrawal
                   </FormLabel>
-                  <OperatorSelector />
+                  <OperatorSelector actionType={ActionType.Withdraw} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
                   ) : (

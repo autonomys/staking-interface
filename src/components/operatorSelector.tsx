@@ -1,9 +1,14 @@
 import { ChakraStylesConfig, Select, SingleValue } from 'chakra-react-select'
 import React from 'react'
+import { ActionType } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { Option } from '../types'
 
-export const OperatorSelector: React.FC = () => {
+interface OperatorSelectorProps {
+  actionType: ActionType
+}
+
+export const OperatorSelector: React.FC<OperatorSelectorProps> = ({ actionType }) => {
   const { operatorsOptions, operatorId, handleChangeOperatorId } = useManage()
 
   const chakraStyles: ChakraStylesConfig = {
@@ -21,8 +26,8 @@ export const OperatorSelector: React.FC = () => {
     <Select
       placeholder='Operator ID'
       name='operatorId'
-      value={operatorsOptions.find((option) => option.value.toString() === operatorId)}
-      onChange={(newValue: unknown) => handleChangeOperatorId(newValue as SingleValue<Option<number>>)}
+      value={operatorsOptions.find((option) => option.value.toString() === operatorId(actionType))}
+      onChange={(newValue: unknown) => handleChangeOperatorId(actionType, newValue as SingleValue<Option<number>>)}
       options={operatorsOptions}
       chakraStyles={chakraStyles}
     />
