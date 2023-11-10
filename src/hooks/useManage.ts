@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
