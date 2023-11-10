@@ -100,8 +100,7 @@ export type ErrorsField = {
   [key: string]: boolean
 }
 
-export type ActionInput = {
-  operatorId: string
+export type ActionAmountInput = {
   amount: string
 }
 
