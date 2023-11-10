@@ -3,7 +3,8 @@ import type { SingleValue } from 'chakra-react-select'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
-import { ActionInput, Option } from '../types'
+import { useManageState } from '../states/manage'
+import { Option } from '../types'
 import { capitalizeFirstLetter, formatAddress, formatNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
@@ -11,17 +12,14 @@ export const useManage = () => {
   const toast = useToast()
   const accountDetails = useExtension((state) => state.accountDetails)
   const stakingConstants = useExtension((state) => state.stakingConstants)
-  const [deregister, setDeregister] = useState<string>('')
-  const [addFundsAmount, setAddFundsAmount] = useState<ActionInput>({
-    operatorId: '',
-    amount: '',
-    formattedAmount: ''
-  })
-  const [withdrawAmount, setWithdrawAmount] = useState<ActionInput>({
-    operatorId: '',
-    amount: '',
-    formattedAmount: ''
-  })
+  const deregister = useManageState((state) => state.deregister)
+  const addFundsAmount = useManageState((state) => state.addFundsAmount)
+  const withdrawAmount = useManageState((state) => state.withdrawAmount)
+  const setDeregister = useManageState((state) => state.setDeregister)
+  const setAddFundsOperator = useManageState((state) => state.setAddFundsOperator)
+  const setWithdrawOperator = useManageState((state) => state.setWithdrawOperator)
+  const setAddFundsAmount = useManageState((state) => state.setAddFundsAmount)
+  const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
 
   const operatorsOptions = useMemo(
@@ -57,20 +55,14 @@ export const useManage = () => {
           setDeregister(operatorId)
           break
         case ActionType.AddFunds:
-          setAddFundsAmount({
-            ...addFundsAmount,
-            operatorId
-          })
+          setAddFundsOperator(operatorId)
           break
         case ActionType.Withdraw:
-          setWithdrawAmount({
-            ...withdrawAmount,
-            operatorId
-          })
+          setWithdrawOperator(operatorId)
           break
       }
     },
-    [addFundsAmount, withdrawAmount]
+    [setAddFundsOperator, setDeregister, setWithdrawOperator]
   )
 
   const handleChangeAmount = useCallback(
@@ -92,7 +84,7 @@ export const useManage = () => {
           break
       }
     },
-    [addFundsAmount, withdrawAmount]
+    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, withdrawAmount]
   )
 
   const handleMaxAmountToAddFunds = useCallback(() => {
@@ -100,9 +92,19 @@ export const useManage = () => {
     setAddFundsAmount({
       ...addFundsAmount,
       amount: accountDetails.data.free,
-      formattedAmount: formatNumber(accountDetails.data.free, DECIMALS)
+      formattedAmount: formatNumber(accountDetails.data.free)
     })
-  }, [accountDetails, addFundsAmount])
+  }, [accountDetails, addFundsAmount, setAddFundsAmount])
+
+  const handleMaxAmountToWithdraw = useCallback(() => {
+    const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
+    const amount = operator ? parseInt(operator.currentTotalStake) : 0
+    setWithdrawAmount({
+      ...withdrawAmount,
+      amount: amount.toString(),
+      formattedAmount: formatNumber(amount / 10 ** DECIMALS)
+    })
+  }, [setWithdrawAmount, stakingConstants.operators, withdrawAmount])
 
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {
@@ -130,9 +132,12 @@ export const useManage = () => {
   return {
     operatorsOptions,
     operatorId,
+    addFundsAmount,
+    withdrawAmount,
     handleChangeOperatorId,
     handleChangeAmount,
     handleMaxAmountToAddFunds,
+    handleMaxAmountToWithdraw,
     handleSubmit
   }
 }

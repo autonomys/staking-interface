@@ -34,8 +34,17 @@ const Page: React.FC = () => {
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const { handleConnect } = useWallet()
-  const { handleChangeAmount, handleMaxAmountToAddFunds, handleSubmit } = useManage()
+  const {
+    addFundsAmount,
+    withdrawAmount,
+    handleChangeAmount,
+    handleMaxAmountToAddFunds,
+    handleMaxAmountToWithdraw,
+    handleSubmit
+  } = useManage()
   const { handleOnchainData } = useOnchainData()
+
+  console.log('addFundsAmount', addFundsAmount)
 
   useEffect(() => {
     handleOnchainData()
@@ -97,6 +106,7 @@ const Page: React.FC = () => {
                       borderColor='#141414'
                       border='1px'
                       placeholder={`Amount, ${SYMBOL}`}
+                      value={addFundsAmount.formattedAmount}
                       onChange={(e) => handleChangeAmount(ActionType.AddFunds, e)}
                       _placeholder={{ color: '#7D7D7D' }}
                     />
@@ -127,7 +137,23 @@ const Page: React.FC = () => {
                   )}
                 </FormControl>
                 <FormControl isInvalid={isErrorsField['amount']}>
-                  <Input
+                  <InputGroup size='md' mt='4' w='479px'>
+                    <Input
+                      name='amount'
+                      borderColor='#141414'
+                      border='1px'
+                      placeholder={`Amount, ${SYMBOL}`}
+                      value={withdrawAmount.formattedAmount}
+                      onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
+                      _placeholder={{ color: '#7D7D7D' }}
+                    />
+                    <InputRightElement>
+                      <Button m={1} onClick={handleMaxAmountToWithdraw} size='sm'>
+                        Max
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  {/* <Input
                     name='amount'
                     borderColor='#141414'
                     border='1px'
@@ -135,7 +161,7 @@ const Page: React.FC = () => {
                     placeholder={`Amount, ${SYMBOL}`}
                     onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
                     _placeholder={{ color: '#7D7D7D' }}
-                  />
+                  /> */}
                   {isErrorsField['amount'] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (
