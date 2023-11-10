@@ -15,7 +15,7 @@ export const OperatorSelector: React.FC<OperatorSelectorProps> = ({ actionType }
     control: (base) => ({
       ...base,
       bg: '#FFFFFF',
-      color: '#7D7D7D',
+      color: '#141414',
       borderColor: '#141414',
       borderRadius: '5',
       mt: '4'
