@@ -73,7 +73,6 @@ export const useRegister = () => {
   }, [accountDetails, currentRegistration, saveCurrentRegistration])
 
   const handleSubmit = useCallback(async () => {
-    console.log('currentRegistration', currentRegistration)
     try {
       await handleRegisterOperator(currentRegistration)
 
