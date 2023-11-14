@@ -88,10 +88,10 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      console.log('Withdraw')
+      const hexAmount = '0x0' + BigInt(amount).toString(16)
       if (extension.data) {
         const result = await api.tx.domains
-          .withdrawStake(operatorId, amount)
+          .withdrawStake(operatorId, hexAmount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
