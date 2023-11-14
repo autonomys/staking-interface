@@ -86,7 +86,7 @@ export const useConnect = () => {
   )
 
   const handleRefreshBalance = useCallback(async () => {
-    if (!api || !extension.data) throw new Error('API not set')
+    if (!api || !extension.data) return
 
     const rawAccountDetails = await api.query.system.account(extension.data.defaultAccount.address)
     const accountDetails = rawAccountDetails.toJSON() as AccountDetails
@@ -99,8 +99,8 @@ export const useConnect = () => {
   const handleDisconnect = useCallback(() => setExtension(initialExtensionValues), [setExtension])
 
   useEffect(() => {
-    if (extension.data) handleRefreshBalance()
-  }, [extension.data, handleRefreshBalance])
+    if (api && extension.data) handleRefreshBalance()
+  }, [api, extension.data, handleRefreshBalance])
 
   return {
     handleConnect,

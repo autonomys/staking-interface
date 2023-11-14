@@ -1,4 +1,5 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber } from '../utils'
@@ -12,9 +13,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
 
   const operators = useMemo(() => {
     if (operatorOwner)
-      return stakingConstants.operators
-        .filter((_, key) => stakingConstants.operatorIdOwner[key] === operatorOwner)
-        .map((_, key) => stakingConstants.operators[key])
+      return stakingConstants.operators.filter((_, key) => stakingConstants.operatorIdOwner[key] === operatorOwner)
     return stakingConstants.operators
   }, [operatorOwner, stakingConstants.operatorIdOwner, stakingConstants.operators])
 
@@ -38,6 +37,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tr>
               <Th isNumeric>DomainID</Th>
               <Th>OperatorID</Th>
+              <Th>Operator Account</Th>
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
@@ -48,6 +48,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {[0, 1, 2, 3].map((_, key) => (
                 <Tr key={key}>
                   <Td isNumeric>{key}</Td>
+                  <Td></Td>
                   <Td></Td>
                   <Td isNumeric></Td>
                   <Td isNumeric></Td>
@@ -60,7 +61,12 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {operators.map((operator, key) => (
                 <Tr key={key}>
                   <Td isNumeric>{operator.currentDomainId}</Td>
-                  <Td>{formatAddress(stakingConstants.operatorIdOwner[key])}</Td>
+                  <Td isNumeric>{key}</Td>
+                  <Td>
+                    <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
+                      {formatAddress(stakingConstants.operatorIdOwner[key])}
+                    </Link>
+                  </Td>
                   <Td isNumeric>{operator.nominationTax}%</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.minimumNominatorStake)}</Td>
                   <Td isNumeric>{hexToFormattedNumber(operator.currentTotalStake)}</Td>
