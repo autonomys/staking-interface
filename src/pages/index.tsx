@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { EXTERNAL_ROUTES, ROUTES } from '../constants'
+import { EXTERNAL_ROUTES, ROUTES, headingStyles, textStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
 import { useExtension } from '../states/extension'
@@ -21,14 +21,10 @@ const Page: React.FC = () => {
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
       <Intro />
-      <Box>
-        <Heading size='lg' fontWeight='700' fontSize='30px' ml='2' mt='66px'>
-          1. Setup a node
-        </Heading>
+      <Box mt='66px'>
+        <Heading {...headingStyles.page}>Setup a node</Heading>
         <Link href={EXTERNAL_ROUTES.OPERATORS_DOCS} target='_blank'>
-          <Text textDecoration='underline' color='#4524C1' mt='4'>
-            Please follow the docs to setup a node
-          </Text>
+          <Text {...textStyles.link}>Please follow the docs to setup a node</Text>
         </Link>
         <Box mt='4'>
           <Image src='/images/SetupANode.png' width='561' height='326' alt='Setup a Node Readme' />

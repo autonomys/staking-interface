@@ -1,6 +1,7 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
+import { headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber } from '../utils'
 
@@ -21,19 +22,15 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
     <Box>
       <Box mt='6'>
         <HStack mb='6'>
-          <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Information across operators
-          </Heading>
+          <Heading {...headingStyles.paragraph}>Information across operators</Heading>
           {operatorOwner && (
-            <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
-              on Account {formatAddress(operatorOwner)}
-            </Heading>
+            <Heading {...headingStyles.paragraphExtra}>on Account {formatAddress(operatorOwner)}</Heading>
           )}
         </HStack>
       </Box>
       <TableContainer>
-        <Table borderColor='#B9B9B9' border='1' variant='striped' size='sm'>
-          <Thead bg='rgba(0, 0, 0, 0.06)'>
+        <Table {...tableStyles}>
+          <Thead {...tHeadStyles}>
             <Tr>
               <Th isNumeric>DomainID</Th>
               <Th>OperatorID</Th>
@@ -47,12 +44,14 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tbody>
               {[0, 1, 2, 3].map((_, key) => (
                 <Tr key={key}>
-                  <Td isNumeric>{key}</Td>
-                  <Td></Td>
-                  <Td></Td>
-                  <Td isNumeric></Td>
-                  <Td isNumeric></Td>
-                  <Td isNumeric></Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {key}
+                  </Td>
+                  <Td {...textStyles.text}></Td>
+                  <Td {...textStyles.text}></Td>
+                  <Td {...textStyles.text} isNumeric></Td>
+                  <Td {...textStyles.text} isNumeric></Td>
+                  <Td {...textStyles.text} isNumeric></Td>
                 </Tr>
               ))}
             </Tbody>
@@ -60,16 +59,26 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tbody>
               {operators.map((operator, key) => (
                 <Tr key={key}>
-                  <Td isNumeric>{operator.currentDomainId}</Td>
-                  <Td isNumeric>{key}</Td>
-                  <Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {operator.currentDomainId}
+                  </Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {key}
+                  </Td>
+                  <Td {...textStyles.link}>
                     <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
                       {formatAddress(stakingConstants.operatorIdOwner[key])}
                     </Link>
                   </Td>
-                  <Td isNumeric>{operator.nominationTax}%</Td>
-                  <Td isNumeric>{hexToFormattedNumber(operator.minimumNominatorStake)}</Td>
-                  <Td isNumeric>{hexToFormattedNumber(operator.currentTotalStake)}</Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {operator.nominationTax}%
+                  </Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {hexToFormattedNumber(operator.minimumNominatorStake)}
+                  </Td>
+                  <Td {...textStyles.text} isNumeric>
+                    {hexToFormattedNumber(operator.currentTotalStake)}
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

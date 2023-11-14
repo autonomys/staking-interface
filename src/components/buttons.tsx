@@ -1,6 +1,7 @@
 import { Button, ButtonProps } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
+import { buttonStyles, connectWalletButtonStyles } from '../constants'
 
 const Connect = dynamic(() => import('./wallet').then((m) => m.ConnectWallet), {
   ssr: false
@@ -8,20 +9,7 @@ const Connect = dynamic(() => import('./wallet').then((m) => m.ConnectWallet), {
 
 export const FormButton: React.FC<ButtonProps> = ({ children, onClick }) => {
   return (
-    <Button
-      bgGradient='linear(to-r, #846F87, #4D397A)'
-      color='#FFFFFF'
-      borderRadius='0'
-      mt='8'
-      pl='16px'
-      pr='16px'
-      pt='8px'
-      pb='7px'
-      w='228px'
-      onClick={onClick}
-      _hover={{
-        bgGradient: 'linear(to-r, #4D397A, #846F87)'
-      }}>
+    <Button {...buttonStyles} onClick={onClick}>
       {children}
     </Button>
   )
@@ -36,19 +24,7 @@ export const ConnectWallet: React.FC<ButtonProps> = ({ onClick }) => {
 
   if (!clientSide)
     return (
-      <Button
-        bgGradient='linear(to-r, #EA71F9, #4D397A)'
-        color='#FFFFFF'
-        borderRadius='0'
-        pl='16px'
-        pr='16px'
-        pt='8px'
-        pb='7px'
-        minW='140px'
-        onClick={onClick}
-        _hover={{
-          bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
-        }}>
+      <Button {...connectWalletButtonStyles} onClick={onClick}>
         Connect Wallet
       </Button>
     )
