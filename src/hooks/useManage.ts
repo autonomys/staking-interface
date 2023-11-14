@@ -41,10 +41,10 @@ export const useManage = () => {
         case ActionType.AddFunds:
           return addFundsAmount.operatorId
         case ActionType.Withdraw:
-          return addFundsAmount.operatorId
+          return withdrawAmount.operatorId
       }
     },
-    [addFundsAmount.operatorId, deregister]
+    [addFundsAmount.operatorId, deregister, withdrawAmount.operatorId]
   )
 
   const handleChangeOperatorId = useCallback(
