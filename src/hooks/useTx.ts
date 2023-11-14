@@ -100,10 +100,11 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      const hexAmount = '0x0' + BigInt(amount).toString(16)
       if (extension.data) {
         const result = await api.tx.domains
-          .withdrawStake(operatorId, hexAmount)
+          .withdrawStake(operatorId, {
+            Some: amount
+          })
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
