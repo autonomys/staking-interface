@@ -69,6 +69,7 @@ export const ConnectWallet = () => {
           pr='16px'
           pt='8px'
           pb='7px'
+          minW='140px'
           onClick={onConnectOpen}
           _hover={{
             bgGradient: 'linear(to-r, #4D397A, #EA71F9)'

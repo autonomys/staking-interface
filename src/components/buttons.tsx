@@ -44,6 +44,7 @@ export const ConnectWallet: React.FC<ButtonProps> = ({ onClick }) => {
         pr='16px'
         pt='8px'
         pb='7px'
+        minW='140px'
         onClick={onClick}
         _hover={{
           bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
