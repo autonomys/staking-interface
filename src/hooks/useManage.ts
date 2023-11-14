@@ -29,7 +29,7 @@ export const useManage = () => {
             label: `${stakingConstants.operators[key].operatorId} - ${formatAddress(owner)} - ${formatAddress(
               stakingConstants.operators[key].operatorDetail.signingKey
             )}`,
-            value: key
+            value: stakingConstants.operators[key].operatorId
           }))
         : [],
     [stakingConstants.operatorIdOwner, stakingConstants.operators]
