@@ -1,6 +1,6 @@
 {
   "name": "staking-interface",
-  "version": "0.0.4",
+  "version": "0.1,0",
   "description": "Staking Interface for Subspace Network using Next.js, React, TypeScript, and Chakra UI.",
   "private": true,
   "workspaces": [
