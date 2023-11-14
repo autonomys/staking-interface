@@ -98,7 +98,7 @@ export const useManage = () => {
 
   const handleMaxAmountToWithdraw = useCallback(() => {
     const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
-    const amount = operator ? parseInt(operator.currentTotalStake) : 0
+    const amount = operator ? parseInt(operator.operatorDetail.currentTotalStake) : 0
     setWithdrawAmount({
       ...withdrawAmount,
       amount: amount.toString(),
