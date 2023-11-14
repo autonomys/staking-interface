@@ -51,6 +51,12 @@ export const useTx = () => {
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
         console.log('result', result)
       }
       return
@@ -73,6 +79,12 @@ export const useTx = () => {
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
         console.log('result', result)
       }
       return
@@ -94,6 +106,12 @@ export const useTx = () => {
           .withdrawStake(operatorId, hexAmount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
+          })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
           })
         console.log('result', result)
       }
