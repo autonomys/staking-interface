@@ -26,11 +26,13 @@ export const useManage = () => {
     () =>
       stakingConstants.operatorIdOwner
         ? stakingConstants.operatorIdOwner.map((owner, key) => ({
-            label: `${key} - ${formatAddress(owner)}`,
+            label: `${stakingConstants.operators[key].operatorId} - ${formatAddress(owner)} - ${formatAddress(
+              stakingConstants.operators[key].operatorDetail.signingKey
+            )}`,
             value: key
           }))
         : [],
-    [stakingConstants.operatorIdOwner]
+    [stakingConstants.operatorIdOwner, stakingConstants.operators]
   )
 
   const operatorId = useCallback(
