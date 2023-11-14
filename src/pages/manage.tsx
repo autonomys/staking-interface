@@ -44,8 +44,6 @@ const Page: React.FC = () => {
   } = useManage()
   const { handleOnchainData } = useOnchainData()
 
-  console.log('addFundsAmount', addFundsAmount)
-
   useEffect(() => {
     handleOnchainData()
   }, [handleOnchainData, subspaceAccount])
@@ -153,15 +151,6 @@ const Page: React.FC = () => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {/* <Input
-                    name='amount'
-                    borderColor='#141414'
-                    border='1px'
-                    w='479px'
-                    placeholder={`Amount, ${SYMBOL}`}
-                    onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
-                    _placeholder={{ color: '#7D7D7D' }}
-                  /> */}
                   {isErrorsField['amount'] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (
