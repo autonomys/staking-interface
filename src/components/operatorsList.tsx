@@ -34,6 +34,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tr>
               <Th isNumeric>DomainID</Th>
               <Th>OperatorID</Th>
+              <Th>Signing key</Th>
               <Th>Operator Account</Th>
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
@@ -47,6 +48,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   <Td {...textStyles.text} isNumeric>
                     {key}
                   </Td>
+                  <Td {...textStyles.text}></Td>
                   <Td {...textStyles.text}></Td>
                   <Td {...textStyles.text}></Td>
                   <Td {...textStyles.text} isNumeric></Td>
@@ -65,6 +67,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   <Td {...textStyles.text} isNumeric>
                     {operator.operatorId}
                   </Td>
+                  <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
                   <Td {...textStyles.link}>
                     <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
                       {formatAddress(stakingConstants.operatorIdOwner[key])}
