@@ -18,7 +18,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { SYMBOL } from '../constants'
+import { EXTERNAL_ROUTES, SYMBOL, headingStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useRegister } from '../hooks/useRegister'
 import { useWallet } from '../hooks/useWallet'
@@ -38,10 +38,8 @@ const Page: React.FC = () => {
   return (
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
       <Intro />
-      <Box>
-        <Heading size='lg' fontWeight='700' fontSize='30px' ml='2' mt='66px'>
-          2. Register
-        </Heading>
+      <Box mt='66px'>
+        <Heading {...headingStyles.page}>Register as operator</Heading>
         <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['domainId']}>
@@ -106,7 +104,7 @@ const Page: React.FC = () => {
               )}
             </FormControl>
             <Box mt='8'>
-              <Link href='/learnMore'>
+              <Link href={EXTERNAL_ROUTES.OPERATORS_DOCS}>
                 <Text textDecoration='underline' color='#4524C1'>
                   Need help? Check the docs
                 </Text>

@@ -23,7 +23,7 @@ import { Wallet } from '../components/icons'
 import { OperatorSelector } from '../components/operatorSelector'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
-import { ActionType, SYMBOL } from '../constants'
+import { ActionType, SYMBOL, headingStyles, textStyles } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
@@ -44,8 +44,6 @@ const Page: React.FC = () => {
   } = useManage()
   const { handleOnchainData } = useOnchainData()
 
-  console.log('addFundsAmount', addFundsAmount)
-
   useEffect(() => {
     handleOnchainData()
   }, [handleOnchainData, subspaceAccount])
@@ -54,7 +52,7 @@ const Page: React.FC = () => {
     <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
       <HStack>
         <Wallet />
-        <Heading ml='2'>Manage the stake</Heading>
+        <Heading {...headingStyles.page}>Manage the stake</Heading>
       </HStack>
       {subspaceAccount ? (
         <>
@@ -63,7 +61,7 @@ const Page: React.FC = () => {
             <Spacer />
             <Box>
               <HStack mb='2' w='100%' alignItems='flex-end' textAlign='right' alignContent='flex-end'>
-                <Text color='#6C6666' pt='2' pb='2'>
+                <Text {...textStyles.text} pt='2' pb='2'>
                   Operator deregistration
                 </Text>
                 <OperatorSelector actionType={ActionType.Deregister} />
@@ -89,9 +87,7 @@ const Page: React.FC = () => {
             <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12' mb='24'>
               <GridItem w='100%'>
                 <FormControl isInvalid={isErrorsField['operatorId']}>
-                  <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
-                    Add more funds
-                  </FormLabel>
+                  <FormLabel {...headingStyles.paragraph}>Add more funds</FormLabel>
                   <OperatorSelector actionType={ActionType.AddFunds} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
@@ -126,9 +122,7 @@ const Page: React.FC = () => {
               </GridItem>
               <GridItem w='100%'>
                 <FormControl isInvalid={isErrorsField['operatorId']}>
-                  <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
-                    Initiate a withdrawal
-                  </FormLabel>
+                  <FormLabel {...headingStyles.paragraph}>Initiate a withdrawal</FormLabel>
                   <OperatorSelector actionType={ActionType.Withdraw} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
@@ -153,15 +147,6 @@ const Page: React.FC = () => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {/* <Input
-                    name='amount'
-                    borderColor='#141414'
-                    border='1px'
-                    w='479px'
-                    placeholder={`Amount, ${SYMBOL}`}
-                    onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
-                    _placeholder={{ color: '#7D7D7D' }}
-                  /> */}
                   {isErrorsField['amount'] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (

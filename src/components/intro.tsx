@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
-import { EXTERNAL_ROUTES, SYMBOL } from '../constants'
+import { EXTERNAL_ROUTES, SYMBOL, headingStyles } from '../constants'
 import { Wallet } from './icons'
 
 export const Intro: React.FC = () => {
@@ -9,7 +9,7 @@ export const Intro: React.FC = () => {
     <Box>
       <HStack mb='6'>
         <Wallet />
-        <Heading ml='2'>Staking as a pool operator</Heading>
+        <Heading {...headingStyles.page}>Staking as a pool operator</Heading>
       </HStack>
       <Text>
         {SYMBOL} holders (Gemini 3g testnet network only) can stake their {SYMBOL} to add more security to the protocol

@@ -23,7 +23,7 @@ import {
 import { encodeAddress } from '@polkadot/keyring'
 import Image from 'next/image'
 import { useRef } from 'react'
-import { SUBSPACE_ACCOUNT_FORMAT } from '../constants'
+import { SUBSPACE_ACCOUNT_FORMAT, connectWalletButtonStyles } from '../constants'
 import { useConnect } from '../hooks/useConnect'
 import { useExtension } from '../states/extension'
 import { formatAddress } from '../utils'
@@ -61,38 +61,12 @@ export const ConnectWallet = () => {
   return (
     <>
       {!extension.data || !subspaceAccount ? (
-        <Button
-          bgGradient='linear(to-r, #EA71F9, #4D397A)'
-          color='#FFFFFF'
-          borderRadius='0'
-          pl='16px'
-          pr='16px'
-          pt='8px'
-          pb='7px'
-          onClick={onConnectOpen}
-          _hover={{
-            bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
-          }}>
+        <Button {...connectWalletButtonStyles} onClick={onConnectOpen}>
           Connect Wallet
         </Button>
       ) : (
         <Menu>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            bgGradient='linear(to-r, #EA71F9, #4D397A)'
-            color='#FFFFFF'
-            borderRadius='0'
-            pl='16px'
-            pr='16px'
-            pt='8px'
-            pb='7px'
-            _active={{
-              bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
-            }}
-            _hover={{
-              bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
-            }}>
+          <MenuButton {...connectWalletButtonStyles} as={Button} rightIcon={<ChevronDownIcon pl='2' />}>
             {formatAddress(subspaceAccount)}
           </MenuButton>
           <MenuList>

@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, HStack, Heading, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
-import { SYMBOL, textStyles } from '../constants'
+import { SYMBOL, headingStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, formatNumber, hexToNumber } from '../utils'
 
@@ -38,13 +38,9 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
     <Box>
       <Box mt='6'>
         <HStack mb='6'>
-          <Heading size='lg' fontWeight='500' fontSize='40px' ml='2' color='#5B5252'>
-            Aggregated data
-          </Heading>
+          <Heading {...headingStyles.paragraph}>Aggregated data</Heading>
           {operatorOwner && (
-            <Heading size='lg' fontWeight='500' fontSize='24px' ml='2' mt='16px' color='#5B5252'>
-              on Account {formatAddress(operatorOwner)}
-            </Heading>
+            <Heading {...headingStyles.paragraphExtra}>on Account {formatAddress(operatorOwner)}</Heading>
           )}
         </HStack>
       </Box>
