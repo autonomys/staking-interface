@@ -52,7 +52,13 @@ export const useRegister = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
-      if (name === 'amountToStake')
+      if (name === 'minimumNominatorStake')
+        saveCurrentRegistration({
+          ...currentRegistration,
+          minimumNominatorStake: parseNumber(value),
+          formattedMinimumNominatorStake: value
+        })
+      else if (name === 'amountToStake')
         saveCurrentRegistration({
           ...currentRegistration,
           amountToStake: parseNumber(value),
