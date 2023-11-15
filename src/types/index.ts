@@ -67,7 +67,7 @@ export type DomainStakingSummary = {
   }
 }
 
-export type Operators = {
+export type OperatorDetail = {
   signingKey: string
   currentDomainId: number
   nextDomainId: number
@@ -77,6 +77,11 @@ export type Operators = {
   currentEpochRewards: number
   totalShares: number
   status: string
+}
+
+export type Operators = {
+  operatorId: string
+  operatorDetail: OperatorDetail
 }
 
 export type PendingStakingOperationCount = {

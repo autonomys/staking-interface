@@ -34,6 +34,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tr>
               <Th isNumeric>DomainID</Th>
               <Th>OperatorID</Th>
+              <Th>Signing key</Th>
               <Th>Operator Account</Th>
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
@@ -49,6 +50,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   </Td>
                   <Td {...textStyles.text}></Td>
                   <Td {...textStyles.text}></Td>
+                  <Td {...textStyles.text}></Td>
                   <Td {...textStyles.text} isNumeric></Td>
                   <Td {...textStyles.text} isNumeric></Td>
                   <Td {...textStyles.text} isNumeric></Td>
@@ -60,24 +62,25 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {operators.map((operator, key) => (
                 <Tr key={key}>
                   <Td {...textStyles.text} isNumeric>
-                    {operator.currentDomainId}
+                    {operator.operatorDetail.currentDomainId}
                   </Td>
                   <Td {...textStyles.text} isNumeric>
-                    {key}
+                    {operator.operatorId}
                   </Td>
+                  <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
                   <Td {...textStyles.link}>
                     <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
                       {formatAddress(stakingConstants.operatorIdOwner[key])}
                     </Link>
                   </Td>
                   <Td {...textStyles.text} isNumeric>
-                    {operator.nominationTax}%
+                    {operator.operatorDetail.nominationTax}%
                   </Td>
                   <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.minimumNominatorStake)}
+                    {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
                   </Td>
                   <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.currentTotalStake)}
+                    {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                   </Td>
                 </Tr>
               ))}

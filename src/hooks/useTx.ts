@@ -51,6 +51,12 @@ export const useTx = () => {
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
         console.log('result', result)
       }
       return
@@ -73,6 +79,12 @@ export const useTx = () => {
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
           })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
+          })
         console.log('result', result)
       }
       return
@@ -88,12 +100,19 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      console.log('Withdraw')
       if (extension.data) {
         const result = await api.tx.domains
-          .withdrawStake(operatorId, amount)
+          .withdrawStake(operatorId, {
+            Some: amount
+          })
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer }, ({ status }) => {
             console.log('status', status)
+          })
+          .then((result) => {
+            console.log('result', result)
+          })
+          .catch((error) => {
+            console.log('error', error)
           })
         console.log('result', result)
       }
