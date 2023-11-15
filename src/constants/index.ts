@@ -38,6 +38,12 @@ export const initialRegistrationValues: Registration = {
   signingKey: ''
 }
 
+export const initialActionInput = {
+  operatorId: '',
+  amount: '',
+  formattedAmount: ''
+}
+
 export const initialExtensionValues: ExtensionState = {
   loading: false,
   data: undefined,

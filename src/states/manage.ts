@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { ActionType, initialActionInput } from '../constants'
 import { ActionInput } from '../types'
 
 interface ManageState {
@@ -11,12 +12,7 @@ interface ManageState {
   setWithdrawOperator: (operatorId: string) => void
   setAddFundsAmount: (amount: Omit<ActionInput, 'operatorId'>) => void
   setWithdrawAmount: (amount: Omit<ActionInput, 'operatorId'>) => void
-}
-
-const initialActionInput = {
-  operatorId: '',
-  amount: '',
-  formattedAmount: ''
+  clearInput: (actionType: ActionType) => void
 }
 
 export const useManageState = create<ManageState>()(
@@ -31,7 +27,18 @@ export const useManageState = create<ManageState>()(
       setWithdrawOperator: (operatorId) =>
         set((states) => ({ withdrawAmount: { ...states.withdrawAmount, operatorId } })),
       setAddFundsAmount: (amount) => set((states) => ({ addFundsAmount: { ...states.addFundsAmount, ...amount } })),
-      setWithdrawAmount: (amount) => set((states) => ({ withdrawAmount: { ...states.withdrawAmount, ...amount } }))
+      setWithdrawAmount: (amount) => set((states) => ({ withdrawAmount: { ...states.withdrawAmount, ...amount } })),
+      clearInput: (actionType: ActionType) =>
+        set(() => {
+          switch (actionType) {
+            case ActionType.Deregister:
+              return { deregister: '' }
+            case ActionType.AddFunds:
+              return { addFundsAmount: initialActionInput }
+            case ActionType.Withdraw:
+              return { withdrawAmount: initialActionInput }
+          }
+        })
     }),
     {
       name: 'manage',
