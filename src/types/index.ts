@@ -92,6 +92,7 @@ export type Registration = {
   domainId: string
   minimumNominatorStake: string
   amountToStake: string
+  formattedAmountToStake: string
   nominatorTax: number
   signingKey: string
 }

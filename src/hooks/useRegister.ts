@@ -6,7 +6,7 @@ import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { Option } from '../types'
-import { capitalizeFirstLetter } from '../utils'
+import { capitalizeFirstLetter, hexToFormattedNumber, hexToNumber, parseNumber } from '../utils'
 import { isValidSr25519PublicKey } from '../utils/signingKey'
 import { useTx } from './useTx'
 
@@ -52,7 +52,13 @@ export const useRegister = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
-      saveCurrentRegistration({ ...currentRegistration, [name]: value })
+      if (name === 'amountToStake')
+        saveCurrentRegistration({
+          ...currentRegistration,
+          amountToStake: parseNumber(value),
+          formattedAmountToStake: value
+        })
+      else saveCurrentRegistration({ ...currentRegistration, [name]: value })
       setErrorsField(name, detectError(name, value))
     },
     [currentRegistration, detectError, saveCurrentRegistration, setErrorsField]
@@ -69,7 +75,11 @@ export const useRegister = () => {
 
   const handleMaxAmountToStake = useCallback(() => {
     if (!accountDetails) return
-    saveCurrentRegistration({ ...currentRegistration, amountToStake: accountDetails.data.free })
+    saveCurrentRegistration({
+      ...currentRegistration,
+      amountToStake: hexToNumber(accountDetails.data.free).toString(),
+      formattedAmountToStake: hexToFormattedNumber(accountDetails.data.free)
+    })
   }, [accountDetails, currentRegistration, saveCurrentRegistration])
 
   const handleSubmit = useCallback(async () => {

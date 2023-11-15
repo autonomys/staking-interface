@@ -29,7 +29,7 @@ const Page: React.FC = () => {
   const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { handleOnchainData } = useOnchainData()
   const { currentRegistration, isErrorsField } = useRegistration((state) => state)
-  const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
+  const { domainId, formattedAmountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
 
   useEffect(() => {
     handleOnchainData()
@@ -61,7 +61,7 @@ const Page: React.FC = () => {
             <FormControl isInvalid={isErrorsField['amountToStake']}>
               <FormLabel>Amount to stake, {SYMBOL}</FormLabel>
               <InputGroup size='md' mt='4'>
-                <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
+                <Input name='amountToStake' value={formattedAmountToStake} onChange={handleChange} />
                 <InputRightElement>
                   <Button m={1} onClick={handleMaxAmountToStake}>
                     Max

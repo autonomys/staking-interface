@@ -34,6 +34,7 @@ export const initialRegistrationValues: Registration = {
   domainId: '',
   minimumNominatorStake: '',
   amountToStake: '',
+  formattedAmountToStake: '',
   nominatorTax: 0,
   signingKey: ''
 }
