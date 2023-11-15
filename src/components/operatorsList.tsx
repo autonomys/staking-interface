@@ -69,8 +69,8 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   </Td>
                   <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
                   <Td {...textStyles.link}>
-                    <Link href={`/operatorStats/${stakingConstants.operatorIdOwner[key]}`}>
-                      {formatAddress(stakingConstants.operatorIdOwner[key])}
+                    <Link href={`/operatorStats/${operatorOwner ?? stakingConstants.operatorIdOwner[key]}`}>
+                      {formatAddress(operatorOwner ?? stakingConstants.operatorIdOwner[key])}
                     </Link>
                   </Td>
                   <Td {...textStyles.text} isNumeric>
