@@ -26,7 +26,7 @@ export const Intro: React.FC = () => {
         </u>{' '}
         on how to participate and earn even more rewards!
       </Text>
-      <Link href='/learnMore'>
+      <Link href={EXTERNAL_ROUTES.RISK}>
         <Text textDecoration='underline'>Learn more about risks involved.</Text>
       </Link>
     </Box>
