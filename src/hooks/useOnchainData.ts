@@ -15,41 +15,15 @@ export const useOnchainData = () => {
       const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_PROVIDER_URL)
       const _api = await ApiPromise.create({ provider: wsProvider })
       if (_api) {
-        console.log('Connection Success')
         setApi(_api)
         const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } =
           _api.consts.domains
-        console.log('stakimg', _api.consts.domains)
 
         const domainRegistry = await _api.query.domains.domainRegistry.entries()
-        console.log(
-          'domainRegistry',
-          domainRegistry.map((domain) => domain[1].toJSON() as DomainRegistry)
-        )
-
         const domainStakingSummary = await _api.query.domains.domainStakingSummary.entries()
-        console.log(
-          'domainStakingSummary',
-          domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary)
-        )
-
         const operatorIdOwner = await _api.query.domains.operatorIdOwner.entries()
-        console.log(
-          'operatorIdOwner',
-          operatorIdOwner.map((operator) => operator[1].toJSON() as string)
-        )
-
         const operators = await _api.query.domains.operators.entries()
-        console.log(
-          'operators',
-          operators.map((operator) => operator[1].toJSON() as Operators)
-        )
-
         const pendingStakingOperationCount = await _api.query.domains.pendingStakingOperationCount.entries()
-        console.log(
-          'pendingStakingOperationCount',
-          pendingStakingOperationCount.map((operator) => operator[1].toJSON() as PendingStakingOperationCount)
-        )
 
         setStakingConstants({
           maxNominators: Number(maxNominators.toString()),
@@ -66,7 +40,7 @@ export const useOnchainData = () => {
         })
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }, [setApi, setStakingConstants])
 

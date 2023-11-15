@@ -1,46 +1,110 @@
 import { useToast } from '@chakra-ui/react'
-import React, { useCallback, useState } from 'react'
-import { ActionType, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
+import type { SingleValue } from 'chakra-react-select'
+import React, { useCallback, useMemo } from 'react'
+import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
-import { ActionInput } from '../types'
-import { capitalizeFirstLetter } from '../utils'
+import { useManageState } from '../states/manage'
+import { Option } from '../types'
+import { capitalizeFirstLetter, formatAddress, formatNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
 export const useManage = () => {
   const toast = useToast()
   const accountDetails = useExtension((state) => state.accountDetails)
-  const [deregister, setDeregister] = useState<string>('')
-  const [addFunds, setAddFunds] = useState<ActionInput>({
-    operatorId: '',
-    amount: ''
-  })
-  const [withdraw, setWithdraw] = useState<ActionInput>({
-    operatorId: '',
-    amount: ''
-  })
+  const stakingConstants = useExtension((state) => state.stakingConstants)
+  const deregister = useManageState((state) => state.deregister)
+  const addFundsAmount = useManageState((state) => state.addFundsAmount)
+  const withdrawAmount = useManageState((state) => state.withdrawAmount)
+  const setDeregister = useManageState((state) => state.setDeregister)
+  const setAddFundsOperator = useManageState((state) => state.setAddFundsOperator)
+  const setWithdrawOperator = useManageState((state) => state.setWithdrawOperator)
+  const setAddFundsAmount = useManageState((state) => state.setAddFundsAmount)
+  const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
 
-  const handleChange = useCallback(
-    (actionType: ActionType, e: React.ChangeEvent<HTMLInputElement>) => {
+  const operatorsOptions = useMemo(
+    () =>
+      stakingConstants.operatorIdOwner
+        ? stakingConstants.operatorIdOwner.map((owner, key) => ({
+            label: `${key} - ${formatAddress(owner)}`,
+            value: key
+          }))
+        : [],
+    [stakingConstants.operatorIdOwner]
+  )
+
+  const operatorId = useCallback(
+    (actionType: ActionType) => {
       switch (actionType) {
         case ActionType.Deregister:
-          setDeregister(e.target.value)
+          return deregister
+        case ActionType.AddFunds:
+          return addFundsAmount.operatorId
+        case ActionType.Withdraw:
+          return withdrawAmount.operatorId
+      }
+    },
+    [addFundsAmount.operatorId, deregister, withdrawAmount.operatorId]
+  )
+
+  const handleChangeOperatorId = useCallback(
+    (actionType: ActionType, operatorSelected: SingleValue<Option<number>>) => {
+      const operatorId = operatorSelected != null ? operatorSelected.value.toString() : ''
+      switch (actionType) {
+        case ActionType.Deregister:
+          setDeregister(operatorId)
           break
         case ActionType.AddFunds:
-          setAddFunds({ ...addFunds, [e.target.name]: e.target.value })
+          setAddFundsOperator(operatorId)
           break
         case ActionType.Withdraw:
-          setWithdraw({ ...withdraw, [e.target.name]: e.target.value })
+          setWithdrawOperator(operatorId)
           break
       }
     },
-    [addFunds, withdraw]
+    [setAddFundsOperator, setDeregister, setWithdrawOperator]
+  )
+
+  const handleChangeAmount = useCallback(
+    (actionType: ActionType, e: React.ChangeEvent<HTMLInputElement>) => {
+      switch (actionType) {
+        case ActionType.AddFunds:
+          setAddFundsAmount({
+            ...addFundsAmount,
+            amount: parseNumber(e.target.value),
+            formattedAmount: e.target.value
+          })
+          break
+        case ActionType.Withdraw:
+          setWithdrawAmount({
+            ...withdrawAmount,
+            amount: parseNumber(e.target.value),
+            formattedAmount: e.target.value
+          })
+          break
+      }
+    },
+    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, withdrawAmount]
   )
 
   const handleMaxAmountToAddFunds = useCallback(() => {
     if (!accountDetails) return
-    setAddFunds({ ...addFunds, amount: accountDetails.data.free })
-  }, [accountDetails, addFunds])
+    setAddFundsAmount({
+      ...addFundsAmount,
+      amount: accountDetails.data.free,
+      formattedAmount: formatNumber(accountDetails.data.free)
+    })
+  }, [accountDetails, addFundsAmount, setAddFundsAmount])
+
+  const handleMaxAmountToWithdraw = useCallback(() => {
+    const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
+    const amount = operator ? parseInt(operator.currentTotalStake) : 0
+    setWithdrawAmount({
+      ...withdrawAmount,
+      amount: amount.toString(),
+      formattedAmount: formatNumber(amount / 10 ** DECIMALS)
+    })
+  }, [setWithdrawAmount, stakingConstants.operators, withdrawAmount])
 
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {
@@ -49,9 +113,9 @@ export const useManage = () => {
           case ActionType.Deregister:
             return await handleDeregister(deregister)
           case ActionType.AddFunds:
-            return await handleAddFunds(addFunds.operatorId, addFunds.amount)
+            return await handleAddFunds(addFundsAmount.operatorId, addFundsAmount.amount)
           case ActionType.Withdraw:
-            return await handleWithdraw(withdraw.operatorId, withdraw.amount)
+            return await handleWithdraw(withdrawAmount.operatorId, withdrawAmount.amount)
         }
       } catch (error) {
         toast({
@@ -62,12 +126,18 @@ export const useManage = () => {
         })
       }
     },
-    [addFunds, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdraw]
+    [addFundsAmount, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdrawAmount]
   )
 
   return {
-    handleChange,
+    operatorsOptions,
+    operatorId,
+    addFundsAmount,
+    withdrawAmount,
+    handleChangeOperatorId,
+    handleChangeAmount,
     handleMaxAmountToAddFunds,
+    handleMaxAmountToWithdraw,
     handleSubmit
   }
 }

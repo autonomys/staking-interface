@@ -103,6 +103,7 @@ export type ErrorsField = {
 export type ActionInput = {
   operatorId: string
   amount: string
+  formattedAmount: string
 }
 
 export type Error = {

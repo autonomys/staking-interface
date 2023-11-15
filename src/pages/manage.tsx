@@ -20,6 +20,7 @@ import {
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Wallet } from '../components/icons'
+import { OperatorSelector } from '../components/operatorSelector'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
 import { ActionType, SYMBOL } from '../constants'
@@ -33,8 +34,17 @@ const Page: React.FC = () => {
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const { handleConnect } = useWallet()
-  const { handleChange, handleMaxAmountToAddFunds, handleSubmit } = useManage()
+  const {
+    addFundsAmount,
+    withdrawAmount,
+    handleChangeAmount,
+    handleMaxAmountToAddFunds,
+    handleMaxAmountToWithdraw,
+    handleSubmit
+  } = useManage()
   const { handleOnchainData } = useOnchainData()
+
+  console.log('addFundsAmount', addFundsAmount)
 
   useEffect(() => {
     handleOnchainData()
@@ -56,23 +66,7 @@ const Page: React.FC = () => {
                 <Text color='#6C6666' pt='2' pb='2'>
                   Operator deregistration
                 </Text>
-                <Input
-                  placeholder='Operator ID'
-                  bg='#FFFFFF'
-                  borderColor='#141414'
-                  color='#7D7D7D'
-                  mt='4'
-                  w='48'
-                  borderRadius='5'
-                  pl='16px'
-                  pr='16px'
-                  pt='8px'
-                  pb='7px'
-                  onChange={(e) => handleChange(ActionType.Deregister, e)}
-                  _placeholder={{
-                    color: '#7D7D7D'
-                  }}
-                />
+                <OperatorSelector actionType={ActionType.Deregister} />
                 <Button
                   bg='#999393'
                   borderColor='#EAEBEF'
@@ -98,16 +92,7 @@ const Page: React.FC = () => {
                   <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
                     Add more funds
                   </FormLabel>
-                  <Input
-                    name='operatorId'
-                    mt='4'
-                    borderColor='#141414'
-                    border='1px'
-                    w='479px'
-                    placeholder='Operator ID'
-                    onChange={(e) => handleChange(ActionType.AddFunds, e)}
-                    _placeholder={{ color: '#7D7D7D' }}
-                  />
+                  <OperatorSelector actionType={ActionType.AddFunds} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
                   ) : (
@@ -121,7 +106,8 @@ const Page: React.FC = () => {
                       borderColor='#141414'
                       border='1px'
                       placeholder={`Amount, ${SYMBOL}`}
-                      onChange={(e) => handleChange(ActionType.AddFunds, e)}
+                      value={addFundsAmount.formattedAmount}
+                      onChange={(e) => handleChangeAmount(ActionType.AddFunds, e)}
                       _placeholder={{ color: '#7D7D7D' }}
                     />
                     <InputRightElement>
@@ -143,16 +129,7 @@ const Page: React.FC = () => {
                   <FormLabel fontWeight='500' fontSize='40px' color='#5B5252'>
                     Initiate a withdrawal
                   </FormLabel>
-                  <Input
-                    name='operatorId'
-                    mt='4'
-                    borderColor='#141414'
-                    border='1px'
-                    w='479px'
-                    placeholder='Operator ID'
-                    onChange={(e) => handleChange(ActionType.Withdraw, e)}
-                    _placeholder={{ color: '#7D7D7D' }}
-                  />
+                  <OperatorSelector actionType={ActionType.Withdraw} />
                   {isErrorsField['operatorId'] ? (
                     <FormErrorMessage h='10'>The operator id you enter is not valid</FormErrorMessage>
                   ) : (
@@ -160,15 +137,31 @@ const Page: React.FC = () => {
                   )}
                 </FormControl>
                 <FormControl isInvalid={isErrorsField['amount']}>
-                  <Input
+                  <InputGroup size='md' mt='4' w='479px'>
+                    <Input
+                      name='amount'
+                      borderColor='#141414'
+                      border='1px'
+                      placeholder={`Amount, ${SYMBOL}`}
+                      value={withdrawAmount.formattedAmount}
+                      onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
+                      _placeholder={{ color: '#7D7D7D' }}
+                    />
+                    <InputRightElement>
+                      <Button m={1} onClick={handleMaxAmountToWithdraw} size='sm'>
+                        Max
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  {/* <Input
                     name='amount'
                     borderColor='#141414'
                     border='1px'
                     w='479px'
                     placeholder={`Amount, ${SYMBOL}`}
-                    onChange={(e) => handleChange(ActionType.Withdraw, e)}
+                    onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
                     _placeholder={{ color: '#7D7D7D' }}
-                  />
+                  /> */}
                   {isErrorsField['amount'] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (

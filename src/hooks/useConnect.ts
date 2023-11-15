@@ -38,8 +38,6 @@ export const useConnect = () => {
           }
         })
         setSubspaceAccount(encodeAddress(accounts[0].address, SUBSPACE_ACCOUNT_FORMAT))
-
-        console.log('accounts', accounts)
       })
       .catch((error) => {
         console.error('Error with connect', error)
@@ -51,7 +49,6 @@ export const useConnect = () => {
     async (source: string) => {
       await handleConnect()
       const mainAccount = extension.data?.accounts.find((account) => account.meta.source === source)
-      console.log('mainAccount', mainAccount)
       if (mainAccount && extension.data) {
         setExtension({
           ...extension,
@@ -70,7 +67,6 @@ export const useConnect = () => {
   const handleSelectWallet = useCallback(
     async (address: string) => {
       const mainAccount = extension.data?.accounts.find((account) => account.address === address)
-      console.log('mainAccount', mainAccount)
       if (mainAccount && extension.data) {
         setExtension({
           ...extension,
@@ -91,9 +87,6 @@ export const useConnect = () => {
     const rawAccountDetails = await api.query.system.account(extension.data.defaultAccount.address)
     const accountDetails = rawAccountDetails.toJSON() as AccountDetails
     setAccountDetails(accountDetails)
-
-    const balance = accountDetails.data.free
-    console.log('balance', balance)
   }, [api, extension.data, setAccountDetails])
 
   const handleDisconnect = useCallback(() => setExtension(initialExtensionValues), [setExtension])
