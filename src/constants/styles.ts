@@ -1,3 +1,11 @@
+export const pageStyles = {
+  minW: '60vw',
+  maxW: '80vw',
+  mt: '10',
+  p: '4',
+  border: '0'
+}
+
 export const headingStyles = {
   page: {
     size: 'lg',

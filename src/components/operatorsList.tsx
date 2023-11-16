@@ -46,7 +46,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
-              {isOneOfTheOperators && <Th>Actions</Th>}
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           {operators.length === 0 ? (
@@ -62,7 +62,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   <Td {...textStyles.text} isNumeric></Td>
                   <Td {...textStyles.text} isNumeric></Td>
                   <Td {...textStyles.text} isNumeric></Td>
-                  {isOneOfTheOperators && <Td {...textStyles.text}></Td>}
+                  <Td {...textStyles.text}></Td>
                 </Tr>
               ))}
             </Tbody>
@@ -91,13 +91,11 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   <Td {...textStyles.text} isNumeric>
                     {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                   </Td>
-                  {isOneOfTheOperators &&
-                    subspaceAccount &&
-                    stakingConstants.operatorIdOwner[key] === subspaceAccount && (
-                      <Td {...textStyles.text}>
-                        <Actions operatorId={operator.operatorId} />
-                      </Td>
-                    )}
+                  {key === 3 && (
+                    <Td {...textStyles.text}>
+                      <Actions operatorId={operator.operatorId} />
+                    </Td>
+                  )}
                 </Tr>
               ))}
             </Tbody>

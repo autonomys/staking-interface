@@ -18,7 +18,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { EXTERNAL_ROUTES, SYMBOL, headingStyles } from '../constants'
+import { EXTERNAL_ROUTES, SYMBOL, headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useRegister } from '../hooks/useRegister'
 import { useWallet } from '../hooks/useWallet'
@@ -37,7 +37,7 @@ const Page: React.FC = () => {
   }, [handleOnchainData])
 
   return (
-    <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
+    <Box {...pageStyles}>
       <Intro />
       <Box mt='66px'>
         <Heading {...headingStyles.page}>Register as operator</Heading>

@@ -4,7 +4,7 @@ import { ConnectWallet } from '../components/buttons'
 import { Wallet } from '../components/icons'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
-import { headingStyles } from '../constants'
+import { headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
 import { useExtension } from '../states/extension'
@@ -19,7 +19,7 @@ const Page: React.FC = () => {
   }, [handleOnchainData, subspaceAccount])
 
   return (
-    <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
+    <Box {...pageStyles}>
       <HStack>
         <Wallet />
         <Heading {...headingStyles.page}>Manage the stake</Heading>
