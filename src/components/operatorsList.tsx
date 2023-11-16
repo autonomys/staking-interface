@@ -93,7 +93,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   </Td>
                   {isOneOfTheOperators &&
                     subspaceAccount &&
-                    stakingConstants.operatorIdOwner[key] === subspaceAccount && (
+                    stakingConstants.operatorIdOwner[
+                      stakingConstants.operators.findIndex((o) => o.operatorId === operator.operatorId)
+                    ] === subspaceAccount && (
                       <Td {...textStyles.text}>
                         <Actions operatorId={operator.operatorId} />
                       </Td>
