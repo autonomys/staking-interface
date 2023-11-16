@@ -1,9 +1,9 @@
 import { useToast } from '@chakra-ui/react'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
-import { capitalizeFirstLetter, formatAddress, formatNumber, parseNumber } from '../utils'
+import { capitalizeFirstLetter, formatNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
 export const useManage = () => {
@@ -20,20 +20,7 @@ export const useManage = () => {
   const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
   const clearInput = useManageState((state) => state.clearInput)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
-
-  const operatorsOptions = useMemo(
-    () =>
-      stakingConstants.operatorIdOwner
-        ? stakingConstants.operatorIdOwner.map((owner, key) => ({
-            label: `${stakingConstants.operators[key].operatorId} - ${formatAddress(owner)} - ${formatAddress(
-              stakingConstants.operators[key].operatorDetail.signingKey
-            )}`,
-            value: stakingConstants.operators[key].operatorId
-          }))
-        : [],
-    [stakingConstants.operatorIdOwner, stakingConstants.operators]
-  )
-
+  console.log('stakingConstants', stakingConstants)
   const operatorId = useCallback(
     (actionType: ActionType) => {
       switch (actionType) {
@@ -134,7 +121,6 @@ export const useManage = () => {
   )
 
   return {
-    operatorsOptions,
     operatorId,
     addFundsAmount,
     withdrawAmount,
