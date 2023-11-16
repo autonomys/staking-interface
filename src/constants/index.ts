@@ -60,7 +60,6 @@ export const initialStakingConstants: StakingConstants = {
   stakeWithdrawalLockingPeriod: 0,
   domainRegistry: [],
   domainStakingSummary: [],
-  operatorIdOwner: [],
   operators: [],
   pendingStakingOperationCount: []
 }

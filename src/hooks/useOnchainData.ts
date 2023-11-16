@@ -44,10 +44,10 @@ export const useOnchainData = () => {
             } as DomainRegistry
           }),
           domainStakingSummary: domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary),
-          operatorIdOwner: operatorIdOwner.map((operator) => operator[1].toJSON() as string),
-          operators: operators.map((operator) => {
+          operators: operators.map((operator, key) => {
             return {
               operatorId: (operator[0].toHuman() as string[])[0],
+              operatorOwner: operatorIdOwner[key][1].toJSON() as string,
               operatorDetail: operator[1].toJSON() as OperatorDetail
             } as Operators
           }),
