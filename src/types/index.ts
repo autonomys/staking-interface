@@ -91,7 +91,9 @@ export type PendingStakingOperationCount = {
 export type Registration = {
   domainId: string
   minimumNominatorStake: string
+  formattedMinimumNominatorStake: string
   amountToStake: string
+  formattedAmountToStake: string
   nominatorTax: number
   signingKey: string
 }

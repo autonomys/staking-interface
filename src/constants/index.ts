@@ -33,9 +33,17 @@ export enum ActionType {
 export const initialRegistrationValues: Registration = {
   domainId: '',
   minimumNominatorStake: '',
+  formattedMinimumNominatorStake: '',
   amountToStake: '',
+  formattedAmountToStake: '',
   nominatorTax: 0,
   signingKey: ''
+}
+
+export const initialActionInput = {
+  operatorId: '',
+  amount: '',
+  formattedAmount: ''
 }
 
 export const initialExtensionValues: ExtensionState = {

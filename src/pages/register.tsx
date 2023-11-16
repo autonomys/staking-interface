@@ -29,7 +29,8 @@ const Page: React.FC = () => {
   const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { handleOnchainData } = useOnchainData()
   const { currentRegistration, isErrorsField } = useRegistration((state) => state)
-  const { domainId, amountToStake, signingKey, minimumNominatorStake, nominatorTax } = currentRegistration
+  const { domainId, formattedAmountToStake, signingKey, formattedMinimumNominatorStake, nominatorTax } =
+    currentRegistration
 
   useEffect(() => {
     handleOnchainData()
@@ -61,7 +62,7 @@ const Page: React.FC = () => {
             <FormControl isInvalid={isErrorsField['amountToStake']}>
               <FormLabel>Amount to stake, {SYMBOL}</FormLabel>
               <InputGroup size='md' mt='4'>
-                <Input name='amountToStake' value={amountToStake} onChange={handleChange} />
+                <Input name='amountToStake' value={formattedAmountToStake} onChange={handleChange} />
                 <InputRightElement>
                   <Button m={1} onClick={handleMaxAmountToStake}>
                     Max
@@ -87,7 +88,12 @@ const Page: React.FC = () => {
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['minimumNominatorStake']}>
               <FormLabel>Minimum Nominator Stake, {SYMBOL}</FormLabel>
-              <Input name='minimumNominatorStake' value={minimumNominatorStake} onChange={handleChange} mt='4' />
+              <Input
+                name='minimumNominatorStake'
+                value={formattedMinimumNominatorStake}
+                onChange={handleChange}
+                mt='4'
+              />
               {isErrorsField['minimumNominatorStake'] ? (
                 <FormErrorMessage h='10'>The minimum nominator stake you enter is not valid</FormErrorMessage>
               ) : (

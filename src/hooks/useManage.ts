@@ -20,6 +20,7 @@ export const useManage = () => {
   const setWithdrawOperator = useManageState((state) => state.setWithdrawOperator)
   const setAddFundsAmount = useManageState((state) => state.setAddFundsAmount)
   const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
+  const clearInput = useManageState((state) => state.clearInput)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
 
   const operatorsOptions = useMemo(
@@ -113,12 +114,16 @@ export const useManage = () => {
       try {
         switch (actionType) {
           case ActionType.Deregister:
-            return await handleDeregister(deregister)
+            await handleDeregister(deregister)
+            break
           case ActionType.AddFunds:
-            return await handleAddFunds(addFundsAmount.operatorId, addFundsAmount.amount)
+            await handleAddFunds(addFundsAmount.operatorId, addFundsAmount.amount)
+            break
           case ActionType.Withdraw:
-            return await handleWithdraw(withdrawAmount.operatorId, withdrawAmount.amount)
+            await handleWithdraw(withdrawAmount.operatorId, withdrawAmount.amount)
+            break
         }
+        clearInput(actionType)
       } catch (error) {
         toast({
           title: 'Error: ' + capitalizeFirstLetter(actionType) + ' failed',
@@ -128,7 +133,7 @@ export const useManage = () => {
         })
       }
     },
-    [addFundsAmount, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdrawAmount]
+    [addFundsAmount, deregister, handleAddFunds, handleDeregister, handleWithdraw, toast, withdrawAmount, clearInput]
   )
 
   return {
