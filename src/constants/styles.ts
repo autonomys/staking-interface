@@ -80,3 +80,5 @@ export const connectWalletButtonStyles = {
     bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
   }
 }
+
+export const actionButtonStyles = connectWalletButtonStyles
