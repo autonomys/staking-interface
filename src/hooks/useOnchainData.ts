@@ -1,6 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import { WsProvider } from '@polkadot/rpc-provider'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useExtension } from '../states/extension'
 import {
   DomainRegistry,
@@ -14,6 +14,8 @@ import {
 export const useOnchainData = () => {
   const setApi = useExtension((state) => state.setApi)
   const setStakingConstants = useExtension((state) => state.setStakingConstants)
+
+  const domainIdFiltering = useMemo(() => parseInt(process.env.NEXT_PUBLIC_DOMAIN_ID || '0'), [])
 
   const handleOnchainData = useCallback(async () => {
     try {
@@ -37,20 +39,24 @@ export const useOnchainData = () => {
           minOperatorStake: BigInt(minOperatorStake.toString()),
           stakeEpochDuration: Number(stakeEpochDuration.toString()),
           stakeWithdrawalLockingPeriod: Number(stakeWithdrawalLockingPeriod.toString()),
-          domainRegistry: domainRegistry.map((domain) => {
-            return {
-              domainId: (domain[0].toHuman() as string[])[0],
-              domainDetail: domain[1].toJSON() as DomainRegistryDetail
-            } as DomainRegistry
-          }),
+          domainRegistry: domainRegistry
+            .map((domain) => {
+              return {
+                domainId: (domain[0].toHuman() as string[])[0],
+                domainDetail: domain[1].toJSON() as DomainRegistryDetail
+              } as DomainRegistry
+            })
+            .filter((domain) => domain.domainId === domainIdFiltering.toString()),
           domainStakingSummary: domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary),
-          operators: operators.map((operator, key) => {
-            return {
-              operatorId: (operator[0].toHuman() as string[])[0],
-              operatorOwner: operatorIdOwner[key][1].toJSON() as string,
-              operatorDetail: operator[1].toJSON() as OperatorDetail
-            } as Operators
-          }),
+          operators: operators
+            .map((operator, key) => {
+              return {
+                operatorId: (operator[0].toHuman() as string[])[0],
+                operatorOwner: operatorIdOwner[key][1].toJSON() as string,
+                operatorDetail: operator[1].toJSON() as OperatorDetail
+              } as Operators
+            })
+            .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
           pendingStakingOperationCount: pendingStakingOperationCount.map(
             (operator) => operator[1].toJSON() as PendingStakingOperationCount
           )
@@ -59,7 +65,7 @@ export const useOnchainData = () => {
     } catch (error) {
       console.error(error)
     }
-  }, [setApi, setStakingConstants])
+  }, [domainIdFiltering, setApi, setStakingConstants])
 
   return {
     handleOnchainData
