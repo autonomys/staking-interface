@@ -36,6 +36,11 @@ export type StakingConstants = {
 }
 
 export type DomainRegistry = {
+  domainId: string
+  domainDetail: DomainRegistryDetail
+}
+
+export type DomainRegistryDetail = {
   ownerAccountId: string
   createdAt: number
   genesisReceiptHash: string

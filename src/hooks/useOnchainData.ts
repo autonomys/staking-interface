@@ -2,7 +2,14 @@ import { ApiPromise } from '@polkadot/api'
 import { WsProvider } from '@polkadot/rpc-provider'
 import { useCallback } from 'react'
 import { useExtension } from '../states/extension'
-import { DomainRegistry, DomainStakingSummary, OperatorDetail, Operators, PendingStakingOperationCount } from '../types'
+import {
+  DomainRegistry,
+  DomainRegistryDetail,
+  DomainStakingSummary,
+  OperatorDetail,
+  Operators,
+  PendingStakingOperationCount
+} from '../types'
 
 export const useOnchainData = () => {
   const setApi = useExtension((state) => state.setApi)
@@ -30,7 +37,12 @@ export const useOnchainData = () => {
           minOperatorStake: BigInt(minOperatorStake.toString()),
           stakeEpochDuration: Number(stakeEpochDuration.toString()),
           stakeWithdrawalLockingPeriod: Number(stakeWithdrawalLockingPeriod.toString()),
-          domainRegistry: domainRegistry.map((domain) => domain[1].toJSON() as DomainRegistry),
+          domainRegistry: domainRegistry.map((domain) => {
+            return {
+              domainId: (domain[0].toHuman() as string[])[0],
+              domainDetail: domain[1].toJSON() as DomainRegistryDetail
+            } as DomainRegistry
+          }),
           domainStakingSummary: domainStakingSummary.map((domain) => domain[1].toJSON() as DomainStakingSummary),
           operatorIdOwner: operatorIdOwner.map((operator) => operator[1].toJSON() as string),
           operators: operators.map((operator) => {
