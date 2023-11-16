@@ -3,7 +3,7 @@ import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/keyring'
 import { useCallback, useEffect } from 'react'
 import { SUBSPACE_ACCOUNT_FORMAT, SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
-import { useExtension } from '../states/extension'
+import { useExtension, useLastConnection } from '../states/extension'
 import { AccountDetails } from '../types'
 
 export const useConnect = () => {
@@ -13,6 +13,9 @@ export const useConnect = () => {
   const setSubspaceAccount = useExtension((state) => state.setSubspaceAccount)
   const setInjectedExtension = useExtension((state) => state.setInjectedExtension)
   const setAccountDetails = useExtension((state) => state.setAccountDetails)
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const lastSubspaceAccount = useLastConnection((state) => state.subspaceAccount)
+  const setLastSubspaceAccount = useLastConnection((state) => state.setSubspaceAccount)
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
 
   const handleConnect = useCallback(async () => {
@@ -29,21 +32,25 @@ export const useConnect = () => {
       .then(async (accounts) => {
         if (!accounts.length) return Promise.reject(new Error('NO_ACCOUNTS'))
 
+        const lastAccount = accounts.find((account) => account.address === lastSubspaceAccount)
+        const defaultAccount = lastAccount ? lastAccount : accounts[0]
+
         setExtension({
           error: null,
           loading: false,
           data: {
             accounts: accounts,
-            defaultAccount: accounts[0]
+            defaultAccount
           }
         })
-        setSubspaceAccount(encodeAddress(accounts[0].address, SUBSPACE_ACCOUNT_FORMAT))
+        setSubspaceAccount(encodeAddress(defaultAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setLastSubspaceAccount(defaultAccount.address)
       })
       .catch((error) => {
         console.error('Error with connect', error)
         setExtension({ error, loading: false, data: undefined })
       })
-  }, [setExtension, setInjectedExtension, setSubspaceAccount])
+  }, [lastSubspaceAccount, setExtension, setInjectedExtension, setLastSubspaceAccount, setSubspaceAccount])
 
   const handleSelectFirstWalletFromExtension = useCallback(
     async (source: string) => {
@@ -58,10 +65,11 @@ export const useConnect = () => {
           }
         })
         setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setLastSubspaceAccount(mainAccount.address)
       }
       onConnectClose()
     },
-    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount]
+    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount, setLastSubspaceAccount]
   )
 
   const handleSelectWallet = useCallback(
@@ -76,9 +84,10 @@ export const useConnect = () => {
           }
         })
         setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setLastSubspaceAccount(mainAccount.address)
       }
     },
-    [extension, setExtension, setSubspaceAccount]
+    [extension, setExtension, setLastSubspaceAccount, setSubspaceAccount]
   )
 
   const handleRefreshBalance = useCallback(async () => {
@@ -94,6 +103,11 @@ export const useConnect = () => {
   useEffect(() => {
     if (api && extension.data) handleRefreshBalance()
   }, [api, extension.data, handleRefreshBalance])
+
+  useEffect(() => {
+    if (lastSubspaceAccount && !subspaceAccount) handleConnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
     handleConnect,
