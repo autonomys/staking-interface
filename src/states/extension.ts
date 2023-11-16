@@ -1,6 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
 import { InjectedExtension } from '@polkadot/extension-inject/types'
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { initialExtensionValues, initialStakingConstants } from '../constants'
 import { AccountDetails, ExtensionState, StakingConstants } from '../types'
 
@@ -19,6 +20,11 @@ interface RegistrationState {
   setStakingConstants: (networkConstants: StakingConstants) => void
 }
 
+interface LastConnection {
+  subspaceAccount: string | undefined
+  setSubspaceAccount: (subspaceAccount: string) => void
+}
+
 export const useExtension = create<RegistrationState>((set) => ({
   api: undefined,
   extension: initialExtensionValues,
@@ -33,3 +39,16 @@ export const useExtension = create<RegistrationState>((set) => ({
   setAccountDetails: (accountDetails) => set(() => ({ accountDetails })),
   setStakingConstants: (stakingConstants) => set(() => ({ stakingConstants }))
 }))
+
+export const useLastConnection = create<LastConnection>()(
+  persist(
+    (set) => ({
+      subspaceAccount: undefined,
+      setSubspaceAccount: (subspaceAccount) => set(() => ({ subspaceAccount }))
+    }),
+    {
+      name: 'lastConnection',
+      version: 1
+    }
+  )
+)
