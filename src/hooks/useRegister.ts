@@ -21,6 +21,8 @@ export const useRegister = () => {
   const stakingConstants = useExtension((state) => state.stakingConstants)
   const { handleRegisterOperator } = useTx()
 
+  const domainIdFiltering = useMemo(() => process.env.NEXT_PUBLIC_DOMAIN_ID || '0', [])
+
   const detectError = useCallback((key: string, value: string) => {
     switch (key) {
       case 'domainId':
@@ -41,12 +43,14 @@ export const useRegister = () => {
   const domainsOptions = useMemo(
     () =>
       stakingConstants.domainRegistry
-        ? stakingConstants.domainRegistry.map((domain, key) => ({
-            label: `${key} - ${capitalizeFirstLetter(domain.domainConfig.domainName)}`,
-            value: key
-          }))
+        ? stakingConstants.domainRegistry
+            .filter((domain) => domain.domainId === domainIdFiltering)
+            .map((domain) => ({
+              label: `${domain.domainId} - ${capitalizeFirstLetter(domain.domainDetail.domainConfig.domainName)}`,
+              value: domain.domainId
+            }))
         : [],
-    [stakingConstants.domainRegistry]
+    [domainIdFiltering, stakingConstants.domainRegistry]
   )
 
   const handleChange = useCallback(
@@ -71,8 +75,8 @@ export const useRegister = () => {
   )
 
   const handleDomainChange = useCallback(
-    (domainSelected: SingleValue<Option<number>>) => {
-      const domainId = domainSelected != null ? domainSelected.value.toString() : ''
+    (domainSelected: SingleValue<Option<string>>) => {
+      const domainId = domainSelected != null ? domainSelected.value : ''
       saveCurrentRegistration({ ...currentRegistration, domainId })
       setErrorsField('domainId', detectError('domainId', domainId))
     },

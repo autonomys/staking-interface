@@ -48,7 +48,7 @@ const Page: React.FC = () => {
               <Box mt='6'>
                 <Select
                   name='domainId'
-                  value={domainsOptions.find((option) => option.value.toString() === domainId)}
+                  value={domainsOptions.find((option) => option.value === domainId)}
                   onChange={handleDomainChange}
                   options={domainsOptions}
                 />
