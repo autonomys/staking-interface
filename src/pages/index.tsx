@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { EXTERNAL_ROUTES, ROUTES, headingStyles, textStyles } from '../constants'
+import { EXTERNAL_ROUTES, ROUTES, headingStyles, pageStyles, textStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
 import { useExtension } from '../states/extension'
@@ -19,7 +19,7 @@ const Page: React.FC = () => {
   }, [handleOnchainData, subspaceAccount])
 
   return (
-    <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
+    <Box {...pageStyles}>
       <Intro />
       <Box mt='66px'>
         <Heading {...headingStyles.page}>Setup a node</Heading>

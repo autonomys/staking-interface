@@ -5,6 +5,7 @@ import React, { useEffect, useMemo } from 'react'
 import { Wallet } from '../../components/icons'
 import { OperatorsList } from '../../components/operatorsList'
 import { OperatorsTotal } from '../../components/operatorsTotal'
+import { headingStyles, pageStyles } from '../../constants'
 import { useOnchainData } from '../../hooks/useOnchainData'
 
 const Page: React.FC = () => {
@@ -21,10 +22,10 @@ const Page: React.FC = () => {
   }, [query])
 
   return (
-    <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
+    <Box {...pageStyles}>
       <HStack>
         <Wallet />
-        <Heading ml='2'>Stats</Heading>
+        <Heading {...headingStyles}>Stats</Heading>
       </HStack>
       <OperatorsList operatorOwner={operatorOwner} />
       <OperatorsTotal operatorOwner={operatorOwner} />

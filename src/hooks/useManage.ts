@@ -1,10 +1,8 @@
 import { useToast } from '@chakra-ui/react'
-import type { SingleValue } from 'chakra-react-select'
 import React, { useCallback, useMemo } from 'react'
 import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
-import { Option } from '../types'
 import { capitalizeFirstLetter, formatAddress, formatNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
@@ -51,8 +49,7 @@ export const useManage = () => {
   )
 
   const handleChangeOperatorId = useCallback(
-    (actionType: ActionType, operatorSelected: SingleValue<Option<number>>) => {
-      const operatorId = operatorSelected != null ? operatorSelected.value.toString() : ''
+    (actionType: ActionType, operatorId: string) => {
       switch (actionType) {
         case ActionType.Deregister:
           setDeregister(operatorId)

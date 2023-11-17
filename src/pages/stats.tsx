@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Wallet } from '../components/icons'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
-import { headingStyles } from '../constants'
+import { headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 
 const Page: React.FC = () => {
@@ -14,7 +14,7 @@ const Page: React.FC = () => {
   }, [handleOnchainData])
 
   return (
-    <Box minW='60vw' maxW='60vw' mt='10' p='4' border='0'>
+    <Box {...pageStyles}>
       <HStack>
         <Wallet />
         <Heading {...headingStyles.page}>Stats</Heading>

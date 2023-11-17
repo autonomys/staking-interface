@@ -1,3 +1,11 @@
+export const pageStyles = {
+  minW: '60vw',
+  maxW: '80vw',
+  mt: '10',
+  p: '4',
+  border: '0'
+}
+
 export const headingStyles = {
   page: {
     size: 'lg',
@@ -80,3 +88,5 @@ export const connectWalletButtonStyles = {
     bgGradient: 'linear(to-r, #4D397A, #EA71F9)'
   }
 }
+
+export const actionButtonStyles = connectWalletButtonStyles
