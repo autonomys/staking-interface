@@ -15,14 +15,13 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
   const subspaceAccount = useExtension((state) => state.subspaceAccount)
 
   const operators = useMemo(() => {
-    if (operatorOwner)
-      return stakingConstants.operators.filter((_, key) => stakingConstants.operatorIdOwner[key] === operatorOwner)
+    if (operatorOwner) return stakingConstants.operators.filter((operator) => operator.operatorOwner === operatorOwner)
     return stakingConstants.operators
-  }, [operatorOwner, stakingConstants.operatorIdOwner, stakingConstants.operators])
+  }, [operatorOwner, stakingConstants.operators])
 
   const isOneOfTheOperators = useMemo(
-    () => subspaceAccount && stakingConstants.operatorIdOwner.includes(subspaceAccount),
-    [stakingConstants.operatorIdOwner, subspaceAccount]
+    () => subspaceAccount && stakingConstants.operators.find((operator) => operator.operatorOwner === subspaceAccount),
+    [stakingConstants.operators, subspaceAccount]
   )
 
   return (
@@ -78,8 +77,8 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   </Td>
                   <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
                   <Td {...textStyles.link}>
-                    <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? stakingConstants.operatorIdOwner[key]}`}>
-                      {formatAddress(operatorOwner ?? stakingConstants.operatorIdOwner[key])}
+                    <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
+                      {formatAddress(operatorOwner ?? operator.operatorOwner)}
                     </Link>
                   </Td>
                   <Td {...textStyles.text} isNumeric>
@@ -91,15 +90,11 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   <Td {...textStyles.text} isNumeric>
                     {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                   </Td>
-                  {isOneOfTheOperators &&
-                    subspaceAccount &&
-                    stakingConstants.operatorIdOwner[
-                      stakingConstants.operators.findIndex((o) => o.operatorId === operator.operatorId)
-                    ] === subspaceAccount && (
-                      <Td {...textStyles.text}>
-                        <Actions operatorId={operator.operatorId} />
-                      </Td>
-                    )}
+                  {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
+                    <Td {...textStyles.text}>
+                      <Actions operatorId={operator.operatorId} />
+                    </Td>
+                  )}
                 </Tr>
               ))}
             </Tbody>

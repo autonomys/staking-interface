@@ -52,17 +52,8 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
   } = useManage()
 
   const operator = useMemo(
-    () => stakingConstants.operators.filter((operator) => operator.operatorId === operatorId)[0],
+    () => stakingConstants.operators.find((operator) => operator.operatorId === operatorId),
     [operatorId, stakingConstants.operators]
-  )
-  const operatorAccount = useMemo(
-    () =>
-      formatAddress(
-        stakingConstants.operatorIdOwner[
-          stakingConstants.operators.findIndex((operator) => operator.operatorId === operatorId)
-        ]
-      ),
-    [stakingConstants.operatorIdOwner, stakingConstants.operators, operatorId]
   )
 
   const handleClickOnAction = useCallback(
@@ -114,7 +105,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
           <ModalBody>
             <Center>
               <VStack>
-                <Text>Operator Account {operatorAccount}</Text>
+                <Text>Operator Account {operator && operator.operatorOwner}</Text>
                 <Text>
                   Signing Key{' '}
                   {operator && (

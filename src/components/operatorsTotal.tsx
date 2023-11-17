@@ -14,13 +14,13 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
   const totalFundsInStake = useMemo(() => {
     if (operatorOwner)
       return stakingConstants.operators
-        .filter((_, key) => stakingConstants.operatorIdOwner[key] === operatorOwner)
+        .filter((operator) => operator.operatorOwner === operatorOwner)
         .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake), 0)
     return stakingConstants.operators.reduce(
       (acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake),
       0
     )
-  }, [operatorOwner, stakingConstants.operatorIdOwner, stakingConstants.operators])
+  }, [operatorOwner, stakingConstants.operators])
 
   // To-Do: Implement this
   const totalFundsInStakeAvailable = useMemo(() => {
