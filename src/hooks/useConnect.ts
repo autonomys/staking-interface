@@ -98,7 +98,10 @@ export const useConnect = () => {
     setAccountDetails(accountDetails)
   }, [api, extension.data, setAccountDetails])
 
-  const handleDisconnect = useCallback(() => setExtension(initialExtensionValues), [setExtension])
+  const handleDisconnect = useCallback(() => {
+    setExtension(initialExtensionValues)
+    setLastSubspaceAccount(undefined)
+  }, [setExtension, setLastSubspaceAccount])
 
   useEffect(() => {
     if (api && extension.data) handleRefreshBalance()

@@ -22,7 +22,7 @@ interface RegistrationState {
 
 interface LastConnection {
   subspaceAccount: string | undefined
-  setSubspaceAccount: (subspaceAccount: string) => void
+  setSubspaceAccount: (subspaceAccount: string | undefined) => void
 }
 
 export const useExtension = create<RegistrationState>((set) => ({
