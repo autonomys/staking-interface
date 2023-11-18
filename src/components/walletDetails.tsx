@@ -6,6 +6,7 @@ import { formatNumber, hexToNumber } from '../utils'
 import { TokenBalance, TokenStaked } from './icons'
 
 const TokenBalanceSection: React.FC = () => {
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const accountDetails = useExtension((state) => state.accountDetails)
 
   const accountBalance = useMemo(
@@ -15,12 +16,16 @@ const TokenBalanceSection: React.FC = () => {
 
   return (
     <HStack w='6vw' h='8vh' display='flex' flexDir='row'>
-      <TokenBalance />
-      <Tooltip hasArrow label='Account balance' aria-label='Account balance' placement='bottom'>
-        <Text whiteSpace='nowrap'>
-          {accountBalance} {SYMBOL}
-        </Text>
-      </Tooltip>
+      {subspaceAccount && (
+        <>
+          <TokenBalance />
+          <Tooltip hasArrow label='Account balance' aria-label='Account balance' placement='bottom'>
+            <Text whiteSpace='nowrap'>
+              {accountBalance} {SYMBOL}
+            </Text>
+          </Tooltip>
+        </>
+      )}
     </HStack>
   )
 }
@@ -40,12 +45,16 @@ const TokenStakedSection: React.FC = () => {
 
   return (
     <HStack w='6vw' h='8vh' display='flex' flexDir='row'>
-      <TokenStaked />
-      <Tooltip hasArrow label='Account balance staked' aria-label='Account balance staked' placement='bottom'>
-        <Text whiteSpace='nowrap'>
-          {accountBalanceStaked} {SYMBOL}
-        </Text>
-      </Tooltip>
+      {subspaceAccount && (
+        <>
+          <TokenStaked />
+          <Tooltip hasArrow label='Account balance staked' aria-label='Account balance staked' placement='bottom'>
+            <Text whiteSpace='nowrap'>
+              {accountBalanceStaked} {SYMBOL}
+            </Text>
+          </Tooltip>
+        </>
+      )}
     </HStack>
   )
 }
