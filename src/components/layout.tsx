@@ -4,6 +4,7 @@ import React from 'react'
 import { ROUTES } from '../constants'
 import { ConnectWallet } from './buttons'
 import { Subspace } from './icons'
+import { WalletDetails } from './walletDetails'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -11,7 +12,7 @@ interface LayoutProps {
 
 export const Header: React.FC = () => {
   return (
-    <HStack w='50vw' h='10vh' display='flex' flexDir='row'>
+    <HStack w='60vw' h='10vh' display='flex' flexDir='row'>
       <Link href={ROUTES.HOME}>
         <Subspace />
       </Link>
@@ -33,6 +34,7 @@ export const Header: React.FC = () => {
       </Link>
       <Spacer />
       <ConnectWallet />
+      <WalletDetails />
     </HStack>
   )
 }
