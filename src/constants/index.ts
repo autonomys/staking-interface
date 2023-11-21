@@ -70,3 +70,9 @@ export const toastConfig = {
   duration: 9000,
   isClosable: true
 }
+
+export enum TransactionStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed'
+}

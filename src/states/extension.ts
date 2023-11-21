@@ -2,8 +2,8 @@ import { ApiPromise } from '@polkadot/api'
 import { InjectedExtension } from '@polkadot/extension-inject/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { initialExtensionValues, initialStakingConstants } from '../constants'
-import { AccountDetails, ExtensionState, StakingConstants } from '../types'
+import { initialExtensionValues, initialStakingConstants, TransactionStatus } from '../constants'
+import { AccountDetails, ExtensionState, NewTransaction, StakingConstants, Transaction } from '../types'
 
 interface RegistrationState {
   api: ApiPromise | undefined
@@ -23,6 +23,12 @@ interface RegistrationState {
 interface LastConnection {
   subspaceAccount: string | undefined
   setSubspaceAccount: (subspaceAccount: string) => void
+}
+
+interface TransactionsState {
+  transactions: Transaction[]
+  addTransactionToWatch: (newTransaction: NewTransaction) => void
+  changeTransactionStatus: (extrinsicHash: string, status: TransactionStatus) => void
 }
 
 export const useExtension = create<RegistrationState>((set) => ({
@@ -48,6 +54,34 @@ export const useLastConnection = create<LastConnection>()(
     }),
     {
       name: 'lastConnection',
+      version: 1
+    }
+  )
+)
+
+export const useTransactions = create<TransactionsState>()(
+  persist(
+    (set) => ({
+      transactions: [],
+      addTransactionToWatch: (newTransaction) =>
+        set((state) => ({
+          transactions: [
+            ...state.transactions,
+            {
+              ...newTransaction,
+              status: TransactionStatus.Pending
+            }
+          ]
+        })),
+      changeTransactionStatus: (extrinsicHash, status) =>
+        set((state) => ({
+          transactions: state.transactions.map((transaction) =>
+            transaction.extrinsicHash === extrinsicHash ? { ...transaction, status } : transaction
+          )
+        }))
+    }),
+    {
+      name: 'transactions',
       version: 1
     }
   )
