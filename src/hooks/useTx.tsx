@@ -2,7 +2,7 @@ import { useToast } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { SuccessTxToast } from '../components/toasts'
 import { ERROR_WALLET_NOT_FOUND, toastConfig } from '../constants'
-import { useExtension } from '../states/extension'
+import { useExtension, useTransactions } from '../states/extension'
 import { Registration } from '../types'
 
 export const useTx = () => {
@@ -10,6 +10,7 @@ export const useTx = () => {
   const api = useExtension((state) => state.api)
   const extension = useExtension((state) => state.extension)
   const injectedExtension = useExtension((state) => state.injectedExtension)
+  const addTransactionToWatch = useTransactions((state) => state.addTransactionToWatch)
 
   const handleRegisterOperator = useCallback(
     async (registration: Registration) => {
@@ -30,13 +31,27 @@ export const useTx = () => {
             })
             .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
           console.log('hash', hash)
+          addTransactionToWatch({
+            extrinsicHash: hash.toString(),
+            method: 'registerOperator',
+            sender: extension.data?.defaultAccount.address,
+            parameters: [
+              registration.domainId,
+              registration.amountToStake,
+              JSON.stringify({
+                signingKey: registration.signingKey,
+                minimumNominatorStake: registration.minimumNominatorStake,
+                nominationTax: registration.nominatorTax
+              })
+            ]
+          })
           toast({
             ...toastConfig,
             isClosable: true,
             render: () => (
               <SuccessTxToast
                 heading='Registration successful'
-                description='Your registration was successful. You will see the change after the next epoch.'
+                description='Your registration tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
                 hash={hash.toString()}
               />
             )
@@ -48,7 +63,7 @@ export const useTx = () => {
       }
       return
     },
-    [api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
   )
 
   const handleDeregister = useCallback(
@@ -65,13 +80,19 @@ export const useTx = () => {
           .deregisterOperator(operatorId)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
         console.log('hash', hash)
+        addTransactionToWatch({
+          extrinsicHash: hash.toString(),
+          method: 'deregisterOperator',
+          sender: extension.data?.defaultAccount.address,
+          parameters: [operatorId]
+        })
         toast({
           ...toastConfig,
           isClosable: true,
           render: () => (
             <SuccessTxToast
               heading='Registration successful'
-              description='Your request to de-register was successful. You will see the change after the next epoch.'
+              description='Your request to de-register tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
           )
@@ -79,7 +100,7 @@ export const useTx = () => {
       }
       return
     },
-    [api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
   )
 
   const handleAddFunds = useCallback(
@@ -96,13 +117,19 @@ export const useTx = () => {
           .nominateOperator(operatorId, amount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
         console.log('hash', hash)
+        addTransactionToWatch({
+          extrinsicHash: hash.toString(),
+          method: 'nominateOperator',
+          sender: extension.data?.defaultAccount.address,
+          parameters: [operatorId, amount]
+        })
         toast({
           ...toastConfig,
           isClosable: true,
           render: () => (
             <SuccessTxToast
               heading='Registration successful'
-              description='Your request to add funds was successful. You will see the change after the next epoch.'
+              description='Your request to add funds tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
           )
@@ -110,7 +137,7 @@ export const useTx = () => {
       }
       return
     },
-    [api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
   )
 
   const handleWithdraw = useCallback(
@@ -128,13 +155,19 @@ export const useTx = () => {
           })
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
         console.log('hash', hash)
+        addTransactionToWatch({
+          extrinsicHash: hash.toString(),
+          method: 'withdrawStake',
+          sender: extension.data?.defaultAccount.address,
+          parameters: [operatorId, JSON.stringify({ Some: amount })]
+        })
         toast({
           ...toastConfig,
           isClosable: true,
           render: () => (
             <SuccessTxToast
               heading='Withdraw successful'
-              description='Your withdraw request was successful. You will see the change after the next epoch.'
+              description='Your withdraw request tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
           )
@@ -142,7 +175,7 @@ export const useTx = () => {
       }
       return
     },
-    [api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
   )
 
   return {
