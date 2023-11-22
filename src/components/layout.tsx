@@ -4,6 +4,7 @@ import React from 'react'
 import { ROUTES } from '../constants'
 import { ConnectWallet } from './buttons'
 import { Subspace } from './icons'
+import { TransactionsSpotter } from './transactionsSpotter'
 import { WalletDetails } from './walletDetails'
 
 interface LayoutProps {
@@ -35,6 +36,7 @@ export const Header: React.FC = () => {
       <Spacer />
       <ConnectWallet />
       <WalletDetails />
+      <TransactionsSpotter />
     </HStack>
   )
 }
