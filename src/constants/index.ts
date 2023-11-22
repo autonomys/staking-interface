@@ -25,6 +25,8 @@ export const SYMBOL = 'tSSC'
 
 export const DECIMALS = 18
 
+export const SUBSCAN_URL = 'https://subspace.subscan.io/'
+
 export enum ActionType {
   Deregister = 'deregister',
   AddFunds = 'addFunds',
@@ -67,4 +69,10 @@ export const initialStakingConstants: StakingConstants = {
 export const toastConfig = {
   duration: 9000,
   isClosable: true
+}
+
+export enum TransactionStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed'
 }

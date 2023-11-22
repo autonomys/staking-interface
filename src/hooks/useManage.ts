@@ -20,7 +20,7 @@ export const useManage = () => {
   const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
   const clearInput = useManageState((state) => state.clearInput)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
-  console.log('stakingConstants', stakingConstants)
+
   const operatorId = useCallback(
     (actionType: ActionType) => {
       switch (actionType) {

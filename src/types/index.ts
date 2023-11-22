@@ -1,5 +1,6 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import type { OptionBase } from 'chakra-react-select'
+import { TransactionStatus } from '../constants'
 
 export type ExtensionState = {
   loading: boolean
@@ -106,6 +107,19 @@ export type Registration = {
 export interface Option<T> extends OptionBase {
   label: string
   value: T
+}
+
+export type NewTransaction = {
+  extrinsicHash: string
+  method: string
+  sender: string
+  fromBlockNumber: number
+  parameters?: string[]
+}
+
+export interface Transaction extends NewTransaction {
+  status: TransactionStatus
+  onBlockNumber?: number
 }
 
 export type ErrorsField = {
