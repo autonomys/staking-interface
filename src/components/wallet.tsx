@@ -78,7 +78,11 @@ export const ConnectWallet = () => {
                   bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
                 }}>
                 <ExtensionIcon extension={account.meta.source} />
-                <Text ml='2'>{formatAddress(encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT))}</Text>
+                <Text ml='2'>
+                  {`${formatAddress(encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT))} ${
+                    account.meta.name && `(${account.meta.name})`
+                  }`}
+                </Text>
               </MenuItem>
             ))}
             <MenuDivider />
