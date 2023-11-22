@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, HStack, Heading, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
-import { SYMBOL, headingStyles, textStyles } from '../constants'
+import { DECIMALS, SYMBOL, headingStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, formatNumber, hexToNumber } from '../utils'
 
@@ -11,7 +11,32 @@ interface OperatorsTotalProps {
 export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner }) => {
   const stakingConstants = useExtension((state) => state.stakingConstants)
 
+  const totalPendingDeposits = useMemo(() => {
+    if (!stakingConstants.pendingDeposits || stakingConstants.pendingDeposits.length === 0) return 0
+    if (operatorOwner)
+      return stakingConstants.pendingDeposits
+        .filter((deposit) => deposit.operatorOwner === operatorOwner)
+        .reduce((acc, deposit) => acc + parseInt(deposit.amount) / 10 ** DECIMALS, 0)
+    return stakingConstants.pendingDeposits.reduce((acc, deposit) => acc + parseInt(deposit.amount) / 10 ** DECIMALS, 0)
+  }, [operatorOwner, stakingConstants.pendingDeposits])
+
   const totalFundsInStake = useMemo(() => {
+    if (operatorOwner)
+      return (
+        stakingConstants.operators
+          .filter((operator) => operator.operatorOwner === operatorOwner)
+          .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake), 0) +
+        totalPendingDeposits
+      )
+    return (
+      stakingConstants.operators.reduce(
+        (acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake),
+        0
+      ) + totalPendingDeposits
+    )
+  }, [operatorOwner, stakingConstants.operators, totalPendingDeposits])
+
+  const totalFundsInStakeAvailable = useMemo(() => {
     if (operatorOwner)
       return stakingConstants.operators
         .filter((operator) => operator.operatorOwner === operatorOwner)
@@ -21,11 +46,6 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
       0
     )
   }, [operatorOwner, stakingConstants.operators])
-
-  // To-Do: Implement this
-  const totalFundsInStakeAvailable = useMemo(() => {
-    return totalFundsInStake
-  }, [totalFundsInStake])
 
   // To-Do: Implement this
   const totalNominators = useMemo(() => {
