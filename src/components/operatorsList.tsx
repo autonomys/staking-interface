@@ -1,7 +1,8 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
-import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
+import { ROUTES, SUBSPACE_ACCOUNT_FORMAT, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber } from '../utils'
 import { Actions } from './actions'
@@ -11,6 +12,7 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
+  const extension = useExtension((state) => state.extension)
   const stakingConstants = useExtension((state) => state.stakingConstants)
   const subspaceAccount = useExtension((state) => state.subspaceAccount)
 
@@ -67,36 +69,47 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             </Tbody>
           ) : (
             <Tbody>
-              {operators.map((operator, key) => (
-                <Tr key={key}>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorDetail.currentDomainId}
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorId}
-                  </Td>
-                  <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
-                  <Td {...textStyles.link}>
-                    <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
-                      {formatAddress(operatorOwner ?? operator.operatorOwner)}
-                    </Link>
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorDetail.nominationTax}%
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
-                  </Td>
-                  {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
-                    <Td {...textStyles.text}>
-                      <Actions operatorId={operator.operatorId} />
+              {operators.map((operator, key) => {
+                const findMatchingAccount =
+                  extension.data &&
+                  extension.data.accounts.find(
+                    (a) => encodeAddress(a.address, SUBSPACE_ACCOUNT_FORMAT) === operator.operatorOwner
+                  )
+                const accountLabel =
+                  findMatchingAccount && findMatchingAccount.meta.name
+                    ? `${formatAddress(operatorOwner ?? operator.operatorOwner)} (${findMatchingAccount.meta.name})`
+                    : formatAddress(operatorOwner ?? operator.operatorOwner)
+                return (
+                  <Tr key={key}>
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorDetail.currentDomainId}
                     </Td>
-                  )}
-                </Tr>
-              ))}
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorId}
+                    </Td>
+                    <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
+                    <Td {...textStyles.link}>
+                      <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
+                        {accountLabel}
+                      </Link>
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorDetail.nominationTax}%
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
+                    </Td>
+                    {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
+                      <Td {...textStyles.text}>
+                        <Actions operatorId={operator.operatorId} />
+                      </Td>
+                    )}
+                  </Tr>
+                )
+              })}
             </Tbody>
           )}
         </Table>
