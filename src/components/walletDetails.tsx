@@ -14,7 +14,7 @@ const TokenBalanceSection: React.FC = () => {
   )
 
   return (
-    <HStack w='6vw' h='8vh' display='flex' flexDir='row'>
+    <HStack w='6vw' h='8vh' maxW='120px' display='flex' flexDir='row'>
       {subspaceAccount && (
         <>
           <TokenBalance />
@@ -42,7 +42,7 @@ const TokenStakedSection: React.FC = () => {
   }, [subspaceAccount, stakingConstants.operators])
 
   return (
-    <HStack w='6vw' h='8vh' display='flex' flexDir='row'>
+    <HStack w='6vw' h='8vh' maxW='120px' display='flex' flexDir='row'>
       {subspaceAccount && (
         <>
           <TokenStaked />
