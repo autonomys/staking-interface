@@ -1,9 +1,15 @@
 import { useToast } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
+import {
+  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
+  ActionType,
+  DECIMALS,
+  ERROR_DESC_INFORMATION_INCORRECT,
+  toastConfig
+} from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
-import { capitalizeFirstLetter, formatNumber, hexToFormattedNumber, parseNumber } from '../utils'
+import { capitalizeFirstLetter, formatNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
 export const useManage = () => {
@@ -76,10 +82,12 @@ export const useManage = () => {
 
   const handleMaxAmountToAddFunds = useCallback(() => {
     if (!accountDetails) return
+    const fullAmount = parseInt(accountDetails.data.free, 16)
+    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
     setAddFundsAmount({
       ...addFundsAmount,
-      amount: parseInt(accountDetails.data.free, 16).toString(),
-      formattedAmount: hexToFormattedNumber(accountDetails.data.free)
+      amount: amount.toString(),
+      formattedAmount: formatNumber(amount / 10 ** DECIMALS)
     })
   }, [accountDetails, addFundsAmount, setAddFundsAmount])
 

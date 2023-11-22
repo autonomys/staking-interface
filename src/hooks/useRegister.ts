@@ -2,11 +2,17 @@ import { useToast } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
-import { ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
+import {
+  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
+  DECIMALS,
+  ERROR_REGISTRATION_FAILED,
+  ROUTES,
+  toastConfig
+} from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { Option } from '../types'
-import { capitalizeFirstLetter, hexToFormattedNumber, hexToNumber, parseNumber } from '../utils'
+import { capitalizeFirstLetter, formatNumber, parseNumber } from '../utils'
 import { isValidSr25519PublicKey } from '../utils/signingKey'
 import { useTx } from './useTx'
 
@@ -81,10 +87,12 @@ export const useRegister = () => {
 
   const handleMaxAmountToStake = useCallback(() => {
     if (!accountDetails) return
+    const fullAmount = parseInt(accountDetails.data.free, 16)
+    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
     saveCurrentRegistration({
       ...currentRegistration,
-      amountToStake: hexToNumber(accountDetails.data.free).toString(),
-      formattedAmountToStake: hexToFormattedNumber(accountDetails.data.free)
+      amountToStake: amount.toString(),
+      formattedAmountToStake: formatNumber(amount / 10 ** DECIMALS)
     })
   }, [accountDetails, currentRegistration, saveCurrentRegistration])
 

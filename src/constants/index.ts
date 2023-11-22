@@ -27,6 +27,8 @@ export const DECIMALS = 18
 
 export const SUBSCAN_URL = 'https://subspace.subscan.io/'
 
+export const AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT = 5000000000000000
+
 export enum ActionType {
   Deregister = 'deregister',
   AddFunds = 'addFunds',
