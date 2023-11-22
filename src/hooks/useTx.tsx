@@ -52,7 +52,7 @@ export const useTx = () => {
             isClosable: true,
             render: () => (
               <SuccessTxToast
-                heading='Registration successful'
+                heading='Registration request sent'
                 description='Your registration tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
                 hash={hash.toString()}
               />
@@ -94,7 +94,7 @@ export const useTx = () => {
           isClosable: true,
           render: () => (
             <SuccessTxToast
-              heading='Registration successful'
+              heading='Registration request sent'
               description='Your request to de-register tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
@@ -134,7 +134,7 @@ export const useTx = () => {
           isClosable: true,
           render: () => (
             <SuccessTxToast
-              heading='Registration successful'
+              heading='Registration request sent'
               description='Your request to add funds tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
@@ -148,6 +148,8 @@ export const useTx = () => {
 
   const handleWithdraw = useCallback(
     async (operatorId: string, amount: string) => {
+      console.log('operatorId', operatorId)
+      console.log('amount', amount)
       if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
@@ -173,7 +175,7 @@ export const useTx = () => {
           isClosable: true,
           render: () => (
             <SuccessTxToast
-              heading='Withdraw successful'
+              heading='Withdraw request sent'
               description='Your withdraw request tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
               hash={hash.toString()}
             />
