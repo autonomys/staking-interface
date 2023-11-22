@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
-import { capitalizeFirstLetter, formatNumber, parseNumber } from '../utils'
+import { capitalizeFirstLetter, formatNumber, hexToFormattedNumber, parseNumber } from '../utils'
 import { useTx } from './useTx'
 
 export const useManage = () => {
@@ -20,7 +20,7 @@ export const useManage = () => {
   const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
   const clearInput = useManageState((state) => state.clearInput)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
-  console.log('stakingConstants', stakingConstants)
+
   const operatorId = useCallback(
     (actionType: ActionType) => {
       switch (actionType) {
@@ -78,8 +78,8 @@ export const useManage = () => {
     if (!accountDetails) return
     setAddFundsAmount({
       ...addFundsAmount,
-      amount: accountDetails.data.free,
-      formattedAmount: formatNumber(accountDetails.data.free)
+      amount: parseInt(accountDetails.data.free, 16).toString(),
+      formattedAmount: hexToFormattedNumber(accountDetails.data.free)
     })
   }, [accountDetails, addFundsAmount, setAddFundsAmount])
 
