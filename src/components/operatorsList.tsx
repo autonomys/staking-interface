@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
@@ -52,18 +52,16 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
           </Thead>
           {operators.length === 0 ? (
             <Tbody>
-              {[0, 1, 2, 3].map((_, key) => (
+              {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} isNumeric>
-                    {key}
+                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 8 : 7}>
+                    <Text>No operators found</Text>
+                    {subspaceAccount === operatorOwner && (
+                      <Text>
+                        If you recently register a operator, it may take up to 10 minutes for the operator to be added.
+                      </Text>
+                    )}
                   </Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  {isOneOfTheOperators && <Td {...textStyles.text}></Td>}
                 </Tr>
               ))}
             </Tbody>
