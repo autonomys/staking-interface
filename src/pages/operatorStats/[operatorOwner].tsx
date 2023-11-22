@@ -27,8 +27,8 @@ const Page: React.FC = () => {
         <Wallet />
         <Heading {...headingStyles}>Stats</Heading>
       </HStack>
-      <OperatorsList operatorOwner={operatorOwner} />
       <OperatorsTotal operatorOwner={operatorOwner} />
+      <OperatorsList operatorOwner={operatorOwner} />
     </Box>
   )
 }

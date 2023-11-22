@@ -19,8 +19,8 @@ const Page: React.FC = () => {
         <Wallet />
         <Heading {...headingStyles.page}>Stats</Heading>
       </HStack>
-      <OperatorsList />
       <OperatorsTotal />
+      <OperatorsList />
     </Box>
   )
 }
