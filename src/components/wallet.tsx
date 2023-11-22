@@ -72,13 +72,17 @@ export const ConnectWallet = () => {
           <MenuList>
             {extension.data.accounts.map((account) => (
               <MenuItem
-                key={account.address}
+                key={`${account.meta.source}-${account.address}`}
                 onClick={() => handleSelectWallet(account.address)}
                 _hover={{
                   bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
                 }}>
                 <ExtensionIcon extension={account.meta.source} />
-                <Text ml='2'>{formatAddress(encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT))}</Text>
+                <Text ml='2'>
+                  {`${account.meta.name && `(${account.meta.name})`} ${formatAddress(
+                    encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT)
+                  )}`}
+                </Text>
               </MenuItem>
             ))}
             <MenuDivider />
