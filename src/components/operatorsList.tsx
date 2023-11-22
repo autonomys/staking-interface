@@ -77,7 +77,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                   )
                 const accountLabel =
                   findMatchingAccount && findMatchingAccount.meta.name
-                    ? `${formatAddress(operatorOwner ?? operator.operatorOwner)} (${findMatchingAccount.meta.name})`
+                    ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
                     : formatAddress(operatorOwner ?? operator.operatorOwner)
                 return (
                   <Tr key={key}>
