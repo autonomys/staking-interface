@@ -27,6 +27,8 @@ export const DECIMALS = 18
 
 export const SUBSCAN_URL = 'https://subspace.subscan.io/'
 
+export const MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER = 30
+
 export enum ActionType {
   Deregister = 'deregister',
   AddFunds = 'addFunds',

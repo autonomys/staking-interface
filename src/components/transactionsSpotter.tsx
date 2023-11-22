@@ -1,7 +1,14 @@
 import { CheckIcon, ChevronDownIcon, HamburgerIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { Button, HStack, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, VStack } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { ActionType, DECIMALS, SUBSCAN_URL, SYMBOL, TransactionStatus } from '../constants'
+import {
+  ActionType,
+  DECIMALS,
+  MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER,
+  SUBSCAN_URL,
+  SYMBOL,
+  TransactionStatus
+} from '../constants'
 import { useExtension, useTransactions } from '../states/extension'
 import { Transaction } from '../types'
 import { capitalizeFirstLetter } from '../utils'
@@ -38,7 +45,11 @@ export const TransactionsSpotter: React.FC = () => {
       }
     }
 
-    for (let i = firstPendingTransaction.fromBlockNumber; i < firstPendingTransaction.fromBlockNumber + 10; i++) {
+    for (
+      let i = firstPendingTransaction.fromBlockNumber;
+      i < firstPendingTransaction.fromBlockNumber + MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER;
+      i++
+    ) {
       verifyNextBlocks(i)
     }
   }, [api, changeTransactionStatus, transactions])
