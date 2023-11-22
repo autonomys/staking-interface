@@ -11,10 +11,10 @@ export const ROUTES = {
 }
 
 export const EXTERNAL_ROUTES = {
-  OPERATORS_DOCS: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/operators',
-  STAKING_INCENTIVES: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/intro',
-  STAKING_INFORMATION: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/',
-  RISK: 'https://docs.subspace.network/docs/security'
+  OPERATORS_DOCS: 'https://docs.subspace.network/docs/farming-&-staking/staking/operators',
+  STAKING_INCENTIVES: 'https://docs.subspace.network/docs/farming-&-staking/staking/intro',
+  STAKING_INFORMATION: 'https://docs.subspace.network/docs/farming-&-staking/staking/',
+  RISK: 'https://docs.subspace.network/docs/learn/security'
 }
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
