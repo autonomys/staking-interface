@@ -8,6 +8,7 @@ import {
   DomainStakingSummary,
   OperatorDetail,
   Operators,
+  PendingDeposit,
   PendingStakingOperationCount
 } from '../types'
 
@@ -32,7 +33,64 @@ export const useOnchainData = () => {
         const domainStakingSummary = await _api.query.domains.domainStakingSummary.entries()
         const operatorIdOwner = await _api.query.domains.operatorIdOwner.entries()
         const operators = await _api.query.domains.operators.entries()
+
         const pendingStakingOperationCount = await _api.query.domains.pendingStakingOperationCount.entries()
+        const pendingDeposits = await _api.query.domains.pendingDeposits.entries()
+        const pendingOperatorDeregistrations = await _api.query.domains.pendingOperatorDeregistrations.entries()
+        const pendingOperatorSwitches = await _api.query.domains.pendingOperatorSwitches.entries()
+        // const pendingOperatorUnlocks = await _api.query.domains.pendingOperatorUnlocks.entries()
+        // console.log('pendingOperatorUnlocks', pendingOperatorUnlocks)
+        const pendingSlashes = await _api.query.domains.pendingSlashes.entries()
+        const pendingUnlocks = await _api.query.domains.pendingUnlocks.entries()
+        const pendingWithdrawals = await _api.query.domains.pendingWithdrawals.entries()
+        console.log(
+          'pendingStakingOperationCount',
+          pendingStakingOperationCount.map((operator) => {
+            return {
+              [0]: operator[0].toHuman(),
+              [1]: operator[1].toJSON()
+            }
+          })
+        )
+        console.log(
+          'pendingDeposits',
+          pendingDeposits.map((operator) => {
+            return {
+              [0]: operator[0].toHuman(),
+              [1]: operator[1].toHuman()
+            }
+          })
+        )
+        console.log('pendingOperatorDeregistrations', pendingOperatorDeregistrations)
+        console.log('pendingOperatorSwitches', pendingOperatorSwitches)
+        console.log(
+          'pendingSlashes',
+          pendingSlashes.map((operator) => {
+            return {
+              [0]: operator[0].toHuman(),
+              [1]: operator[1].toJSON()
+            }
+          })
+        )
+        console.log(
+          'pendingUnlocks',
+          pendingUnlocks.map((operator) => {
+            return {
+              [0]: operator[0].toHuman(),
+              [1]: operator[1].toJSON()
+            }
+          })
+        )
+
+        console.log(
+          'pendingWithdrawals',
+          pendingWithdrawals.map((operator) => {
+            return {
+              [0]: operator[0].toHuman(),
+              [1]: operator[1].toHuman()
+            }
+          })
+        )
 
         setStakingConstants({
           maxNominators: Number(maxNominators.toString()),
@@ -59,7 +117,15 @@ export const useOnchainData = () => {
             .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
           pendingStakingOperationCount: pendingStakingOperationCount.map(
             (operator) => operator[1].toJSON() as PendingStakingOperationCount
-          )
+          ),
+          pendingDeposits: pendingDeposits.map((operator) => {
+            const details = operator[0].toHuman() as string[]
+            return {
+              operatorId: details[0],
+              operatorOwner: details[1],
+              amount: operator[1].toJSON()
+            } as PendingDeposit
+          })
         })
       }
     } catch (error) {
