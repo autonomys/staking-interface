@@ -113,11 +113,13 @@ export type NewTransaction = {
   extrinsicHash: string
   method: string
   sender: string
+  fromBlockNumber: number
   parameters?: string[]
 }
 
 export interface Transaction extends NewTransaction {
   status: TransactionStatus
+  onBlockNumber?: number
 }
 
 export type ErrorsField = {

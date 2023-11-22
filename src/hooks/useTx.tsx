@@ -9,12 +9,13 @@ export const useTx = () => {
   const toast = useToast()
   const api = useExtension((state) => state.api)
   const extension = useExtension((state) => state.extension)
+  const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const injectedExtension = useExtension((state) => state.injectedExtension)
   const addTransactionToWatch = useTransactions((state) => state.addTransactionToWatch)
 
   const handleRegisterOperator = useCallback(
     async (registration: Registration) => {
-      if (!api || !extension.data || !injectedExtension)
+      if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
           ...toastConfig,
@@ -23,6 +24,7 @@ export const useTx = () => {
       console.log('RegisterOperator')
       if (extension.data) {
         try {
+          const block = await api.rpc.chain.getBlock()
           const hash = await api.tx.domains
             .registerOperator(registration.domainId, registration.amountToStake, {
               signingKey: registration.signingKey,
@@ -30,11 +32,11 @@ export const useTx = () => {
               nominationTax: registration.nominatorTax
             })
             .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-          console.log('hash', hash)
           addTransactionToWatch({
             extrinsicHash: hash.toString(),
             method: 'registerOperator',
-            sender: extension.data?.defaultAccount.address,
+            sender: subspaceAccount,
+            fromBlockNumber: block.block.header.number.toNumber(),
             parameters: [
               registration.domainId,
               registration.amountToStake,
@@ -63,12 +65,12 @@ export const useTx = () => {
       }
       return
     },
-    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, subspaceAccount, toast]
   )
 
   const handleDeregister = useCallback(
     async (operatorId: string) => {
-      if (!api || !extension.data || !injectedExtension)
+      if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
           ...toastConfig,
@@ -76,14 +78,15 @@ export const useTx = () => {
         })
       console.log('Deregister')
       if (extension.data) {
+        const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
           .deregisterOperator(operatorId)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-        console.log('hash', hash)
         addTransactionToWatch({
           extrinsicHash: hash.toString(),
           method: 'deregisterOperator',
-          sender: extension.data?.defaultAccount.address,
+          sender: subspaceAccount,
+          fromBlockNumber: block.block.header.number.toNumber(),
           parameters: [operatorId]
         })
         toast({
@@ -100,12 +103,12 @@ export const useTx = () => {
       }
       return
     },
-    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, subspaceAccount, toast]
   )
 
   const handleAddFunds = useCallback(
     async (operatorId: string, amount: string) => {
-      if (!api || !extension.data || !injectedExtension)
+      if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
           ...toastConfig,
@@ -113,14 +116,17 @@ export const useTx = () => {
         })
       console.log('AddFund')
       if (extension.data) {
+        const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
           .nominateOperator(operatorId, amount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-        console.log('hash', hash)
+
+        console.log('txHash', hash.toString())
         addTransactionToWatch({
           extrinsicHash: hash.toString(),
           method: 'nominateOperator',
-          sender: extension.data?.defaultAccount.address,
+          sender: subspaceAccount,
+          fromBlockNumber: block.block.header.number.toNumber(),
           parameters: [operatorId, amount]
         })
         toast({
@@ -137,28 +143,29 @@ export const useTx = () => {
       }
       return
     },
-    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, subspaceAccount, toast]
   )
 
   const handleWithdraw = useCallback(
     async (operatorId: string, amount: string) => {
-      if (!api || !extension.data || !injectedExtension)
+      if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
           ...toastConfig,
           status: 'error'
         })
       if (extension.data) {
+        const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
           .withdrawStake(operatorId, {
             Some: amount
           })
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-        console.log('hash', hash)
         addTransactionToWatch({
           extrinsicHash: hash.toString(),
           method: 'withdrawStake',
-          sender: extension.data?.defaultAccount.address,
+          sender: subspaceAccount,
+          fromBlockNumber: block.block.header.number.toNumber(),
           parameters: [operatorId, JSON.stringify({ Some: amount })]
         })
         toast({
@@ -175,7 +182,7 @@ export const useTx = () => {
       }
       return
     },
-    [addTransactionToWatch, api, extension.data, injectedExtension, toast]
+    [addTransactionToWatch, api, extension.data, injectedExtension, subspaceAccount, toast]
   )
 
   return {
