@@ -63,7 +63,8 @@ export const initialStakingConstants: StakingConstants = {
   domainRegistry: [],
   domainStakingSummary: [],
   operators: [],
-  pendingStakingOperationCount: []
+  pendingStakingOperationCount: [],
+  pendingDeposits: []
 }
 
 export const toastConfig = {
