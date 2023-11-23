@@ -13,7 +13,7 @@ interface LayoutProps {
 
 export const Header: React.FC = () => {
   return (
-    <HStack w='60vw' h='10vh' display='flex' flexDir='row'>
+    <HStack w='60vw' h='10vh' maxW='1600px' display='flex' flexDir='row'>
       <Link href={ROUTES.HOME}>
         <Subspace />
       </Link>

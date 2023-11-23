@@ -1,6 +1,6 @@
 export const pageStyles = {
   minW: '60vw',
-  maxW: '80vw',
+  maxW: '1600px',
   mt: '10',
   p: '4',
   border: '0'

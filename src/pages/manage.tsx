@@ -26,8 +26,8 @@ const Page: React.FC = () => {
       </HStack>
       {subspaceAccount ? (
         <>
-          <OperatorsList operatorOwner={subspaceAccount} />
           <OperatorsTotal operatorOwner={subspaceAccount} />
+          <OperatorsList operatorOwner={subspaceAccount} />
         </>
       ) : (
         <Box mt='4'>
