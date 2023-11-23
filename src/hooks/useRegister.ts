@@ -21,7 +21,7 @@ export const useRegister = () => {
   const { push } = useRouter()
   const currentRegistration = useRegistration((state) => state.currentRegistration)
   const saveCurrentRegistration = useRegistration((state) => state.saveCurrentRegistration)
-  const addRegistration = useRegistration((state) => state.addRegistration)
+  const clearCurrentRegistration = useRegistration((state) => state.clearCurrentRegistration)
   const setErrorsField = useRegistration((state) => state.setErrorsField)
   const accountDetails = useExtension((state) => state.accountDetails)
   const stakingConstants = useExtension((state) => state.stakingConstants)
@@ -100,7 +100,7 @@ export const useRegister = () => {
     try {
       await handleRegisterOperator(currentRegistration)
 
-      addRegistration(currentRegistration)
+      clearCurrentRegistration()
       push(ROUTES.MANAGE)
     } catch (error) {
       toast({
@@ -109,7 +109,7 @@ export const useRegister = () => {
         ...toastConfig
       })
     }
-  }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
+  }, [clearCurrentRegistration, currentRegistration, handleRegisterOperator, push, toast])
 
   return {
     domainsOptions,
