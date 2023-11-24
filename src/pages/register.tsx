@@ -18,13 +18,16 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { ConnectWallet, FormButton } from '../components/buttons'
 import { Intro } from '../components/intro'
-import { EXTERNAL_ROUTES, SYMBOL, headingStyles, pageStyles } from '../constants'
+import { EXTERNAL_ROUTES, headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useRegister } from '../hooks/useRegister'
 import { useWallet } from '../hooks/useWallet'
+import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
+  const chainDetails = useExtension((state) => state.chainDetails)
+  const { tokenSymbol } = chainDetails
   const { extension, handleConnect } = useWallet()
   const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { handleOnchainData } = useOnchainData()
@@ -60,7 +63,7 @@ const Page: React.FC = () => {
               )}
             </FormControl>
             <FormControl isInvalid={isErrorsField['amountToStake']}>
-              <FormLabel>Amount to stake, {SYMBOL}</FormLabel>
+              <FormLabel>Amount to stake, {tokenSymbol}</FormLabel>
               <InputGroup size='md' mt='4'>
                 <Input name='amountToStake' value={formattedAmountToStake} onChange={handleChange} />
                 <InputRightElement>
@@ -87,7 +90,7 @@ const Page: React.FC = () => {
           </GridItem>
           <GridItem w='100%'>
             <FormControl isInvalid={isErrorsField['minimumNominatorStake']}>
-              <FormLabel>Minimum Nominator Stake, {SYMBOL}</FormLabel>
+              <FormLabel>Minimum Nominator Stake, {tokenSymbol}</FormLabel>
               <Input
                 name='minimumNominatorStake'
                 value={formattedMinimumNominatorStake}
