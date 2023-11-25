@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, HStack, Heading, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
-import { SYMBOL, headingStyles, textStyles } from '../constants'
+import { headingStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, formatNumber, hexToNumber } from '../utils'
 
@@ -9,18 +9,19 @@ interface OperatorsTotalProps {
 }
 
 export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner }) => {
-  const stakingConstants = useExtension((state) => state.stakingConstants)
+  const { stakingConstants, chainDetails } = useExtension((state) => state)
+  const { tokenDecimals, tokenSymbol } = chainDetails
 
   const totalFundsInStake = useMemo(() => {
     if (operatorOwner)
       return stakingConstants.operators
         .filter((operator) => operator.operatorOwner === operatorOwner)
-        .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake), 0)
+        .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals), 0)
     return stakingConstants.operators.reduce(
-      (acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake),
+      (acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals),
       0
     )
-  }, [operatorOwner, stakingConstants.operators])
+  }, [operatorOwner, stakingConstants.operators, tokenDecimals])
 
   // To-Do: Implement this
   const totalFundsInStakeAvailable = useMemo(() => {
@@ -49,7 +50,7 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
       </Box>
       <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
         <GridItem w='100%'>
-          <Text style={textStyles.heading}>Funds in Stake, {SYMBOL}</Text>
+          <Text style={textStyles.heading}>Funds in Stake, {tokenSymbol}</Text>
           <Text style={textStyles.value}>{formatNumber(totalFundsInStake)}</Text>
 
           <Text style={textStyles.heading} mt='8'>
@@ -58,11 +59,11 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
           <Text style={textStyles.value}>{totalNominators}</Text>
         </GridItem>
         <GridItem w='100%'>
-          <Text style={textStyles.heading}>Available for withdrawal, {SYMBOL}</Text>
+          <Text style={textStyles.heading}>Available for withdrawal, {tokenSymbol}</Text>
           <Text style={textStyles.value}>{formatNumber(totalFundsInStakeAvailable)}</Text>
 
           <Text style={textStyles.heading} mt='8'>
-            Nominator’s funds, {SYMBOL}
+            Nominator’s funds, {tokenSymbol}
           </Text>
           <Text style={textStyles.value}>{formatNumber(totalNominatorsStake)}</Text>
         </GridItem>

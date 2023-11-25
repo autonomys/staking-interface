@@ -2,13 +2,7 @@ import { useToast } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
-import {
-  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
-  DECIMALS,
-  ERROR_REGISTRATION_FAILED,
-  ROUTES,
-  toastConfig
-} from '../constants'
+import { AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT, ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { Option } from '../types'
@@ -19,13 +13,12 @@ import { useTx } from './useTx'
 export const useRegister = () => {
   const toast = useToast()
   const { push } = useRouter()
-  const currentRegistration = useRegistration((state) => state.currentRegistration)
-  const saveCurrentRegistration = useRegistration((state) => state.saveCurrentRegistration)
-  const addRegistration = useRegistration((state) => state.addRegistration)
-  const setErrorsField = useRegistration((state) => state.setErrorsField)
-  const accountDetails = useExtension((state) => state.accountDetails)
-  const stakingConstants = useExtension((state) => state.stakingConstants)
+  const { currentRegistration, saveCurrentRegistration, addRegistration, setErrorsField } = useRegistration(
+    (state) => state
+  )
+  const { accountDetails, stakingConstants, chainDetails } = useExtension((state) => state)
   const { handleRegisterOperator } = useTx()
+  const { tokenDecimals } = chainDetails
 
   const detectError = useCallback((key: string, value: string) => {
     switch (key) {
@@ -61,19 +54,19 @@ export const useRegister = () => {
       if (name === 'minimumNominatorStake')
         saveCurrentRegistration({
           ...currentRegistration,
-          minimumNominatorStake: parseNumber(value),
+          minimumNominatorStake: parseNumber(value, tokenDecimals),
           formattedMinimumNominatorStake: value
         })
       else if (name === 'amountToStake')
         saveCurrentRegistration({
           ...currentRegistration,
-          amountToStake: parseNumber(value),
+          amountToStake: parseNumber(value, tokenDecimals),
           formattedAmountToStake: value
         })
       else saveCurrentRegistration({ ...currentRegistration, [name]: value })
       setErrorsField(name, detectError(name, value))
     },
-    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField]
+    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, tokenDecimals]
   )
 
   const handleDomainChange = useCallback(
@@ -92,9 +85,9 @@ export const useRegister = () => {
     saveCurrentRegistration({
       ...currentRegistration,
       amountToStake: amount.toString(),
-      formattedAmountToStake: formatNumber(amount / 10 ** DECIMALS)
+      formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
     })
-  }, [accountDetails, currentRegistration, saveCurrentRegistration])
+  }, [accountDetails, currentRegistration, saveCurrentRegistration, tokenDecimals])
 
   const handleSubmit = useCallback(async () => {
     try {

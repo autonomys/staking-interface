@@ -1,17 +1,15 @@
 import { CheckIcon, ChevronDownIcon, HamburgerIcon, WarningTwoIcon } from '@chakra-ui/icons'
 import { Button, HStack, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, VStack } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { ActionType, DECIMALS, SUBSCAN_URL, SYMBOL, TransactionStatus } from '../constants'
+import { ActionType, SUBSCAN_URL, TransactionStatus } from '../constants'
 import { useExtension, useTransactions } from '../states/extension'
 import { Transaction } from '../types'
 import { capitalizeFirstLetter } from '../utils'
 
 export const TransactionsSpotter: React.FC = () => {
-  const api = useExtension((state) => state.api)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
-
-  const transactions = useTransactions((state) => state.transactions)
-  const changeTransactionStatus = useTransactions((state) => state.changeTransactionStatus)
+  const { api, subspaceAccount, chainDetails } = useExtension((state) => state)
+  const { transactions, changeTransactionStatus } = useTransactions((state) => state)
+  const { tokenDecimals, tokenSymbol } = chainDetails
 
   const userTransactions = useMemo(
     () => transactions.filter((transaction) => transaction.sender === subspaceAccount).reverse(),
@@ -68,8 +66,8 @@ export const TransactionsSpotter: React.FC = () => {
                 {transactionStatusIcon(transaction)} {capitalizeFirstLetter(transaction.method)}{' '}
                 {transaction.parameters &&
                   ` on domain Id ${transaction.parameters[0]} with ${
-                    parseInt(transaction.parameters[1]) / 10 ** DECIMALS
-                  } ${SYMBOL}`}
+                    parseInt(transaction.parameters[1]) / 10 ** tokenDecimals
+                  } ${tokenSymbol}`}
               </Text>
             </VStack>
           )
@@ -88,7 +86,7 @@ export const TransactionsSpotter: React.FC = () => {
               <Text ml='2'>
                 {transactionStatusIcon(transaction)} {capitalizeFirstLetter(ActionType.AddFunds)}
                 {transaction.parameters &&
-                  ` ${parseInt(transaction.parameters[1]) / 10 ** DECIMALS} ${SYMBOL} from operator Id ${
+                  ` ${parseInt(transaction.parameters[1]) / 10 ** tokenDecimals} ${tokenSymbol} from operator Id ${
                     transaction.parameters[0]
                   }`}
               </Text>
@@ -100,9 +98,9 @@ export const TransactionsSpotter: React.FC = () => {
               <Text ml='2'>
                 {transactionStatusIcon(transaction)} {capitalizeFirstLetter(ActionType.Withdraw)}
                 {transaction.parameters &&
-                  ` ${JSON.parse(transaction.parameters[1]).Some / 10 ** DECIMALS} ${SYMBOL} from operator Id ${
-                    transaction.parameters[0]
-                  }`}
+                  ` ${
+                    JSON.parse(transaction.parameters[1]).Some / 10 ** tokenDecimals
+                  } ${tokenSymbol} from operator Id ${transaction.parameters[0]}`}
               </Text>
             </VStack>
           )
@@ -110,7 +108,7 @@ export const TransactionsSpotter: React.FC = () => {
           break
       }
     },
-    [transactionStatusIcon]
+    [tokenDecimals, tokenSymbol, transactionStatusIcon]
   )
 
   const transactionsList = useMemo(
