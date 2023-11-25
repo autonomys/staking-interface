@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { ActionType, ROUTES, SYMBOL, actionButtonStyles } from '../constants'
+import { ActionType, ROUTES, actionButtonStyles } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
@@ -37,7 +37,7 @@ interface ActionsProps {
 export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
   const finalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const stakingConstants = useExtension((state) => state.stakingConstants)
+  const { stakingConstants, chainDetails } = useExtension((state) => state)
   const [actionSelected, setActionSelected] = useState<ActionType | null>(null)
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const {
@@ -49,6 +49,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
     handleMaxAmountToWithdraw,
     handleSubmit
   } = useManage()
+  const { tokenSymbol } = chainDetails
 
   const operator = useMemo(
     () => stakingConstants.operators.find((operator) => operator.operatorId === operatorId),
@@ -121,7 +122,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
                       name='amount'
                       borderColor='brand.500'
                       border='1px'
-                      placeholder={`Amount, ${SYMBOL}`}
+                      placeholder={`Amount, ${tokenSymbol}`}
                       value={addFundsAmount.formattedAmount}
                       onChange={(e) => handleChangeAmount(ActionType.AddFunds, e)}
                       _placeholder={{ color: '#7D7D7D' }}
@@ -146,7 +147,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
                       name='amount'
                       borderColor='brand.500'
                       border='1px'
-                      placeholder={`Amount, ${SYMBOL}`}
+                      placeholder={`Amount, ${tokenSymbol}`}
                       value={withdrawAmount.formattedAmount}
                       onChange={(e) => handleChangeAmount(ActionType.Withdraw, e)}
                       _placeholder={{ color: '#7D7D7D' }}

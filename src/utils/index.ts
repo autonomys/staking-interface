@@ -10,10 +10,10 @@ export const formatNumber = (number: number | string, decimals = 3) => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-export const parseNumber = (number: string) => (parseFloat(number) * 10 ** DECIMALS).toString()
+export const parseNumber = (number: string, decimals: number = DECIMALS) => (BigInt(parseFloat(number)) * BigInt(10 ** decimals)).toString()
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
 
-export const hexToNumber = (hex: string) => parseInt(hex, 16) / 10 ** DECIMALS
+export const hexToNumber = (hex: string, decimals: number = DECIMALS) => parseInt(hex, 16) / 10 ** decimals
 
 export const hexToFormattedNumber = (hex: string, decimals = 3) => formatNumber(hexToNumber(hex), decimals)

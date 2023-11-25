@@ -1,4 +1,4 @@
-import { ExtensionState, Registration, StakingConstants } from '../types'
+import { ChainDetails, ExtensionState, Registration, StakingConstants } from '../types'
 export * from './errors'
 export * from './styles'
 
@@ -55,6 +55,14 @@ export const initialExtensionValues: ExtensionState = {
   loading: false,
   data: undefined,
   error: null
+}
+
+export const initialChainDetails: ChainDetails = {
+  chain: 'Subspace',
+  name: 'Subspace',
+  tokenDecimals: DECIMALS,
+  tokenSymbol: SYMBOL,
+  ss58Format: SUBSPACE_ACCOUNT_FORMAT
 }
 
 export const initialStakingConstants: StakingConstants = {

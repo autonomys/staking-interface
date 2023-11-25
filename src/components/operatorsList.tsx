@@ -2,7 +2,7 @@ import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
-import { ROUTES, SUBSPACE_ACCOUNT_FORMAT, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
+import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber } from '../utils'
 import { Actions } from './actions'
@@ -12,9 +12,8 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
-  const extension = useExtension((state) => state.extension)
-  const stakingConstants = useExtension((state) => state.stakingConstants)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { ss58Format } = chainDetails
 
   const operators = useMemo(() => {
     if (operatorOwner) return stakingConstants.operators.filter((operator) => operator.operatorOwner === operatorOwner)
@@ -69,9 +68,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {operators.map((operator, key) => {
                 const findMatchingAccount =
                   extension.data &&
-                  extension.data.accounts.find(
-                    (a) => encodeAddress(a.address, SUBSPACE_ACCOUNT_FORMAT) === operator.operatorOwner
-                  )
+                  extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
                 const accountLabel =
                   findMatchingAccount && findMatchingAccount.meta.name
                     ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
