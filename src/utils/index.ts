@@ -7,8 +7,7 @@ export const formatNumber = (number: number | string, decimals = 4) => {
   return (Math.round(number * 100) / 100).toFixed(decimals).toLocaleString()
 }
 
-export const parseNumber = (number: string, decimals: number = DECIMALS) =>
-  (parseFloat(number) * 10 ** decimals).toString()
+export const parseNumber = (number: string, decimals: number = decimals) => (BigInt(parseFloat(number)) * BigInt(10 ** decimals)).toString()
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
 
