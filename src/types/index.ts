@@ -24,6 +24,14 @@ export type AccountDetails = {
   }
 }
 
+export type ChainDetails = {
+  chain: string
+  name: string
+  tokenDecimals: number
+  tokenSymbol: string
+  ss58Format: number
+}
+
 export type StakingConstants = {
   maxNominators: number
   minOperatorStake: bigint

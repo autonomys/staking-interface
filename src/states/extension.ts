@@ -2,8 +2,8 @@ import { ApiPromise } from '@polkadot/api'
 import { InjectedExtension } from '@polkadot/extension-inject/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { initialExtensionValues, initialStakingConstants, TransactionStatus } from '../constants'
-import { AccountDetails, ExtensionState, NewTransaction, StakingConstants, Transaction } from '../types'
+import { TransactionStatus, initialChainDetails, initialExtensionValues, initialStakingConstants } from '../constants'
+import { AccountDetails, ChainDetails, ExtensionState, NewTransaction, StakingConstants, Transaction } from '../types'
 
 interface RegistrationState {
   api: ApiPromise | undefined
@@ -11,18 +11,20 @@ interface RegistrationState {
   subspaceAccount: string | undefined
   injectedExtension: InjectedExtension | undefined
   accountDetails: AccountDetails | undefined
+  chainDetails: ChainDetails
   stakingConstants: StakingConstants
   setApi: (api: ApiPromise) => void
   setExtension: (registration: ExtensionState) => void
   setSubspaceAccount: (subspaceAccount: string) => void
   setInjectedExtension: (injectedExtension: InjectedExtension) => void
   setAccountDetails: (accountDetails: AccountDetails) => void
+  setChainDetails: (chainDetails: ChainDetails) => void
   setStakingConstants: (networkConstants: StakingConstants) => void
 }
 
 interface LastConnection {
   subspaceAccount: string | undefined
-  setSubspaceAccount: (subspaceAccount: string) => void
+  setSubspaceAccount: (subspaceAccount: string | undefined) => void
 }
 
 interface TransactionsState {
@@ -37,12 +39,14 @@ export const useExtension = create<RegistrationState>((set) => ({
   subspaceAccount: undefined,
   injectedExtension: undefined,
   accountDetails: undefined,
+  chainDetails: initialChainDetails,
   stakingConstants: initialStakingConstants,
   setApi: (api) => set(() => ({ api })),
   setExtension: (extension) => set(() => ({ extension })),
   setSubspaceAccount: (subspaceAccount) => set(() => ({ subspaceAccount })),
   setInjectedExtension: (injectedExtension) => set(() => ({ injectedExtension })),
   setAccountDetails: (accountDetails) => set(() => ({ accountDetails })),
+  setChainDetails: (chainDetails) => set(() => ({ chainDetails })),
   setStakingConstants: (stakingConstants) => set(() => ({ stakingConstants }))
 }))
 

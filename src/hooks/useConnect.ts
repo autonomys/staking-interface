@@ -2,21 +2,26 @@ import { useDisclosure } from '@chakra-ui/react'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/keyring'
 import { useCallback, useEffect } from 'react'
-import { SUBSPACE_ACCOUNT_FORMAT, SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
+import { SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
 import { useExtension, useLastConnection } from '../states/extension'
 import { AccountDetails } from '../types'
 
 export const useConnect = () => {
-  const extension = useExtension((state) => state.extension)
-  const api = useExtension((state) => state.api)
-  const setExtension = useExtension((state) => state.setExtension)
-  const setSubspaceAccount = useExtension((state) => state.setSubspaceAccount)
-  const setInjectedExtension = useExtension((state) => state.setInjectedExtension)
-  const setAccountDetails = useExtension((state) => state.setAccountDetails)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
-  const lastSubspaceAccount = useLastConnection((state) => state.subspaceAccount)
-  const setLastSubspaceAccount = useLastConnection((state) => state.setSubspaceAccount)
+  const {
+    api,
+    extension,
+    subspaceAccount,
+    chainDetails,
+    setExtension,
+    setSubspaceAccount,
+    setInjectedExtension,
+    setAccountDetails
+  } = useExtension((state) => state)
+  const { subspaceAccount: lastSubspaceAccount, setSubspaceAccount: setLastSubspaceAccount } = useLastConnection(
+    (state) => state
+  )
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
+  const { ss58Format } = chainDetails
 
   const handleConnect = useCallback(async () => {
     setExtension({ ...initialExtensionValues, loading: true })
@@ -43,14 +48,14 @@ export const useConnect = () => {
             defaultAccount
           }
         })
-        setSubspaceAccount(encodeAddress(defaultAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setSubspaceAccount(encodeAddress(defaultAccount.address, ss58Format))
         setLastSubspaceAccount(defaultAccount.address)
       })
       .catch((error) => {
         console.error('Error with connect', error)
         setExtension({ error, loading: false, data: undefined })
       })
-  }, [lastSubspaceAccount, setExtension, setInjectedExtension, setLastSubspaceAccount, setSubspaceAccount])
+  }, [lastSubspaceAccount, setExtension, setInjectedExtension, setLastSubspaceAccount, setSubspaceAccount, ss58Format])
 
   const handleSelectFirstWalletFromExtension = useCallback(
     async (source: string) => {
@@ -64,12 +69,12 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
-        setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setSubspaceAccount(encodeAddress(mainAccount.address, ss58Format))
         setLastSubspaceAccount(mainAccount.address)
       }
       onConnectClose()
     },
-    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount, setLastSubspaceAccount]
+    [handleConnect, extension, onConnectClose, setExtension, setSubspaceAccount, ss58Format, setLastSubspaceAccount]
   )
 
   const handleSelectWallet = useCallback(
@@ -83,11 +88,11 @@ export const useConnect = () => {
             defaultAccount: mainAccount
           }
         })
-        setSubspaceAccount(encodeAddress(mainAccount.address, SUBSPACE_ACCOUNT_FORMAT))
+        setSubspaceAccount(encodeAddress(mainAccount.address, ss58Format))
         setLastSubspaceAccount(mainAccount.address)
       }
     },
-    [extension, setExtension, setLastSubspaceAccount, setSubspaceAccount]
+    [extension, setExtension, setLastSubspaceAccount, setSubspaceAccount, ss58Format]
   )
 
   const handleRefreshBalance = useCallback(async () => {
@@ -98,7 +103,10 @@ export const useConnect = () => {
     setAccountDetails(accountDetails)
   }, [api, extension.data, setAccountDetails])
 
-  const handleDisconnect = useCallback(() => setExtension(initialExtensionValues), [setExtension])
+  const handleDisconnect = useCallback(() => {
+    setExtension(initialExtensionValues)
+    setLastSubspaceAccount(undefined)
+  }, [setExtension, setLastSubspaceAccount])
 
   useEffect(() => {
     if (api && extension.data) handleRefreshBalance()

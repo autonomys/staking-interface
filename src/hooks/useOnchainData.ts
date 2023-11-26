@@ -13,8 +13,7 @@ import {
 } from '../types'
 
 export const useOnchainData = () => {
-  const setApi = useExtension((state) => state.setApi)
-  const setStakingConstants = useExtension((state) => state.setStakingConstants)
+  const { setApi, setChainDetails, setStakingConstants } = useExtension((state) => state)
 
   const domainIdFiltering = useMemo(() => parseInt(process.env.NEXT_PUBLIC_DOMAIN_ID || '0'), [])
 
@@ -23,75 +22,42 @@ export const useOnchainData = () => {
       if (!process.env.NEXT_PUBLIC_PROVIDER_URL) throw new Error('NEXT_PUBLIC_PROVIDER_URL not set')
 
       const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_PROVIDER_URL)
-      const _api = await ApiPromise.create({ provider: wsProvider })
-      if (_api) {
-        setApi(_api)
-        const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } =
-          _api.consts.domains
+      const api = await ApiPromise.create({ provider: wsProvider })
+      if (api) {
+        setApi(api)
 
-        const domainRegistry = await _api.query.domains.domainRegistry.entries()
-        const domainStakingSummary = await _api.query.domains.domainStakingSummary.entries()
-        const operatorIdOwner = await _api.query.domains.operatorIdOwner.entries()
-        const operators = await _api.query.domains.operators.entries()
+        const [
+          domains,
+          chain,
+          name,
+          properties,
+          domainRegistry,
+          domainStakingSummary,
+          operatorIdOwner,
+          operators,
+          pendingStakingOperationCount,
+          pendingDeposits
+        ] = await Promise.all([
+          api.consts.domains,
+          api.rpc.system.chain(),
+          api.rpc.system.name(),
+          api.rpc.system.properties(),
+          api.query.domains.domainRegistry.entries(),
+          api.query.domains.domainStakingSummary.entries(),
+          api.query.domains.operatorIdOwner.entries(),
+          api.query.domains.operators.entries(),
+          api.query.domains.pendingStakingOperationCount.entries(),
+          api.query.domains.pendingDeposits.entries()
+        ])
+        const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } = domains
 
-        const pendingStakingOperationCount = await _api.query.domains.pendingStakingOperationCount.entries()
-        const pendingDeposits = await _api.query.domains.pendingDeposits.entries()
-        const pendingOperatorDeregistrations = await _api.query.domains.pendingOperatorDeregistrations.entries()
-        const pendingOperatorSwitches = await _api.query.domains.pendingOperatorSwitches.entries()
-        // const pendingOperatorUnlocks = await _api.query.domains.pendingOperatorUnlocks.entries()
-        // console.log('pendingOperatorUnlocks', pendingOperatorUnlocks)
-        const pendingSlashes = await _api.query.domains.pendingSlashes.entries()
-        const pendingUnlocks = await _api.query.domains.pendingUnlocks.entries()
-        const pendingWithdrawals = await _api.query.domains.pendingWithdrawals.entries()
-        console.log(
-          'pendingStakingOperationCount',
-          pendingStakingOperationCount.map((operator) => {
-            return {
-              [0]: operator[0].toHuman(),
-              [1]: operator[1].toJSON()
-            }
-          })
-        )
-        console.log(
-          'pendingDeposits',
-          pendingDeposits.map((operator) => {
-            return {
-              [0]: operator[0].toHuman(),
-              [1]: operator[1].toHuman()
-            }
-          })
-        )
-        console.log('pendingOperatorDeregistrations', pendingOperatorDeregistrations)
-        console.log('pendingOperatorSwitches', pendingOperatorSwitches)
-        console.log(
-          'pendingSlashes',
-          pendingSlashes.map((operator) => {
-            return {
-              [0]: operator[0].toHuman(),
-              [1]: operator[1].toJSON()
-            }
-          })
-        )
-        console.log(
-          'pendingUnlocks',
-          pendingUnlocks.map((operator) => {
-            return {
-              [0]: operator[0].toHuman(),
-              [1]: operator[1].toJSON()
-            }
-          })
-        )
-
-        console.log(
-          'pendingWithdrawals',
-          pendingWithdrawals.map((operator) => {
-            return {
-              [0]: operator[0].toHuman(),
-              [1]: operator[1].toHuman()
-            }
-          })
-        )
-
+        setChainDetails({
+          chain: chain.toJSON(),
+          name: name.toJSON(),
+          tokenDecimals: (properties.tokenDecimals.toJSON() as number[])[0],
+          tokenSymbol: (properties.tokenSymbol.toJSON() as string[])[0],
+          ss58Format: properties.ss58Format.toJSON() as number
+        })
         setStakingConstants({
           maxNominators: Number(maxNominators.toString()),
           minOperatorStake: BigInt(minOperatorStake.toString()),
@@ -131,7 +97,7 @@ export const useOnchainData = () => {
     } catch (error) {
       console.error(error)
     }
-  }, [domainIdFiltering, setApi, setStakingConstants])
+  }, [domainIdFiltering, setApi, setChainDetails, setStakingConstants])
 
   return {
     handleOnchainData

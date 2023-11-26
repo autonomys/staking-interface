@@ -1,4 +1,5 @@
-import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
+import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
@@ -11,8 +12,8 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
-  const stakingConstants = useExtension((state) => state.stakingConstants)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { ss58Format } = chainDetails
 
   const operators = useMemo(() => {
     if (operatorOwner) return stakingConstants.operators.filter((operator) => operator.operatorOwner === operatorOwner)
@@ -50,53 +51,60 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
           </Thead>
           {operators.length === 0 ? (
             <Tbody>
-              {[0, 1, 2, 3].map((_, key) => (
+              {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} isNumeric>
-                    {key}
+                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 8 : 7}>
+                    <Text>No operators found</Text>
+                    {subspaceAccount === operatorOwner && (
+                      <Text>
+                        If you recently register a operator, it may take up to 10 minutes for the operator to be added.
+                      </Text>
+                    )}
                   </Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text}></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  <Td {...textStyles.text} isNumeric></Td>
-                  {isOneOfTheOperators && <Td {...textStyles.text}></Td>}
                 </Tr>
               ))}
             </Tbody>
           ) : (
             <Tbody>
-              {operators.map((operator, key) => (
-                <Tr key={key}>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorDetail.currentDomainId}
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorId}
-                  </Td>
-                  <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
-                  <Td {...textStyles.link}>
-                    <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
-                      {formatAddress(operatorOwner ?? operator.operatorOwner)}
-                    </Link>
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {operator.operatorDetail.nominationTax}%
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
-                  </Td>
-                  <Td {...textStyles.text} isNumeric>
-                    {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
-                  </Td>
-                  {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
-                    <Td {...textStyles.text}>
-                      <Actions operatorId={operator.operatorId} />
+              {operators.map((operator, key) => {
+                const findMatchingAccount =
+                  extension.data &&
+                  extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
+                const accountLabel =
+                  findMatchingAccount && findMatchingAccount.meta.name
+                    ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
+                    : formatAddress(operatorOwner ?? operator.operatorOwner)
+                return (
+                  <Tr key={key}>
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorDetail.currentDomainId}
                     </Td>
-                  )}
-                </Tr>
-              ))}
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorId}
+                    </Td>
+                    <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
+                    <Td {...textStyles.link}>
+                      <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
+                        {accountLabel}
+                      </Link>
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {operator.operatorDetail.nominationTax}%
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
+                      {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
+                    </Td>
+                    {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
+                      <Td {...textStyles.text}>
+                        <Actions operatorId={operator.operatorId} />
+                      </Td>
+                    )}
+                  </Tr>
+                )
+              })}
             </Tbody>
           )}
         </Table>

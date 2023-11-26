@@ -1,4 +1,4 @@
-import { ExtensionState, Registration, StakingConstants } from '../types'
+import { ChainDetails, ExtensionState, Registration, StakingConstants } from '../types'
 export * from './errors'
 export * from './styles'
 
@@ -11,10 +11,10 @@ export const ROUTES = {
 }
 
 export const EXTERNAL_ROUTES = {
-  OPERATORS_DOCS: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/operators',
-  STAKING_INCENTIVES: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/intro',
-  STAKING_INFORMATION: 'https://docs.subspace.network/docs/Farming%20&%20Staking/Staking/',
-  RISK: 'https://docs.subspace.network/docs/security'
+  OPERATORS_DOCS: 'https://docs.subspace.network/docs/farming-&-staking/staking/operators',
+  STAKING_INCENTIVES: 'https://docs.subspace.network/docs/farming-&-staking/staking/intro',
+  STAKING_INFORMATION: 'https://docs.subspace.network/docs/farming-&-staking/staking/',
+  RISK: 'https://docs.subspace.network/docs/learn/security'
 }
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
@@ -28,6 +28,8 @@ export const DECIMALS = 18
 export const SUBSCAN_URL = 'https://subspace.subscan.io/'
 
 export const MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER = 30
+
+export const AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT = 5000000000000000
 
 export enum ActionType {
   Deregister = 'deregister',
@@ -55,6 +57,14 @@ export const initialExtensionValues: ExtensionState = {
   loading: false,
   data: undefined,
   error: null
+}
+
+export const initialChainDetails: ChainDetails = {
+  chain: 'Subspace',
+  name: 'Subspace',
+  tokenDecimals: DECIMALS,
+  tokenSymbol: SYMBOL,
+  ss58Format: SUBSPACE_ACCOUNT_FORMAT
 }
 
 export const initialStakingConstants: StakingConstants = {

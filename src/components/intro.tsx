@@ -1,10 +1,14 @@
 import { Box, HStack, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
-import { EXTERNAL_ROUTES, SYMBOL, headingStyles } from '../constants'
+import { EXTERNAL_ROUTES, headingStyles } from '../constants'
+import { useExtension } from '../states/extension'
 import { Wallet } from './icons'
 
 export const Intro: React.FC = () => {
+  const chainDetails = useExtension((state) => state.chainDetails)
+  const { tokenSymbol } = chainDetails
+
   return (
     <Box>
       <HStack mb='6'>
@@ -12,8 +16,8 @@ export const Intro: React.FC = () => {
         <Heading {...headingStyles.page}>Staking as a pool operator</Heading>
       </HStack>
       <Text>
-        {SYMBOL} holders (Gemini 3g testnet network only) can stake their {SYMBOL} to add more security to the protocol
-        and earn{' '}
+        {tokenSymbol} holders (Gemini 3g testnet network only) can stake their {tokenSymbol} to add more security to the
+        protocol and earn{' '}
         <u>
           <Link href={EXTERNAL_ROUTES.STAKING_INCENTIVES}>Staking Incentives</Link>
         </u>

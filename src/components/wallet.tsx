@@ -23,7 +23,7 @@ import {
 import { encodeAddress } from '@polkadot/keyring'
 import Image from 'next/image'
 import { useRef } from 'react'
-import { SUBSPACE_ACCOUNT_FORMAT, connectWalletButtonStyles } from '../constants'
+import { connectWalletButtonStyles } from '../constants'
 import { useConnect } from '../hooks/useConnect'
 import { useExtension } from '../states/extension'
 import { formatAddress } from '../utils'
@@ -46,8 +46,7 @@ const ExtensionIcon: React.FC<ExtensionIconProps> = ({ extension }) => {
 }
 
 export const ConnectWallet = () => {
-  const extension = useExtension((state) => state.extension)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const { extension, subspaceAccount, chainDetails } = useExtension((state) => state)
   const {
     handleSelectFirstWalletFromExtension,
     handleSelectWallet,
@@ -57,6 +56,7 @@ export const ConnectWallet = () => {
     onConnectClose
   } = useConnect()
   const finalRef = useRef(null)
+  const { ss58Format } = chainDetails
 
   return (
     <>
@@ -78,7 +78,11 @@ export const ConnectWallet = () => {
                   bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
                 }}>
                 <ExtensionIcon extension={account.meta.source} />
-                <Text ml='2'>{formatAddress(encodeAddress(account.address, SUBSPACE_ACCOUNT_FORMAT))}</Text>
+                <Text ml='2'>
+                  {`${account.meta.name && `(${account.meta.name})`} ${formatAddress(
+                    encodeAddress(account.address, ss58Format)
+                  )}`}
+                </Text>
               </MenuItem>
             ))}
             <MenuDivider />

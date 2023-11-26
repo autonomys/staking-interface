@@ -1,6 +1,11 @@
 import { useToast } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import { ActionType, DECIMALS, ERROR_DESC_INFORMATION_INCORRECT, toastConfig } from '../constants'
+import {
+  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
+  ActionType,
+  ERROR_DESC_INFORMATION_INCORRECT,
+  toastConfig
+} from '../constants'
 import { useExtension } from '../states/extension'
 import { useManageState } from '../states/manage'
 import { capitalizeFirstLetter, formatNumber, parseNumber } from '../utils'
@@ -8,18 +13,20 @@ import { useTx } from './useTx'
 
 export const useManage = () => {
   const toast = useToast()
-  const accountDetails = useExtension((state) => state.accountDetails)
-  const stakingConstants = useExtension((state) => state.stakingConstants)
-  const deregister = useManageState((state) => state.deregister)
-  const addFundsAmount = useManageState((state) => state.addFundsAmount)
-  const withdrawAmount = useManageState((state) => state.withdrawAmount)
-  const setDeregister = useManageState((state) => state.setDeregister)
-  const setAddFundsOperator = useManageState((state) => state.setAddFundsOperator)
-  const setWithdrawOperator = useManageState((state) => state.setWithdrawOperator)
-  const setAddFundsAmount = useManageState((state) => state.setAddFundsAmount)
-  const setWithdrawAmount = useManageState((state) => state.setWithdrawAmount)
-  const clearInput = useManageState((state) => state.clearInput)
+  const { accountDetails, stakingConstants, chainDetails } = useExtension((state) => state)
+  const {
+    deregister,
+    addFundsAmount,
+    withdrawAmount,
+    setDeregister,
+    setAddFundsOperator,
+    setWithdrawOperator,
+    setAddFundsAmount,
+    setWithdrawAmount,
+    clearInput
+  } = useManageState((state) => state)
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
+  const { tokenDecimals } = chainDetails
 
   const operatorId = useCallback(
     (actionType: ActionType) => {
@@ -58,30 +65,32 @@ export const useManage = () => {
         case ActionType.AddFunds:
           setAddFundsAmount({
             ...addFundsAmount,
-            amount: parseNumber(e.target.value),
+            amount: parseNumber(e.target.value, tokenDecimals),
             formattedAmount: e.target.value
           })
           break
         case ActionType.Withdraw:
           setWithdrawAmount({
             ...withdrawAmount,
-            amount: parseNumber(e.target.value),
+            amount: parseNumber(e.target.value, tokenDecimals),
             formattedAmount: e.target.value
           })
           break
       }
     },
-    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, withdrawAmount]
+    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, tokenDecimals, withdrawAmount]
   )
 
   const handleMaxAmountToAddFunds = useCallback(() => {
     if (!accountDetails) return
+    const fullAmount = parseInt(accountDetails.data.free, 16)
+    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
     setAddFundsAmount({
       ...addFundsAmount,
-      amount: accountDetails.data.free,
-      formattedAmount: formatNumber(accountDetails.data.free)
+      amount: amount.toString(),
+      formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
     })
-  }, [accountDetails, addFundsAmount, setAddFundsAmount])
+  }, [accountDetails, addFundsAmount, setAddFundsAmount, tokenDecimals])
 
   const handleMaxAmountToWithdraw = useCallback(() => {
     const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
@@ -89,9 +98,9 @@ export const useManage = () => {
     setWithdrawAmount({
       ...withdrawAmount,
       amount: amount.toString(),
-      formattedAmount: formatNumber(amount / 10 ** DECIMALS)
+      formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
     })
-  }, [setWithdrawAmount, stakingConstants.operators, withdrawAmount])
+  }, [setWithdrawAmount, stakingConstants.operators, tokenDecimals, withdrawAmount])
 
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {
