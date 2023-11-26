@@ -39,7 +39,6 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
         <Table {...tableStyles}>
           <Thead {...tHeadStyles}>
             <Tr>
-              <Th isNumeric>DomainID</Th>
               <Th>OperatorID</Th>
               <Th>Signing key</Th>
               <Th>Operator Account</Th>
@@ -53,7 +52,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 8 : 7}>
+                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 7 : 6}>
                     <Text>No operators found</Text>
                     {subspaceAccount === operatorOwner && (
                       <Text>
@@ -76,9 +75,6 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                     : formatAddress(operatorOwner ?? operator.operatorOwner)
                 return (
                   <Tr key={key}>
-                    <Td {...textStyles.text} isNumeric>
-                      {operator.operatorDetail.currentDomainId}
-                    </Td>
                     <Td {...textStyles.text} isNumeric>
                       {operator.operatorId}
                     </Td>

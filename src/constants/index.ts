@@ -38,7 +38,7 @@ export enum ActionType {
 }
 
 export const initialRegistrationValues: Registration = {
-  domainId: '',
+  domainId: process.env.NEXT_PUBLIC_DOMAIN_ID || '0',
   minimumNominatorStake: '',
   formattedMinimumNominatorStake: '',
   amountToStake: '',

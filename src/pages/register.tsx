@@ -32,8 +32,7 @@ const Page: React.FC = () => {
   const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { handleOnchainData } = useOnchainData()
   const { currentRegistration, isErrorsField } = useRegistration((state) => state)
-  const { domainId, formattedAmountToStake, signingKey, formattedMinimumNominatorStake, nominatorTax } =
-    currentRegistration
+  const { formattedAmountToStake, signingKey, formattedMinimumNominatorStake, nominatorTax } = currentRegistration
 
   useEffect(() => {
     handleOnchainData()
@@ -49,12 +48,7 @@ const Page: React.FC = () => {
             <FormControl isInvalid={isErrorsField['domainId']}>
               <FormLabel>Domain ID</FormLabel>
               <Box mt='6'>
-                <Select
-                  name='domainId'
-                  value={domainsOptions.find((option) => option.value === domainId)}
-                  onChange={handleDomainChange}
-                  options={domainsOptions}
-                />
+                <Select name='domainId' value={domainsOptions} onChange={handleDomainChange} options={domainsOptions} />
               </Box>
               {isErrorsField['domainId'] ? (
                 <FormErrorMessage h='10'>The Domain ID you enter is not valid</FormErrorMessage>

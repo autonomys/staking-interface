@@ -13,7 +13,7 @@ import { useTx } from './useTx'
 export const useRegister = () => {
   const toast = useToast()
   const { push } = useRouter()
-  const { currentRegistration, saveCurrentRegistration, addRegistration, setErrorsField } = useRegistration(
+  const { currentRegistration, saveCurrentRegistration, clearCurrentRegistration, setErrorsField } = useRegistration(
     (state) => state
   )
   const { accountDetails, stakingConstants, chainDetails } = useExtension((state) => state)
@@ -93,7 +93,7 @@ export const useRegister = () => {
     try {
       await handleRegisterOperator(currentRegistration)
 
-      addRegistration(currentRegistration)
+      clearCurrentRegistration()
       push(ROUTES.MANAGE)
     } catch (error) {
       toast({
@@ -102,7 +102,7 @@ export const useRegister = () => {
         ...toastConfig
       })
     }
-  }, [addRegistration, currentRegistration, handleRegisterOperator, push, toast])
+  }, [clearCurrentRegistration, currentRegistration, handleRegisterOperator, push, toast])
 
   return {
     domainsOptions,
