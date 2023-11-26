@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import { ActionType, initialActionInput } from '../constants'
 import { ActionInput } from '../types'
 
@@ -15,34 +14,24 @@ interface ManageState {
   clearInput: (actionType: ActionType) => void
 }
 
-export const useManageState = create<ManageState>()(
-  persist(
-    (set) => ({
-      deregister: '',
-      addFundsAmount: initialActionInput,
-      withdrawAmount: initialActionInput,
-      setDeregister: (deregister) => set(() => ({ deregister })),
-      setAddFundsOperator: (operatorId) =>
-        set((states) => ({ addFundsAmount: { ...states.addFundsAmount, operatorId } })),
-      setWithdrawOperator: (operatorId) =>
-        set((states) => ({ withdrawAmount: { ...states.withdrawAmount, operatorId } })),
-      setAddFundsAmount: (amount) => set((states) => ({ addFundsAmount: { ...states.addFundsAmount, ...amount } })),
-      setWithdrawAmount: (amount) => set((states) => ({ withdrawAmount: { ...states.withdrawAmount, ...amount } })),
-      clearInput: (actionType: ActionType) =>
-        set(() => {
-          switch (actionType) {
-            case ActionType.Deregister:
-              return { deregister: '' }
-            case ActionType.AddFunds:
-              return { addFundsAmount: initialActionInput }
-            case ActionType.Withdraw:
-              return { withdrawAmount: initialActionInput }
-          }
-        })
-    }),
-    {
-      name: 'manage',
-      version: 1
-    }
-  )
-)
+export const useManageState = create<ManageState>((set) => ({
+  deregister: '',
+  addFundsAmount: initialActionInput,
+  withdrawAmount: initialActionInput,
+  setDeregister: (deregister) => set(() => ({ deregister })),
+  setAddFundsOperator: (operatorId) => set((states) => ({ addFundsAmount: { ...states.addFundsAmount, operatorId } })),
+  setWithdrawOperator: (operatorId) => set((states) => ({ withdrawAmount: { ...states.withdrawAmount, operatorId } })),
+  setAddFundsAmount: (amount) => set((states) => ({ addFundsAmount: { ...states.addFundsAmount, ...amount } })),
+  setWithdrawAmount: (amount) => set((states) => ({ withdrawAmount: { ...states.withdrawAmount, ...amount } })),
+  clearInput: (actionType: ActionType) =>
+    set(() => {
+      switch (actionType) {
+        case ActionType.Deregister:
+          return { deregister: '' }
+        case ActionType.AddFunds:
+          return { addFundsAmount: initialActionInput }
+        case ActionType.Withdraw:
+          return { withdrawAmount: initialActionInput }
+      }
+    })
+}))
