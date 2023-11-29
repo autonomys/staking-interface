@@ -4,8 +4,9 @@ import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
-import { formatAddress, hexToFormattedNumber } from '../utils'
+import { formatAddress, hexToFormattedNumber, hexToNumber } from '../utils'
 import { Actions } from './actions'
+import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsListProps {
   operatorOwner?: string
@@ -88,10 +89,14 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                       {operator.operatorDetail.nominationTax}%
                     </Td>
                     <Td {...textStyles.text} isNumeric>
-                      {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
+                      <TooltipAmount amount={hexToNumber(operator.operatorDetail.minimumNominatorStake)}>
+                        {hexToFormattedNumber(operator.operatorDetail.minimumNominatorStake)}
+                      </TooltipAmount>
                     </Td>
                     <Td {...textStyles.text} isNumeric>
-                      {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
+                      <TooltipAmount amount={hexToNumber(operator.operatorDetail.currentTotalStake)}>
+                        {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
+                      </TooltipAmount>
                     </Td>
                     {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
                       <Td {...textStyles.text}>

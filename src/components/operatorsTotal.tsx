@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { headingStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { formatAddress, formatNumber, hexToNumber } from '../utils'
+import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsTotalProps {
   operatorOwner?: string
@@ -51,7 +52,9 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
       <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
         <GridItem w='100%'>
           <Text style={textStyles.heading}>Funds in Stake, {tokenSymbol}</Text>
-          <Text style={textStyles.value}>{formatNumber(totalFundsInStake)}</Text>
+          <Text style={textStyles.value}>
+            <TooltipAmount amount={totalFundsInStake}>{formatNumber(totalFundsInStake)}</TooltipAmount>
+          </Text>
 
           <Text style={textStyles.heading} mt='8'>
             Number of Nominators
@@ -60,12 +63,18 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
         </GridItem>
         <GridItem w='100%'>
           <Text style={textStyles.heading}>Available for withdrawal, {tokenSymbol}</Text>
-          <Text style={textStyles.value}>{formatNumber(totalFundsInStakeAvailable)}</Text>
+          <Text style={textStyles.value}>
+            <TooltipAmount amount={totalFundsInStakeAvailable}>
+              {formatNumber(totalFundsInStakeAvailable)}
+            </TooltipAmount>
+          </Text>
 
           <Text style={textStyles.heading} mt='8'>
             Nominator’s funds, {tokenSymbol}
           </Text>
-          <Text style={textStyles.value}>{formatNumber(totalNominatorsStake)}</Text>
+          <Text style={textStyles.value}>
+            <TooltipAmount amount={totalNominatorsStake}>{formatNumber(totalNominatorsStake)}</TooltipAmount>
+          </Text>
         </GridItem>
       </Grid>
     </Box>
