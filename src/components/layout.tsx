@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
           <Box w='100%' h='100%'>
             <Center pb={3}>
               <Heading size='md' {...textStyles.text}>
-                Other tools
+                Social
               </Heading>
             </Center>
             <Grid h='100px' templateColumns='repeat(9, 1fr)'>
