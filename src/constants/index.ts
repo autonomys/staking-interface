@@ -14,7 +14,17 @@ export const EXTERNAL_ROUTES = {
   OPERATORS_DOCS: 'https://docs.subspace.network/docs/farming-&-staking/staking/operators',
   STAKING_INCENTIVES: 'https://docs.subspace.network/docs/farming-&-staking/staking/intro',
   STAKING_INFORMATION: 'https://docs.subspace.network/docs/farming-&-staking/staking/',
-  RISK: 'https://docs.subspace.network/docs/learn/security'
+  RISK: 'https://docs.subspace.network/docs/learn/security',
+  ASTRAL: 'https://explorer.subspace.network/',
+  DISCORD: 'https://discord.gg/subspace-network',
+  TELEGRAM: 'https://t.me/subspace_network',
+  TWITTER: 'https://twitter.com/NetworkSubspace',
+  GITHUB: 'https://github.com/subspace',
+  REDDIT: 'https://www.reddit.com/r/sub',
+  MEDIUM: 'https://medium.com/subspace-network',
+  YOUTUBE: 'https://www.youtube.com/channel/UCojYRCZOtVTJHJXivOYJzeQ',
+  LINKEDIN: 'https://www.linkedin.com/company/subspace-blockchain/',
+  POLKAVERSE: 'https://app.subsocial.network/@NetworkSubspace'
 }
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
