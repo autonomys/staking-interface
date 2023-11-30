@@ -18,7 +18,7 @@ const TokenBalanceSection: React.FC = () => {
       {subspaceAccount && (
         <>
           <TokenBalance />
-          <Tooltip hasArrow label='Account balance' aria-label='Account balance' placement='bottom'>
+          <Tooltip hasArrow label='Account balance' aria-label='Account balance' placement='bottom' bg='brand.500'>
             <Text whiteSpace='nowrap'>
               {accountBalance} {tokenSymbol}
             </Text>
