@@ -136,13 +136,6 @@ export const Footer: React.FC = () => {
                   </Tooltip>
                 </Link>
               </GridItem>
-              <GridItem>
-                <Link href={EXTERNAL_ROUTES.POLKAVERSE} target='_blank'>
-                  <Tooltip hasArrow label='PolkaVerse' aria-label='Discord' bg='brand.500'>
-                    <Image src='/images/subsocial.svg' width={24} height={24} alt='Reddit' />
-                  </Tooltip>
-                </Link>
-              </GridItem>
             </Grid>
           </Box>
         </Grid>

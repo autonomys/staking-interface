@@ -23,8 +23,7 @@ export const EXTERNAL_ROUTES = {
   REDDIT: 'https://www.reddit.com/r/sub',
   MEDIUM: 'https://medium.com/subspace-network',
   YOUTUBE: 'https://www.youtube.com/channel/UCojYRCZOtVTJHJXivOYJzeQ',
-  LINKEDIN: 'https://www.linkedin.com/company/subspace-blockchain/',
-  POLKAVERSE: 'https://app.subsocial.network/@NetworkSubspace'
+  LINKEDIN: 'https://www.linkedin.com/company/subspace-blockchain/'
 }
 
 export const SUBSPACE_EXTENSION_ID = 'subspace-staking-interface'
