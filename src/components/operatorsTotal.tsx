@@ -41,15 +41,21 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
   }, [operatorOwner, stakingConstants.operators, totalPendingDeposits])
 
   const totalFundsInStakeAvailable = useMemo(() => {
+    const minOperatorStake = Number(BigInt(stakingConstants.minOperatorStake) / BigInt(10 ** tokenDecimals))
     if (operatorOwner)
       return stakingConstants.operators
         .filter((operator) => operator.operatorOwner === operatorOwner)
-        .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals), 0)
-    return stakingConstants.operators.reduce(
-      (acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals),
-      0
-    )
-  }, [operatorOwner, stakingConstants.operators, tokenDecimals])
+        .reduce((acc, operator) => {
+          const amount = hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals)
+          if (amount <= minOperatorStake) return acc
+          return acc + amount - minOperatorStake
+        }, 0)
+    return stakingConstants.operators.reduce((acc, operator) => {
+      const amount = hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals)
+      if (amount <= minOperatorStake) return acc
+      return acc + amount - minOperatorStake
+    }, 0)
+  }, [operatorOwner, stakingConstants.minOperatorStake, stakingConstants.operators, tokenDecimals])
 
   // To-Do: Implement this
   const totalNominators = useMemo(() => {
