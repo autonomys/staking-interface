@@ -30,24 +30,12 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
   }, [totalFundsInStake])
 
   const totalNominators = useMemo(() => {
-    return stakingConstants.nominators.reduce((acc, nominator) => {
-      const nominatorOperator = stakingConstants.operators.find(
-        (operator) => operator.operatorId === nominator.operatorId
-      )
-      if (nominatorOperator?.operatorOwner === operatorOwner) return acc + 1
-      return acc
-    }, 0)
-  }, [operatorOwner, stakingConstants.nominators, stakingConstants.operators])
+    return stakingConstants.nominators.reduce((acc) => acc + 1, 0)
+  }, [stakingConstants.nominators])
 
   const totalNominatorsStake = useMemo(() => {
-    return stakingConstants.nominators.reduce((acc, nominator) => {
-      const nominatorOperator = stakingConstants.operators.find(
-        (operator) => operator.operatorId === nominator.operatorId
-      )
-      if (nominatorOperator?.operatorOwner === operatorOwner) return acc + hexToNumber(nominator.shares)
-      return acc
-    }, 0)
-  }, [operatorOwner, stakingConstants.nominators, stakingConstants.operators])
+    return stakingConstants.nominators.reduce((acc, nominator) => acc + hexToNumber(nominator.shares), 0)
+  }, [stakingConstants.nominators])
 
   return (
     <Box>
