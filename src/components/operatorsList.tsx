@@ -21,11 +21,6 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
     return stakingConstants.operators
   }, [operatorOwner, stakingConstants.operators])
 
-  const isOneOfTheOperators = useMemo(
-    () => subspaceAccount && stakingConstants.operators.find((operator) => operator.operatorOwner === subspaceAccount),
-    [stakingConstants.operators, subspaceAccount]
-  )
-
   return (
     <Box>
       <Box mt='6'>
@@ -46,14 +41,14 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
-              {isOneOfTheOperators && <Th>Actions</Th>}
+              {subspaceAccount && <Th>Actions</Th>}
             </Tr>
           </Thead>
           {operators.length === 0 ? (
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 7 : 6}>
+                  <Td {...textStyles.text} colSpan={subspaceAccount ? 7 : 6}>
                     <Text>No operators found</Text>
                     {subspaceAccount === operatorOwner && (
                       <Text>
@@ -98,7 +93,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                         {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                       </TooltipAmount>
                     </Td>
-                    {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
+                    {subspaceAccount && (
                       <Td {...textStyles.text}>
                         <Actions operatorId={operator.operatorId} />
                       </Td>
