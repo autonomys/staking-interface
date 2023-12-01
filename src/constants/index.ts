@@ -73,6 +73,7 @@ export const initialStakingConstants: StakingConstants = {
   domainRegistry: [],
   domainStakingSummary: [],
   operators: [],
+  nominators: [],
   pendingStakingOperationCount: []
 }
 
