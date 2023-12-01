@@ -6,6 +6,7 @@ import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber, hexToNumber } from '../utils'
 import { Actions } from './actions'
+import { FundsInStake } from './fundsInStake'
 import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsListProps {
@@ -92,6 +93,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                       <TooltipAmount amount={hexToNumber(operator.operatorDetail.currentTotalStake)}>
                         {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                       </TooltipAmount>
+                      <FundsInStake operatorId={operator.operatorId} />
                     </Td>
                     {subspaceAccount && (
                       <Td {...textStyles.text}>
