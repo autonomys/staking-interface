@@ -86,7 +86,7 @@ export const useOnchainData = () => {
             return {
               operatorId: (nominator[0][0].toHuman() as string[])[0],
               nominatorOwner: (nominator[0][0].toHuman() as string[])[1],
-              shares: BigInt((nominator[0][1].toJSON() as { shares: string })['shares']).toString()
+              shares: (nominator[0][1].toJSON() as { shares: string })['shares']
             }
           }),
           pendingStakingOperationCount: pendingStakingOperationCount.map(
