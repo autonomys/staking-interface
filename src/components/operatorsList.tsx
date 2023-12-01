@@ -11,9 +11,10 @@ import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsListProps {
   operatorOwner?: string
+  fromManage?: boolean
 }
 
-export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
+export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
   const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
@@ -21,6 +22,20 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
     if (operatorOwner) return stakingConstants.operators.filter((operator) => operator.operatorOwner === operatorOwner)
     return stakingConstants.operators
   }, [operatorOwner, stakingConstants.operators])
+
+  const nominatorsOperators = useMemo(() => {
+    if (fromManage) {
+      const nominators = stakingConstants.nominators.filter((operator) => operator.nominatorOwner === operatorOwner)
+      return stakingConstants.operators.filter((operator) =>
+        nominators.find((nominator) => nominator.operatorId === operator.operatorId)
+      )
+    }
+  }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
+
+  const operatorsList = useMemo(
+    () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
+    [fromManage, nominatorsOperators, operators]
+  )
 
   return (
     <Box>
@@ -45,7 +60,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               {subspaceAccount && <Th>Actions</Th>}
             </Tr>
           </Thead>
-          {operators.length === 0 ? (
+          {operatorsList.length === 0 ? (
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
