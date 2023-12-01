@@ -89,7 +89,7 @@ export type OperatorDetail = {
   nominationTax: number
   currentTotalStake: string
   currentEpochRewards: number
-  totalShares: number
+  totalShares: string
   status: string
 }
 
