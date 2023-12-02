@@ -31,7 +31,7 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
           )}
         </HStack>
       </Box>
-      <Grid templateColumns='repeat(4, 1fr)' gap={6}>
+      <Grid templateColumns='repeat(5, 1fr)' gap={1}>
         {orderedOperators.length === 0
           ? [0].map((_, key) => (
               <GridItem key={key} w='100%'>
@@ -53,7 +53,7 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
                   : formatAddress(operatorOwner ?? operator.operatorOwner)
               return (
                 <GridItem key={key} w='100%'>
-                  <Card m={2}>
+                  <Card m={2} p={2} border='1px' borderX='#EDECEC' borderY='#DFDCDC' borderStyle='solid'>
                     <VStack>
                       <HStack>
                         <Tag colorScheme='brand' variant='outline'>
@@ -63,7 +63,9 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
                       </HStack>
                       <HStack>
                         <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
-                          <Text {...textStyles.link}>{accountLabel}</Text>
+                          <Tag colorScheme='brand' variant='solid'>
+                            {accountLabel}
+                          </Tag>
                         </Link>
                       </HStack>
                       <HStack>
@@ -86,8 +88,10 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
                           </Text>
                         </TooltipAmount>
                       </HStack>
-                      <FundsInStake operatorId={operator.operatorId} />
-                      {subspaceAccount && <Actions operatorId={operator.operatorId} />}
+                      <HStack>
+                        <FundsInStake operatorId={operator.operatorId} />
+                        {subspaceAccount && <Actions operatorId={operator.operatorId} />}
+                      </HStack>
                     </VStack>
                   </Card>
                 </GridItem>

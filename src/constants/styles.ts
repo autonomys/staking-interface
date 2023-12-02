@@ -89,4 +89,21 @@ export const connectWalletButtonStyles = {
   }
 }
 
-export const actionButtonStyles = connectWalletButtonStyles
+export const actionButtonStyles = {
+  ...connectWalletButtonStyles,
+  variant: 'outline',
+  color: 'brand.500',
+  minW: '40px',
+  bgGradient: undefined,
+  border: '1px solid #4D397A',
+  borderRadius: 6,
+  size: 'sm',
+  _hover: {
+    bgGradient: 'linear(to-r, #4D397A, #EA71F9)',
+    color: '#FFFFFF'
+  },
+  _active: {
+    bgGradient: 'linear(to-r, #4D397A, #EA71F9)',
+    color: '#FFFFFF'
+  }
+}
