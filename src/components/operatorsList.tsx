@@ -1,8 +1,9 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
+import { useOrderedOperators } from '../hooks/useOrderedOperators'
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber, hexToNumber } from '../utils'
 import { Actions } from './actions'
@@ -15,27 +16,10 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
-  const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { extension, subspaceAccount, chainDetails } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
-  const operators = useMemo(() => {
-    if (operatorOwner) return stakingConstants.operators.filter((operator) => operator.operatorOwner === operatorOwner)
-    return stakingConstants.operators
-  }, [operatorOwner, stakingConstants.operators])
-
-  const nominatorsOperators = useMemo(() => {
-    if (fromManage) {
-      const nominators = stakingConstants.nominators.filter((operator) => operator.nominatorOwner === operatorOwner)
-      return stakingConstants.operators.filter((operator) =>
-        nominators.find((nominator) => nominator.operatorId === operator.operatorId)
-      )
-    }
-  }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
-
-  const operatorsList = useMemo(
-    () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
-    [fromManage, nominatorsOperators, operators]
-  )
+  const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
 
   return (
     <Box>
@@ -54,13 +38,13 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
               <Th>OperatorID</Th>
               <Th>Signing key</Th>
               <Th>Operator Account</Th>
-              <Th isNumeric>NominatorTax</Th>
+              <Th isNumeric>Nominator Tax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
               {subspaceAccount && <Th>Actions</Th>}
             </Tr>
           </Thead>
-          {operatorsList.length === 0 ? (
+          {orderedOperators.length === 0 ? (
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
@@ -77,7 +61,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
             </Tbody>
           ) : (
             <Tbody>
-              {operators.map((operator, key) => {
+              {orderedOperators.map((operator, key) => {
                 const findMatchingAccount =
                   extension.data &&
                   extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
