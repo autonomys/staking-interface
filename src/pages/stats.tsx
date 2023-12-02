@@ -1,5 +1,5 @@
 import { Box, HStack, Heading } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Wallet } from '../components/icons'
 import { OperatorsCards } from '../components/operatorsCards'
 import { OperatorsList } from '../components/operatorsList'
@@ -10,6 +10,7 @@ import { useOnchainData } from '../hooks/useOnchainData'
 import { useView } from '../states/view'
 
 const Page: React.FC = () => {
+  const [clientSide, setClientSide] = useState(false)
   const { handleOnchainData } = useOnchainData()
   const { operatorsListType } = useView()
 
@@ -17,7 +18,12 @@ const Page: React.FC = () => {
     handleOnchainData()
   }, [handleOnchainData])
 
-  console.log('operatorsListType', operatorsListType)
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
+
   return (
     <Box {...pageStyles}>
       <HStack>
