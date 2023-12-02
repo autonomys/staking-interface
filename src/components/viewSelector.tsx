@@ -2,13 +2,14 @@ import { DragHandleIcon, HamburgerIcon, UpDownIcon } from '@chakra-ui/icons'
 import { ButtonGroup, HStack, IconButton, Spacer, Text } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
 import { Select } from 'chakra-react-select'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ViewOrderBy, ViewOrderDirection } from '../constants'
 import { useView } from '../states/view'
 import { Option } from '../types'
 import { capitalizeFirstLetter } from '../utils'
 
 export const ViewSelector: React.FC = () => {
+  const [clientSide, setClientSide] = useState(false)
   const {
     operatorsOrderBy,
     operatorsOrderByDirection,
@@ -55,18 +56,24 @@ export const ViewSelector: React.FC = () => {
     [operatorsOrderByDirection, setOperatorsOrderByDirectionAscending, setOperatorsOrderByDirectionDescending]
   )
 
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
+
   return (
     <HStack w='100%' spacing={4} mt={8}>
       <Text>View</Text>
       <ButtonGroup size='md' isAttached variant='outline' colorScheme='brand'>
-        <IconButton aria-label='Add to friends' onClick={setOperatorsListTypeList} icon={<HamburgerIcon />} />
-        <IconButton aria-label='Add to friends' onClick={setOperatorsListTypeCardGrid} icon={<DragHandleIcon />} />
+        <IconButton aria-label='List view' onClick={setOperatorsListTypeList} icon={<HamburgerIcon />} />
+        <IconButton aria-label='Grid view' onClick={setOperatorsListTypeCardGrid} icon={<DragHandleIcon />} />
       </ButtonGroup>
       <Spacer />
       <Text>Order by</Text>
       <Select value={viewOrderByValue} onChange={handleOrderChange} options={viewOrderByOptions} />
       <ButtonGroup size='md' isAttached variant='outline' colorScheme='brand'>
-        <IconButton aria-label='Add to friends' onClick={handleOrderChangeDirection} icon={<UpDownIcon />} />
+        <IconButton aria-label='Switch order' onClick={handleOrderChangeDirection} icon={<UpDownIcon />} />
       </ButtonGroup>
     </HStack>
   )
