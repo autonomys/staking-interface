@@ -84,7 +84,7 @@ export const useOnchainData = () => {
               } as Operators
             })
             .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
-          nominators: nominators.map((nominator, key) => {
+          nominators: nominators.map((nominator) => {
             return {
               operatorId: (nominator[0].toHuman() as string[])[0],
               nominatorOwner: (nominator[0].toHuman() as string[])[1],
