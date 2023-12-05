@@ -7,6 +7,7 @@ export const ROUTES = {
   REGISTER: '/register',
   MANAGE: '/manage',
   STATS: '/stats',
+  OPERATORS: '/operators',
   OPERATOR_STATS: '/operatorStats'
 }
 
