@@ -77,7 +77,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
             </Tbody>
           ) : (
             <Tbody>
-              {operators.map((operator, key) => {
+              {operatorsList.map((operator, key) => {
                 const findMatchingAccount =
                   extension.data &&
                   extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
