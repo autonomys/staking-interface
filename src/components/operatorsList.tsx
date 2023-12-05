@@ -32,6 +32,11 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
     }
   }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
 
+  const nominatorsCount = useMemo(
+    () => stakingConstants.nominators.filter((operator) => operator.nominatorOwner !== operatorOwner).length,
+    [operatorOwner, stakingConstants.nominators]
+  )
+
   const operatorsList = useMemo(
     () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
     [fromManage, nominatorsOperators, operators]
@@ -54,7 +59,8 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
               <Th>OperatorID</Th>
               <Th>Signing key</Th>
               <Th>Operator Account</Th>
-              <Th isNumeric>NominatorTax</Th>
+              <Th isNumeric>Nominators Count</Th>
+              <Th isNumeric>Nominator Tax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
               {subspaceAccount && <Th>Actions</Th>}
@@ -95,6 +101,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                       <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
                         {accountLabel}
                       </Link>
+                    </Td>
+                    <Td {...textStyles.link} isNumeric>
+                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>{nominatorsCount}</Link>
                     </Td>
                     <Td {...textStyles.text} isNumeric>
                       {operator.operatorDetail.nominationTax}%
