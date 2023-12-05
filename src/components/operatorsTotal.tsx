@@ -2,7 +2,7 @@ import { Box, Grid, GridItem, HStack, Heading, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import { headingStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
-import { formatAddress, formatNumber, hexToNumber } from '../utils'
+import { calculateSharedToStake, formatAddress, formatNumber, hexToNumber } from '../utils'
 import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsTotalProps {
@@ -29,13 +29,47 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
     return totalFundsInStake
   }, [totalFundsInStake])
 
+  const totalOperators = useMemo(() => {
+    return stakingConstants.operators.reduce((acc) => acc + 1, 0)
+  }, [stakingConstants.operators])
+
+  const totalOperatorsStake = useMemo(() => {
+    return stakingConstants.operators.reduce(
+      (acc, operator) =>
+        acc +
+        calculateSharedToStake(
+          operator.operatorDetail.totalShares,
+          operator.operatorDetail.totalShares ?? '0x0',
+          operator.operatorDetail.currentTotalStake ?? '0x0'
+        ) -
+        calculateSharedToStake(
+          stakingConstants.nominators.find((nominator) => nominator.operatorId === operator.operatorId)?.shares ??
+            '0x0',
+          operator.operatorDetail.totalShares ?? '0x0',
+          operator.operatorDetail.currentTotalStake ?? '0x0'
+        ),
+      0
+    )
+  }, [stakingConstants.nominators, stakingConstants.operators])
+
   const totalNominators = useMemo(() => {
     return stakingConstants.nominators.reduce((acc) => acc + 1, 0)
   }, [stakingConstants.nominators])
 
   const totalNominatorsStake = useMemo(() => {
-    return stakingConstants.nominators.reduce((acc, nominator) => acc + hexToNumber(nominator.shares), 0)
-  }, [stakingConstants.nominators])
+    return stakingConstants.nominators.reduce(
+      (acc, nominator) =>
+        acc +
+        calculateSharedToStake(
+          nominator.shares,
+          stakingConstants.operators.find((operator) => operator.operatorId === nominator.operatorId)?.operatorDetail
+            .totalShares ?? '0x0',
+          stakingConstants.operators.find((operator) => operator.operatorId === nominator.operatorId)?.operatorDetail
+            .currentTotalStake ?? '0x0'
+        ),
+      0
+    )
+  }, [stakingConstants.nominators, stakingConstants.operators])
 
   return (
     <Box>
@@ -55,6 +89,11 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
           </Text>
 
           <Text style={textStyles.heading} mt='8'>
+            Number of Operators
+          </Text>
+          <Text style={textStyles.value}>{totalOperators}</Text>
+
+          <Text style={textStyles.heading} mt='8'>
             Number of Nominators
           </Text>
           <Text style={textStyles.value}>{totalNominators}</Text>
@@ -65,6 +104,13 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
             <TooltipAmount amount={totalFundsInStakeAvailable}>
               {formatNumber(totalFundsInStakeAvailable)}
             </TooltipAmount>
+          </Text>
+
+          <Text style={textStyles.heading} mt='8'>
+            Operator’s funds, {tokenSymbol}
+          </Text>
+          <Text style={textStyles.value}>
+            <TooltipAmount amount={totalOperatorsStake}>{formatNumber(totalOperatorsStake)}</TooltipAmount>
           </Text>
 
           <Text style={textStyles.heading} mt='8'>
