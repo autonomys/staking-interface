@@ -123,7 +123,7 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                         </TooltipAmount>
                         {operator && <FundsInStake operatorId={operator.operatorId} />}
                       </Td>
-                      {subspaceAccount && operator && (
+                      {subspaceAccount && operator && subspaceAccount === nominator.nominatorOwner && (
                         <Td {...textStyles.text}>
                           <Actions operatorId={operator.operatorId} />
                         </Td>
