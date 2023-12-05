@@ -85,10 +85,11 @@ export const useOnchainData = () => {
             })
             .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
           nominators: nominators.map((nominator) => {
+            const shares = String((nominator[1].toJSON() as { shares: string })['shares'])
             return {
               operatorId: (nominator[0].toHuman() as string[])[0],
               nominatorOwner: (nominator[0].toHuman() as string[])[1],
-              shares: (nominator[1].toJSON() as { shares: string })['shares']
+              shares: shares.startsWith('0x') ? shares : '0x' + BigInt(shares).toString(16)
             }
           }),
           pendingStakingOperationCount: pendingStakingOperationCount.map(
