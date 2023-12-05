@@ -32,11 +32,6 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
     }
   }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
 
-  const nominatorsCount = useMemo(
-    () => stakingConstants.nominators.filter((operator) => operator.nominatorOwner !== operatorOwner).length,
-    [operatorOwner, stakingConstants.nominators]
-  )
-
   const operatorsList = useMemo(
     () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
     [fromManage, nominatorsOperators, operators]
@@ -91,6 +86,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                   findMatchingAccount && findMatchingAccount.meta.name
                     ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
                     : formatAddress(operatorOwner ?? operator.operatorOwner)
+                const nominatorsCount =
+                  stakingConstants.nominators.filter((nominator) => nominator.operatorId === operator.operatorId)
+                    .length - 1
                 return (
                   <Tr key={key}>
                     <Td {...textStyles.text} isNumeric>
