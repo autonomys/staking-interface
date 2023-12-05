@@ -41,12 +41,11 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
             <Tr>
               <Th>Nominator Account</Th>
               <Th>OperatorID</Th>
-              <Th isNumeric>Share</Th>
-              <Th isNumeric>Total Operator Share</Th>
               <Th isNumeric>Nominator Tax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
-              <Th isNumeric>Funds in stake</Th>
-              <Th isNumeric>Total Funds in stake</Th>
+              <Th isNumeric>Funds stake</Th>
+              <Th isNumeric>% of Share</Th>
+              <Th isNumeric>Total Funds stake</Th>
               {subspaceAccount && <Th>Actions</Th>}
             </Tr>
           </Thead>
@@ -79,6 +78,12 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                     operator?.operatorDetail.totalShares ?? '0x0',
                     operator?.operatorDetail.currentTotalStake ?? '0x0'
                   )
+                  const percentage =
+                    operator &&
+                    formatNumber(
+                      (hexToNumber(nominator.shares) / hexToNumber(operator.operatorDetail.totalShares)) * 100,
+                      2
+                    )
                   return (
                     <Tr key={key}>
                       <Td {...textStyles.link}>
@@ -95,16 +100,6 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                         {nominator.operatorId}
                       </Td>
                       <Td {...textStyles.text} isNumeric>
-                        <TooltipAmount amount={hexToNumber(nominator.shares)}>
-                          {hexToFormattedNumber(nominator.shares)}
-                        </TooltipAmount>
-                      </Td>
-                      <Td {...textStyles.text} isNumeric>
-                        <TooltipAmount amount={hexToNumber(operator ? operator.operatorDetail.totalShares : '0x0')}>
-                          {operator && hexToFormattedNumber(operator.operatorDetail.totalShares)}
-                        </TooltipAmount>
-                      </Td>
-                      <Td {...textStyles.text} isNumeric>
                         {operator && operator.operatorDetail.nominationTax}%
                       </Td>
                       <Td {...textStyles.text} isNumeric>
@@ -115,6 +110,9 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                       </Td>
                       <Td {...textStyles.text} isNumeric>
                         <TooltipAmount amount={fundsInStake}>{formatNumber(fundsInStake)}</TooltipAmount>
+                      </Td>
+                      <Td {...textStyles.text} isNumeric>
+                        {percentage && `${formatNumber(percentage)}%`}
                       </Td>
                       <Td {...textStyles.text} isNumeric>
                         <TooltipAmount
