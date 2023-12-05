@@ -18,3 +18,6 @@ export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUppe
 export const hexToNumber = (hex: string, decimals: number = DECIMALS) => parseInt(hex, 16) / 10 ** decimals
 
 export const hexToFormattedNumber = (hex: string, decimals = 3) => formatNumber(hexToNumber(hex), decimals)
+
+export const calculateSharedToStake = (shares: string, totalShares: string, totalStake: string) =>
+  (hexToNumber(totalStake) / hexToNumber(totalShares)) * hexToNumber(shares)

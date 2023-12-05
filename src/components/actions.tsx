@@ -37,7 +37,7 @@ interface ActionsProps {
 export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
   const finalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { stakingConstants, chainDetails } = useExtension((state) => state)
+  const { subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
   const [actionSelected, setActionSelected] = useState<ActionType | null>(null)
   const isErrorsField = useRegistration((state) => state.isErrorsField)
   const {
@@ -54,6 +54,16 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
   const operator = useMemo(
     () => stakingConstants.operators.find((operator) => operator.operatorId === operatorId),
     [operatorId, stakingConstants.operators]
+  )
+
+  const isTheOperators = useMemo(() => {
+    const operators = stakingConstants.operators.find((operator) => operator.operatorId === operatorId)
+    return subspaceAccount && operators && operators.operatorOwner === subspaceAccount
+  }, [operatorId, stakingConstants.operators, subspaceAccount])
+
+  const ActionsList = useMemo(
+    () => (isTheOperators ? Object.values(ActionType) : [ActionType.AddFunds, ActionType.Withdraw]),
+    [isTheOperators]
   )
 
   const handleClickOnAction = useCallback(
@@ -82,7 +92,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
           Action
         </MenuButton>
         <MenuList>
-          {Object.values(ActionType).map((action) => (
+          {ActionsList.map((action) => (
             <MenuItem
               key={action}
               onClick={() => handleClickOnAction(action)}

@@ -40,6 +40,7 @@ export type StakingConstants = {
   domainRegistry: DomainRegistry[]
   domainStakingSummary: DomainStakingSummary[]
   operators: Operators[]
+  nominators: Nominators[]
   pendingStakingOperationCount: PendingStakingOperationCount[]
 }
 
@@ -88,7 +89,7 @@ export type OperatorDetail = {
   nominationTax: number
   currentTotalStake: string
   currentEpochRewards: number
-  totalShares: number
+  totalShares: string
   status: string
 }
 
@@ -96,6 +97,12 @@ export type Operators = {
   operatorId: string
   operatorOwner: string
   operatorDetail: OperatorDetail
+}
+
+export type Nominators = {
+  operatorId: string
+  nominatorOwner: string
+  shares: string
 }
 
 export type PendingStakingOperationCount = {

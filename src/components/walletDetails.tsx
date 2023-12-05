@@ -35,19 +35,23 @@ const TokenStakedSection: React.FC = () => {
 
   const accountBalanceStaked = useMemo(() => {
     return formatNumber(
-      stakingConstants.operators
-        .filter((operator) => operator.operatorOwner === subspaceAccount)
-        .reduce((acc, operator) => acc + hexToNumber(operator.operatorDetail.currentTotalStake, tokenDecimals), 0),
+      stakingConstants.nominators
+        .filter((nominator) => nominator.nominatorOwner === subspaceAccount)
+        .reduce((acc, nominator) => acc + hexToNumber(nominator.shares, tokenDecimals), 0),
       2
     )
-  }, [stakingConstants.operators, subspaceAccount, tokenDecimals])
+  }, [stakingConstants.nominators, subspaceAccount, tokenDecimals])
 
   return (
     <HStack w='6vw' h='8vh' maxW='120px' display='flex' flexDir='row'>
       {subspaceAccount && (
         <>
           <TokenStaked />
-          <Tooltip hasArrow label='Account balance staked' aria-label='Account balance staked' placement='bottom'>
+          <Tooltip
+            hasArrow
+            label='Account balance staked or nominated'
+            aria-label='Account balance staked or nominated'
+            placement='bottom'>
             <Text whiteSpace='nowrap'>
               {accountBalanceStaked} {tokenSymbol}
             </Text>

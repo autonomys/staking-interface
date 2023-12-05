@@ -6,13 +6,15 @@ import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../
 import { useExtension } from '../states/extension'
 import { formatAddress, hexToFormattedNumber, hexToNumber } from '../utils'
 import { Actions } from './actions'
+import { FundsInStake } from './fundsInStake'
 import { TooltipAmount } from './tooltipAmount'
 
 interface OperatorsListProps {
   operatorOwner?: string
+  fromManage?: boolean
 }
 
-export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) => {
+export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
   const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
@@ -21,9 +23,18 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
     return stakingConstants.operators
   }, [operatorOwner, stakingConstants.operators])
 
-  const isOneOfTheOperators = useMemo(
-    () => subspaceAccount && stakingConstants.operators.find((operator) => operator.operatorOwner === subspaceAccount),
-    [stakingConstants.operators, subspaceAccount]
+  const nominatorsOperators = useMemo(() => {
+    if (fromManage) {
+      const nominators = stakingConstants.nominators.filter((operator) => operator.nominatorOwner === operatorOwner)
+      return stakingConstants.operators.filter((operator) =>
+        nominators.find((nominator) => nominator.operatorId === operator.operatorId)
+      )
+    }
+  }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
+
+  const operatorsList = useMemo(
+    () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
+    [fromManage, nominatorsOperators, operators]
   )
 
   return (
@@ -46,14 +57,14 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
               <Th isNumeric>NominatorTax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
-              {isOneOfTheOperators && <Th>Actions</Th>}
+              {subspaceAccount && <Th>Actions</Th>}
             </Tr>
           </Thead>
-          {operators.length === 0 ? (
+          {operatorsList.length === 0 ? (
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} colSpan={isOneOfTheOperators ? 7 : 6}>
+                  <Td {...textStyles.text} colSpan={subspaceAccount ? 7 : 6}>
                     <Text>No operators found</Text>
                     {subspaceAccount === operatorOwner && (
                       <Text>
@@ -66,7 +77,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
             </Tbody>
           ) : (
             <Tbody>
-              {operators.map((operator, key) => {
+              {operatorsList.map((operator, key) => {
                 const findMatchingAccount =
                   extension.data &&
                   extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
@@ -97,8 +108,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner }) =
                       <TooltipAmount amount={hexToNumber(operator.operatorDetail.currentTotalStake)}>
                         {hexToFormattedNumber(operator.operatorDetail.currentTotalStake)}
                       </TooltipAmount>
+                      <FundsInStake operatorId={operator.operatorId} />
                     </Td>
-                    {isOneOfTheOperators && subspaceAccount && operator.operatorOwner === subspaceAccount && (
+                    {subspaceAccount && (
                       <Td {...textStyles.text}>
                         <Actions operatorId={operator.operatorId} />
                       </Td>
