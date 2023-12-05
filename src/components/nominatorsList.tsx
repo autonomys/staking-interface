@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
+import { Box, HStack, Heading, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
@@ -73,6 +73,7 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                     findMatchingAccount && findMatchingAccount.meta.name
                       ? `(${findMatchingAccount.meta.name}) ${formatAddress(nominator.nominatorOwner)}`
                       : formatAddress(nominator.nominatorOwner)
+                  const isOperator = operator?.operatorOwner === nominator.nominatorOwner
                   const fundsInStake = calculateSharedToStake(
                     nominator.shares,
                     operator?.operatorDetail.totalShares ?? '0x0',
@@ -82,6 +83,13 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                     <Tr key={key}>
                       <Td {...textStyles.link}>
                         <Link href={`${ROUTES.NOMINATORS_STATS}/${nominator.nominatorOwner}`}>{accountLabel}</Link>
+                        {isOperator && (
+                          <Link href={`${ROUTES.OPERATOR_STATS}/${nominator.nominatorOwner}`}>
+                            <Tag ml='2' colorScheme='brand'>
+                              Operator
+                            </Tag>
+                          </Link>
+                        )}
                       </Td>
                       <Td {...textStyles.text} isNumeric>
                         {nominator.operatorId}
