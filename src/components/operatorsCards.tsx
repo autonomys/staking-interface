@@ -23,7 +23,7 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
 
   return (
     <Box>
-      <Box mt='6'>
+      <Box mt={[2, 4, 6]}>
         <HStack mb='6'>
           <Heading {...headingStyles.paragraph}>Information across operators</Heading>
           {operatorOwner && (
@@ -31,7 +31,7 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
           )}
         </HStack>
       </Box>
-      <Grid templateColumns='repeat(5, 1fr)' gap={1}>
+      <Grid templateColumns={['repeat(1, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']} gap={1}>
         {orderedOperators.length === 0
           ? [0].map((_, key) => (
               <GridItem key={key} w='100%'>

@@ -2,17 +2,21 @@ import { Box, Center, HStack, Heading, Text } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { ConnectWallet } from '../components/buttons'
 import { Wallet } from '../components/icons'
+import { OperatorsCards } from '../components/operatorsCards'
 import { OperatorsList } from '../components/operatorsList'
 import { OperatorsTotal } from '../components/operatorsTotal'
-import { headingStyles, pageStyles } from '../constants'
+import { ViewSelector } from '../components/viewSelector'
+import { OperatorListType, headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useWallet } from '../hooks/useWallet'
 import { useExtension } from '../states/extension'
+import { useView } from '../states/view'
 
 const Page: React.FC = () => {
   const subspaceAccount = useExtension((state) => state.subspaceAccount)
   const { handleConnect } = useWallet()
   const { handleOnchainData } = useOnchainData()
+  const { operatorsListType } = useView()
 
   useEffect(() => {
     handleOnchainData()
@@ -27,7 +31,11 @@ const Page: React.FC = () => {
       {subspaceAccount ? (
         <>
           <OperatorsTotal operatorOwner={subspaceAccount} />
-          <OperatorsList operatorOwner={subspaceAccount} fromManage />
+          <ViewSelector />
+          {operatorsListType === OperatorListType.CARD_GRID && (
+            <OperatorsCards operatorOwner={subspaceAccount} fromManage />
+          )}
+          {operatorsListType === OperatorListType.LIST && <OperatorsList operatorOwner={subspaceAccount} fromManage />}
         </>
       ) : (
         <Box mt='4'>
