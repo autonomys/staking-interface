@@ -54,7 +54,8 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
               <Th>OperatorID</Th>
               <Th>Signing key</Th>
               <Th>Operator Account</Th>
-              <Th isNumeric>NominatorTax</Th>
+              <Th isNumeric>Nominators Count</Th>
+              <Th isNumeric>Nominator Tax</Th>
               <Th isNumeric>Min Nominator Stake</Th>
               <Th isNumeric>Funds in stake</Th>
               {subspaceAccount && <Th>Actions</Th>}
@@ -85,6 +86,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                   findMatchingAccount && findMatchingAccount.meta.name
                     ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
                     : formatAddress(operatorOwner ?? operator.operatorOwner)
+                const nominatorsCount =
+                  stakingConstants.nominators.filter((nominator) => nominator.operatorId === operator.operatorId)
+                    .length - 1
                 return (
                   <Tr key={key}>
                     <Td {...textStyles.text} isNumeric>
@@ -95,6 +99,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                       <Link href={`${ROUTES.OPERATOR_STATS}/${operatorOwner ?? operator.operatorOwner}`}>
                         {accountLabel}
                       </Link>
+                    </Td>
+                    <Td {...textStyles.link} isNumeric>
+                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>{nominatorsCount}</Link>
                     </Td>
                     <Td {...textStyles.text} isNumeric>
                       {operator.operatorDetail.nominationTax}%

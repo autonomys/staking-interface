@@ -48,9 +48,11 @@ export const useOnchainData = () => {
         ])
         const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } = domains
 
-        const nominators = await Promise.all(
-          operators.map((operator) => api.query.domains.nominators.entries((operator[0].toHuman() as string[])[0]))
-        )
+        const nominators = (
+          await Promise.all(
+            operators.map((operator) => api.query.domains.nominators.entries((operator[0].toHuman() as string[])[0]))
+          )
+        ).flat()
 
         setChainDetails({
           chain: chain.toJSON(),
@@ -83,10 +85,11 @@ export const useOnchainData = () => {
             })
             .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
           nominators: nominators.map((nominator) => {
+            const shares = String((nominator[1].toJSON() as { shares: string })['shares'])
             return {
-              operatorId: (nominator[0][0].toHuman() as string[])[0],
-              nominatorOwner: (nominator[0][0].toHuman() as string[])[1],
-              shares: (nominator[0][1].toJSON() as { shares: string })['shares']
+              operatorId: (nominator[0].toHuman() as string[])[0],
+              nominatorOwner: (nominator[0].toHuman() as string[])[1],
+              shares: shares.startsWith('0x') ? shares : '0x' + BigInt(shares).toString(16)
             }
           }),
           pendingStakingOperationCount: pendingStakingOperationCount.map(

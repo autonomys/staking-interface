@@ -8,7 +8,9 @@ export const ROUTES = {
   MANAGE: '/manage',
   STATS: '/stats',
   OPERATORS: '/operators',
-  OPERATOR_STATS: '/operatorStats'
+  NOMINATORS: '/nominators',
+  OPERATOR_STATS: '/operatorStats',
+  NOMINATORS_STATS: '/nominatorsStats'
 }
 
 export const EXTERNAL_ROUTES = {
