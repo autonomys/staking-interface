@@ -74,8 +74,8 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
           (acc, operator) =>
             acc +
             calculateSharedToStake(
-              stakingConstants.nominators.find((nominator) => nominator.operatorId === operator.operatorId)?.shares ??
-                '0x0',
+              stakingConstants.nominators.find((nominator) => nominator.nominatorOwner === operator.operatorOwner)
+                ?.shares ?? '0x0',
               operator.operatorDetail.totalShares ?? '0x0',
               operator.operatorDetail.currentTotalStake ?? '0x0'
             ),
@@ -86,8 +86,8 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
       (acc, operator) =>
         acc +
         calculateSharedToStake(
-          stakingConstants.nominators.find((nominator) => nominator.operatorId === operator.operatorId)?.shares ??
-            '0x0',
+          stakingConstants.nominators.find((nominator) => nominator.nominatorOwner === operator.operatorOwner)
+            ?.shares ?? '0x0',
           operator.operatorDetail.totalShares ?? '0x0',
           operator.operatorDetail.currentTotalStake ?? '0x0'
         ),
@@ -120,8 +120,8 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
               operator.operatorDetail.currentTotalStake ?? '0x0'
             ) -
             calculateSharedToStake(
-              stakingConstants.nominators.find((nominator) => nominator.operatorId === operator.operatorId)?.shares ??
-                '0x0',
+              stakingConstants.nominators.find((nominator) => nominator.nominatorOwner === operator.operatorOwner)
+                ?.shares ?? '0x0',
               operator.operatorDetail.totalShares ?? '0x0',
               operator.operatorDetail.currentTotalStake ?? '0x0'
             ),
@@ -137,8 +137,8 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
           operator.operatorDetail.currentTotalStake ?? '0x0'
         ) -
         calculateSharedToStake(
-          stakingConstants.nominators.find((nominator) => nominator.operatorId === operator.operatorId)?.shares ??
-            '0x0',
+          stakingConstants.nominators.find((nominator) => nominator.nominatorOwner === operator.operatorOwner)
+            ?.shares ?? '0x0',
           operator.operatorDetail.totalShares ?? '0x0',
           operator.operatorDetail.currentTotalStake ?? '0x0'
         ),
