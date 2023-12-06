@@ -160,9 +160,9 @@ export const Header: React.FC = () => {
           Manage your stake
         </Button>
       </Link>
-      <Link href={ROUTES.STATS}>
+      <Link href={ROUTES.OPERATORS}>
         <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Stats
+          Operators
         </Button>
       </Link>
       <Spacer />

@@ -16,7 +16,7 @@ import {
 import React, { useMemo } from 'react'
 import { textStyles } from '../constants'
 import { useExtension } from '../states/extension'
-import { hexToFormattedNumber, hexToNumber } from '../utils'
+import { calculateSharedToStake, formatNumber, hexToFormattedNumber, hexToNumber } from '../utils'
 import { TooltipAmount } from './tooltipAmount'
 
 interface ActionsProps {
@@ -38,12 +38,28 @@ export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
         .filter(
           (nominator) => nominator.operatorId === operatorId && nominator.nominatorOwner != operator.operatorOwner
         )
-        .reduce((acc, nominator) => acc + hexToNumber(nominator.shares), 0),
+        .reduce(
+          (acc, nominator) =>
+            acc +
+            calculateSharedToStake(
+              nominator.shares,
+              operator.operatorDetail.totalShares,
+              operator.operatorDetail.currentTotalStake
+            ),
+          0
+        ),
     [operator, stakingConstants.nominators, operatorId]
   )
 
   const operatorStake = useMemo(
-    () => operator && nominatorsStake && hexToNumber(operator.operatorDetail.currentTotalStake) - nominatorsStake,
+    () =>
+      operator &&
+      nominatorsStake &&
+      calculateSharedToStake(
+        operator.operatorDetail.totalShares,
+        operator.operatorDetail.totalShares,
+        operator.operatorDetail.currentTotalStake
+      ) - nominatorsStake,
     [operator, nominatorsStake]
   )
 
@@ -66,7 +82,7 @@ export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
                   <Text>Operator stake:</Text>
                   <TooltipAmount amount={operatorStake}>
                     <Text {...textStyles.text}>
-                      {operatorStake} {chainDetails.tokenSymbol}
+                      {formatNumber(operatorStake)} {chainDetails.tokenSymbol}
                     </Text>
                   </TooltipAmount>
                 </>
@@ -76,7 +92,7 @@ export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
                   <Text>Nominators stake:</Text>
                   <TooltipAmount amount={nominatorsStake}>
                     <Text {...textStyles.text}>
-                      {nominatorsStake} {chainDetails.tokenSymbol}
+                      {formatNumber(nominatorsStake)} {chainDetails.tokenSymbol}
                     </Text>
                   </TooltipAmount>
                 </>

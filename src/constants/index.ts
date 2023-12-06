@@ -7,7 +7,10 @@ export const ROUTES = {
   REGISTER: '/register',
   MANAGE: '/manage',
   STATS: '/stats',
-  OPERATOR_STATS: '/operatorStats'
+  OPERATORS: '/operators',
+  NOMINATORS: '/nominators',
+  OPERATOR_STATS: '/operatorStats',
+  NOMINATORS_STATS: '/nominatorsStats'
 }
 
 export const EXTERNAL_ROUTES = {
