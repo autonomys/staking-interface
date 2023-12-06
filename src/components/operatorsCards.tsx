@@ -1,7 +1,7 @@
 import { Box, Card, Grid, GridItem, HStack, Heading, Tag, Text, VStack } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ROUTES, headingStyles, textStyles } from '../constants'
 import { useOrderedOperators } from '../hooks/useOrderedOperators'
 import { useExtension } from '../states/extension'
@@ -16,10 +16,17 @@ interface operatorsCardsProps {
 }
 
 export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, fromManage }) => {
+  const [clientSide, setClientSide] = useState(false)
   const { extension, subspaceAccount, chainDetails } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
   const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
+
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
 
   return (
     <Box>

@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useExtension } from '../states/extension'
 import { calculateSharedToStake, formatAddress, formatNumber, hexToFormattedNumber, hexToNumber } from '../utils'
@@ -14,6 +14,7 @@ interface OperatorsListProps {
 }
 
 export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => {
+  const [clientSide, setClientSide] = useState(false)
   const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
@@ -26,6 +27,12 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
     if (operatorId) return stakingConstants.operators.filter((operator) => operator.operatorId === operatorId)
     return stakingConstants.operators
   }, [operatorId, stakingConstants.operators])
+
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
 
   return (
     <Box>
