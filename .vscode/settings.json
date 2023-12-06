@@ -12,5 +12,5 @@
   "editor.tabSize": 2,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
   "editor.formatOnSave": true,
-  "cSpell.words": ["subspace", "gemini", "subscan"]
+  "cSpell.words": ["subspace", "gemini", "subscan", "extrinsics"]
 }

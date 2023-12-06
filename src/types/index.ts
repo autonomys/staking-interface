@@ -42,6 +42,7 @@ export type StakingConstants = {
   operators: Operators[]
   nominators: Nominators[]
   pendingStakingOperationCount: PendingStakingOperationCount[]
+  pendingDeposits: PendingDeposit[]
 }
 
 export type DomainRegistry = {
@@ -117,6 +118,12 @@ export type Registration = {
   formattedAmountToStake: string
   nominatorTax: number
   signingKey: string
+}
+
+export type PendingDeposit = {
+  operatorId: string
+  operatorOwner: string
+  amount: string
 }
 
 export interface Option<T> extends OptionBase {
