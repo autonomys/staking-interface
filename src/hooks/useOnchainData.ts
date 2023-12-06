@@ -8,6 +8,7 @@ import {
   DomainStakingSummary,
   OperatorDetail,
   Operators,
+  PendingDeposit,
   PendingStakingOperationCount
 } from '../types'
 
@@ -34,7 +35,8 @@ export const useOnchainData = () => {
           domainStakingSummary,
           operatorIdOwner,
           operators,
-          pendingStakingOperationCount
+          pendingStakingOperationCount,
+          pendingDeposits
         ] = await Promise.all([
           api.consts.domains,
           api.rpc.system.chain(),
@@ -44,7 +46,8 @@ export const useOnchainData = () => {
           api.query.domains.domainStakingSummary.entries(),
           api.query.domains.operatorIdOwner.entries(),
           api.query.domains.operators.entries(),
-          api.query.domains.pendingStakingOperationCount.entries()
+          api.query.domains.pendingStakingOperationCount.entries(),
+          api.query.domains.pendingDeposits.entries()
         ])
         const { maxNominators, minOperatorStake, stakeEpochDuration, stakeWithdrawalLockingPeriod } = domains
 
@@ -80,7 +83,15 @@ export const useOnchainData = () => {
             .filter((operator) => operator.operatorDetail.currentDomainId === domainIdFiltering),
           pendingStakingOperationCount: pendingStakingOperationCount.map(
             (operator) => operator[1].toJSON() as PendingStakingOperationCount
-          )
+          ),
+          pendingDeposits: pendingDeposits.map((operator) => {
+            const details = operator[0].toHuman() as string[]
+            return {
+              operatorId: details[0],
+              operatorOwner: details[1],
+              amount: operator[1].toJSON()
+            } as PendingDeposit
+          })
         })
       }
     } catch (error) {
