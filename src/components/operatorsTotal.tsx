@@ -171,7 +171,6 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
             Number of Operators
           </Text>
           <Text {...textStyles.value}>{totalOperators}</Text>
-
           <Text {...textStyles.heading} mt={[2, 3, 8]}>
             Number of Nominators
           </Text>
