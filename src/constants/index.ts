@@ -102,3 +102,20 @@ export enum TransactionStatus {
   Success = 'success',
   Failed = 'failed'
 }
+
+export enum OperatorListType {
+  LIST = 'list',
+  CARD_GRID = 'card-grid'
+}
+
+export enum ViewOrderBy {
+  OperatorId = 'OperatorId',
+  NominatorTax = 'NominatorTax',
+  MinimumNominatorStake = 'MinimumNominatorStake',
+  TotalStake = 'TotalStake'
+}
+
+export enum ViewOrderDirection {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
+}

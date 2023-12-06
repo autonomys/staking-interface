@@ -4,9 +4,12 @@ import { AppProps } from 'next/app'
 import React from 'react'
 import { Layout } from '../components/layout'
 import Header from '../config'
+import { useMobile } from '../hooks/useMobile'
 import theme from '../styles/theme'
 
 const App: React.FC<AppProps> = ({ Component, pageProps = { title: 'Subspace Faucet' } }) => {
+  useMobile()
+
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
