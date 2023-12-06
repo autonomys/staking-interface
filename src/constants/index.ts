@@ -111,6 +111,7 @@ export enum OperatorListType {
 export enum ViewOrderBy {
   OperatorId = 'OperatorId',
   NominatorTax = 'NominatorTax',
+  NominatorCount = 'NominatorCount',
   MinimumNominatorStake = 'MinimumNominatorStake',
   TotalStake = 'TotalStake'
 }
