@@ -6,10 +6,10 @@ import { Wallet } from '../../components/icons'
 import { OperatorsCards } from '../../components/operatorsCards'
 import { OperatorsList } from '../../components/operatorsList'
 import { OperatorsTotal } from '../../components/operatorsTotal'
+import { ViewSelector } from '../../components/viewSelector'
 import { OperatorListType, headingStyles, pageStyles } from '../../constants'
 import { useOnchainData } from '../../hooks/useOnchainData'
 import { useView } from '../../states/view'
-import { ViewSelector } from '../components/viewSelector'
 
 const Page: React.FC = () => {
   const { handleOnchainData } = useOnchainData()
