@@ -54,12 +54,11 @@ export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
   const operatorStake = useMemo(
     () =>
       operator &&
-      nominatorsStake &&
       calculateSharedToStake(
         operator.operatorDetail.totalShares,
         operator.operatorDetail.totalShares,
         operator.operatorDetail.currentTotalStake
-      ) - nominatorsStake,
+      ) - (nominatorsStake ?? 0),
     [operator, nominatorsStake]
   )
 
