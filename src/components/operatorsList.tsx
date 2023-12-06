@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useOrderedOperators } from '../hooks/useOrderedOperators'
 import { useExtension } from '../states/extension'
@@ -16,10 +16,17 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
+  const [clientSide, setClientSide] = useState(false)
   const { extension, subspaceAccount, chainDetails, stakingConstants } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
   const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
+
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
 
   return (
     <Box>
