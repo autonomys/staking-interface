@@ -77,26 +77,18 @@ export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
           <PopoverCloseButton />
           <PopoverBody>
             <Box mb={2}>
-              {operatorStake && (
-                <>
-                  <Text>Operator stake:</Text>
-                  <TooltipAmount amount={operatorStake}>
-                    <Text {...textStyles.text}>
-                      {formatNumber(operatorStake)} {chainDetails.tokenSymbol}
-                    </Text>
-                  </TooltipAmount>
-                </>
-              )}
-              {nominatorsStake && (
-                <>
-                  <Text>Nominators stake:</Text>
-                  <TooltipAmount amount={nominatorsStake}>
-                    <Text {...textStyles.text}>
-                      {formatNumber(nominatorsStake)} {chainDetails.tokenSymbol}
-                    </Text>
-                  </TooltipAmount>
-                </>
-              )}
+              <Text>Operator stake:</Text>
+              <TooltipAmount amount={operatorStake ?? 0}>
+                <Text {...textStyles.text}>
+                  {operatorStake ? formatNumber(operatorStake) : '0'} {chainDetails.tokenSymbol}
+                </Text>
+              </TooltipAmount>
+              <Text>Nominators stake:</Text>
+              <TooltipAmount amount={nominatorsStake ?? 0}>
+                <Text {...textStyles.text}>
+                  {nominatorsStake ? formatNumber(nominatorsStake) : '0'} {chainDetails.tokenSymbol}
+                </Text>
+              </TooltipAmount>
             </Box>
           </PopoverBody>
           <PopoverFooter>
