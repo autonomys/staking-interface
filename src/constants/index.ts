@@ -39,6 +39,8 @@ export const DECIMALS = 18
 
 export const SUBSCAN_URL = 'https://subspace.subscan.io/'
 
+export const MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER = 30
+
 export const AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT = 5000000000000000
 
 export enum ActionType {
@@ -86,7 +88,8 @@ export const initialStakingConstants: StakingConstants = {
   domainStakingSummary: [],
   operators: [],
   nominators: [],
-  pendingStakingOperationCount: []
+  pendingStakingOperationCount: [],
+  pendingDeposits: []
 }
 
 export const toastConfig = {

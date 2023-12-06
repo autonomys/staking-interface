@@ -21,47 +21,42 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      console.log('RegisterOperator')
       if (extension.data) {
-        try {
-          const block = await api.rpc.chain.getBlock()
-          const hash = await api.tx.domains
-            .registerOperator(registration.domainId, registration.amountToStake, {
+        const block = await api.rpc.chain.getBlock()
+        const hash = await api.tx.domains
+          .registerOperator(registration.domainId, registration.amountToStake, {
+            signingKey: registration.signingKey,
+            minimumNominatorStake: registration.minimumNominatorStake,
+            nominationTax: registration.nominatorTax
+          })
+          .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
+        addTransactionToWatch({
+          extrinsicHash: hash.toString(),
+          method: 'registerOperator',
+          sender: subspaceAccount,
+          fromBlockNumber: block.block.header.number.toNumber(),
+          parameters: [
+            registration.domainId,
+            registration.amountToStake,
+            JSON.stringify({
               signingKey: registration.signingKey,
               minimumNominatorStake: registration.minimumNominatorStake,
               nominationTax: registration.nominatorTax
             })
-            .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-          addTransactionToWatch({
-            extrinsicHash: hash.toString(),
-            method: 'registerOperator',
-            sender: subspaceAccount,
-            fromBlockNumber: block.block.header.number.toNumber(),
-            parameters: [
-              registration.domainId,
-              registration.amountToStake,
-              JSON.stringify({
-                signingKey: registration.signingKey,
-                minimumNominatorStake: registration.minimumNominatorStake,
-                nominationTax: registration.nominatorTax
-              })
-            ]
-          })
-          toast({
-            ...toastConfig,
-            isClosable: true,
-            render: () => (
-              <SuccessTxToast
-                heading='Registration request sent'
-                description='Your registration tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
-                hash={hash.toString()}
-              />
-            )
-          })
-          return hash
-        } catch (error) {
-          console.error('error', error)
-        }
+          ]
+        })
+        toast({
+          ...toastConfig,
+          isClosable: true,
+          render: () => (
+            <SuccessTxToast
+              heading='Registration request sent'
+              description='Your registration tx. was sent. The transaction need to be minted then, you will see the change after the next epoch.'
+              hash={hash.toString()}
+            />
+          )
+        })
+        return hash
       }
       return
     },
@@ -76,7 +71,6 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      console.log('Deregister')
       if (extension.data) {
         const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
@@ -114,14 +108,11 @@ export const useTx = () => {
           ...toastConfig,
           status: 'error'
         })
-      console.log('AddFund')
       if (extension.data) {
         const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
           .nominateOperator(operatorId, amount)
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
-
-        console.log('txHash', hash.toString())
         addTransactionToWatch({
           extrinsicHash: hash.toString(),
           method: 'nominateOperator',
@@ -148,8 +139,6 @@ export const useTx = () => {
 
   const handleWithdraw = useCallback(
     async (operatorId: string, amount: string) => {
-      console.log('operatorId', operatorId)
-      console.log('amount', amount)
       if (!api || !extension.data || !injectedExtension || !subspaceAccount)
         return toast({
           ...ERROR_WALLET_NOT_FOUND,
