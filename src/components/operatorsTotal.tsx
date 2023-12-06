@@ -13,6 +13,15 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
   const { stakingConstants, chainDetails } = useExtension((state) => state)
   const { tokenDecimals, tokenSymbol } = chainDetails
 
+  const operatorOwnerId = useMemo(
+    () =>
+      operatorOwner &&
+      stakingConstants.operators
+        .filter((operator) => operator.operatorOwner === operatorOwner)
+        .map((operator) => operator.operatorId),
+    [operatorOwner, stakingConstants.operators]
+  )
+
   const totalPendingDeposits = useMemo(() => {
     if (!stakingConstants.pendingDeposits || stakingConstants.pendingDeposits.length === 0) return 0
     if (operatorOwner)
@@ -98,14 +107,19 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
   const totalNominators = useMemo(() => {
     if (operatorOwner)
       return stakingConstants.nominators
-        .filter((nominator) => nominator.nominatorOwner === operatorOwner)
+        .filter(
+          (nominator) =>
+            nominator.nominatorOwner !== operatorOwner &&
+            operatorOwnerId &&
+            operatorOwnerId.includes(nominator.operatorId)
+        )
         .reduce((acc) => acc + 1, 0)
     return stakingConstants.nominators.reduce((acc, nominator) => {
       const operator = stakingConstants.operators.find((operator) => operator.operatorId === nominator.operatorId)
       if (operator && nominator.nominatorOwner !== operator.operatorOwner) return acc + 1
       return acc
     }, 0)
-  }, [operatorOwner, stakingConstants.nominators, stakingConstants.operators])
+  }, [operatorOwner, operatorOwnerId, stakingConstants.nominators, stakingConstants.operators])
 
   const totalNominatorsStake = useMemo(() => {
     if (operatorOwner)
