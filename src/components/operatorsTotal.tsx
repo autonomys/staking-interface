@@ -58,15 +58,13 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
     }, 0)
   }, [operatorOwner, stakingConstants.minOperatorStake, stakingConstants.operators, tokenDecimals])
 
-  // To-Do: Implement this
   const totalNominators = useMemo(() => {
-    return 0
-  }, [])
+    return stakingConstants.nominators.reduce((acc) => acc + 1, 0)
+  }, [stakingConstants.nominators])
 
-  // To-Do: Implement this
   const totalNominatorsStake = useMemo(() => {
-    return 0
-  }, [])
+    return stakingConstants.nominators.reduce((acc, nominator) => acc + hexToNumber(nominator.shares), 0)
+  }, [stakingConstants.nominators])
 
   return (
     <Box>
@@ -78,30 +76,29 @@ export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner })
           )}
         </HStack>
       </Box>
-      <Grid templateColumns='repeat(2, 1fr)' gap={6} mt='12'>
+      <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(2, 1fr)']} gap={[2, 4, 6]} mt={[2, 10, 12]}>
         <GridItem w='100%'>
-          <Text style={textStyles.heading}>Funds in Stake, {tokenSymbol}</Text>
-          <Text style={textStyles.value}>
+          <Text {...textStyles.heading}>Funds in Stake, {tokenSymbol}</Text>
+          <Text {...textStyles.value}>
             <TooltipAmount amount={totalFundsInStake}>{formatNumber(totalFundsInStake)}</TooltipAmount>
           </Text>
-
-          <Text style={textStyles.heading} mt='8'>
+          <Text {...textStyles.heading} mt={[2, 3, 8]}>
             Number of Nominators
           </Text>
-          <Text style={textStyles.value}>{totalNominators}</Text>
+          <Text {...textStyles.value}>{totalNominators}</Text>
         </GridItem>
         <GridItem w='100%'>
-          <Text style={textStyles.heading}>Available for withdrawal, {tokenSymbol}</Text>
-          <Text style={textStyles.value}>
+          <Text {...textStyles.heading}>Available for withdrawal, {tokenSymbol}</Text>
+          <Text {...textStyles.value}>
             <TooltipAmount amount={totalFundsInStakeAvailable}>
               {formatNumber(totalFundsInStakeAvailable)}
             </TooltipAmount>
           </Text>
 
-          <Text style={textStyles.heading} mt='8'>
+          <Text {...textStyles.heading} mt={[2, 3, 8]}>
             Nominator’s funds, {tokenSymbol}
           </Text>
-          <Text style={textStyles.value}>
+          <Text {...textStyles.value}>
             <TooltipAmount amount={totalNominatorsStake}>{formatNumber(totalNominatorsStake)}</TooltipAmount>
           </Text>
         </GridItem>

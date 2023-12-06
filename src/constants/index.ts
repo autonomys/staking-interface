@@ -84,6 +84,7 @@ export const initialStakingConstants: StakingConstants = {
   domainRegistry: [],
   domainStakingSummary: [],
   operators: [],
+  nominators: [],
   pendingStakingOperationCount: [],
   pendingDeposits: []
 }
@@ -97,4 +98,21 @@ export enum TransactionStatus {
   Pending = 'pending',
   Success = 'success',
   Failed = 'failed'
+}
+
+export enum OperatorListType {
+  LIST = 'list',
+  CARD_GRID = 'card-grid'
+}
+
+export enum ViewOrderBy {
+  OperatorId = 'OperatorId',
+  NominatorTax = 'NominatorTax',
+  MinimumNominatorStake = 'MinimumNominatorStake',
+  TotalStake = 'TotalStake'
+}
+
+export enum ViewOrderDirection {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }

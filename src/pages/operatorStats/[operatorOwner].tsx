@@ -3,14 +3,18 @@ import { GetStaticPaths } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo } from 'react'
 import { Wallet } from '../../components/icons'
+import { OperatorsCards } from '../../components/operatorsCards'
 import { OperatorsList } from '../../components/operatorsList'
 import { OperatorsTotal } from '../../components/operatorsTotal'
-import { headingStyles, pageStyles } from '../../constants'
+import { ViewSelector } from '../../components/viewSelector'
+import { OperatorListType, headingStyles, pageStyles } from '../../constants'
 import { useOnchainData } from '../../hooks/useOnchainData'
+import { useView } from '../../states/view'
 
 const Page: React.FC = () => {
   const { handleOnchainData } = useOnchainData()
   const { query } = useRouter()
+  const { operatorsListType } = useView()
 
   useEffect(() => {
     handleOnchainData()
@@ -28,7 +32,9 @@ const Page: React.FC = () => {
         <Heading {...headingStyles}>Stats</Heading>
       </HStack>
       <OperatorsTotal operatorOwner={operatorOwner} />
-      <OperatorsList operatorOwner={operatorOwner} />
+      <ViewSelector />
+      {operatorsListType === OperatorListType.CARD_GRID && <OperatorsCards operatorOwner={operatorOwner} />}
+      {operatorsListType === OperatorListType.LIST && <OperatorsList operatorOwner={operatorOwner} />}
     </Box>
   )
 }
