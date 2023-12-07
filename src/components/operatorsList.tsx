@@ -92,7 +92,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                       </Link>
                     </Td>
                     <Td {...textStyles.link} isNumeric>
-                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>{nominatorsCount}</Link>
+                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>
+                        {nominatorsCount > 0 ? nominatorsCount : ''}
+                      </Link>
                     </Td>
                     <Td {...textStyles.text} isNumeric>
                       {operator.operatorDetail.nominationTax}%
