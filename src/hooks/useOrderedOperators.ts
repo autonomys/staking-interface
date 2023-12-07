@@ -40,6 +40,16 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
             ? a.operatorDetail.nominationTax - b.operatorDetail.nominationTax
             : b.operatorDetail.nominationTax - a.operatorDetail.nominationTax
         )
+      case ViewOrderBy.NominatorCount:
+        return operatorsList.sort((a, b) => {
+          const nominatorsCountA =
+            stakingConstants.nominators.filter((nominator) => nominator.operatorId === a.operatorId).length - 1
+          const nominatorsCountB =
+            stakingConstants.nominators.filter((nominator) => nominator.operatorId === b.operatorId).length - 1
+          return operatorsOrderByDirection === ViewOrderDirection.Ascending
+            ? nominatorsCountA - nominatorsCountB
+            : nominatorsCountB - nominatorsCountA
+        })
       case ViewOrderBy.MinimumNominatorStake:
         return operatorsList.sort((a, b) =>
           operatorsOrderByDirection === ViewOrderDirection.Ascending
