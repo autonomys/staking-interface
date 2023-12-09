@@ -70,7 +70,7 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
             : Number(b.operatorId) - Number(a.operatorId)
         )
     }
-  }, [operatorsList, operatorsOrderBy, operatorsOrderByDirection])
+  }, [operatorsList, operatorsOrderBy, operatorsOrderByDirection, stakingConstants.nominators])
 
   return { orderedOperators }
 }
