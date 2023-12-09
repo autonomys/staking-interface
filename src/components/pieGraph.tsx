@@ -111,8 +111,9 @@ export const PieGraph: React.FC<OperatorsTotalProps> = ({ operatorOwner, small }
     <Box mb={6}>
       <Grid
         templateColumns={small ? 'repeat(1, 1fr)' : ['repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(2, 1fr)']}
-        gap={[2, 4, 6]}>
-        <GridItem w='100%' h={small ? '200px' : '600px'}>
+        gap={[2, 4, 6]}
+        mt={small ? 0 : 6}>
+        <GridItem w='100%' h={small ? '200px' : '500px'}>
           {small ? (
             <Heading {...headingStyles.paragraphExtra}>Total stake</Heading>
           ) : (
@@ -135,7 +136,7 @@ export const PieGraph: React.FC<OperatorsTotalProps> = ({ operatorOwner, small }
             small={small}
           />
         </GridItem>
-        <GridItem w='100%' h={small ? '200px' : '600px'}>
+        <GridItem w='100%' h={small ? '200px' : '500px'}>
           {small ? (
             <Heading {...headingStyles.paragraphExtra}>Quantity</Heading>
           ) : (
