@@ -31,7 +31,9 @@ const Pie: React.FC<PieProps> = ({ data, colors = '#a584c2', small }) => (
     arcLinkLabelsSkipAngle={10}
     arcLinkLabelsTextColor='#333333'
     arcLinkLabelsThickness={2}
+    arcLinkLabel={(d) => `${d.id}: ${d.value}`}
     arcLinkLabelsColor={{ from: 'color' }}
+    enableArcLabels={false}
     arcLabelsSkipAngle={10}
     arcLabelsTextColor={{
       from: 'color',
@@ -124,12 +126,12 @@ export const PieGraph: React.FC<OperatorsTotalProps> = ({ operatorOwner, small }
               {
                 id: 'nominators',
                 label: 'nominators',
-                value: totalNominatorsStake
+                value: Number(totalNominatorsStake.toFixed(0))
               },
               {
                 id: 'operators',
                 label: 'operators',
-                value: totalOperatorsStake
+                value: Number(totalOperatorsStake.toFixed(0))
               }
             ]}
             colors='#a584c2'
