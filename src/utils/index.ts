@@ -11,7 +11,9 @@ export const formatNumber = (number: number | string, decimals = 3) => {
 }
 
 export const parseNumber = (number: string, decimals: number = DECIMALS) =>
-  (BigInt(parseFloat(number)) * BigInt(10 ** decimals)).toString()
+  parseFloat(number) % 1 === 0
+    ? (BigInt(parseFloat(number)) * BigInt(10 ** decimals)).toString()
+    : BigInt(parseFloat(number) * 10 ** decimals).toString()
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
 
