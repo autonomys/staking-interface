@@ -61,46 +61,73 @@ export const useManage = () => {
 
   const handleChangeAmount = useCallback(
     (actionType: ActionType, e: React.ChangeEvent<HTMLInputElement>) => {
-      switch (actionType) {
-        case ActionType.AddFunds:
-          setAddFundsAmount({
-            ...addFundsAmount,
-            amount: parseNumber(e.target.value, tokenDecimals),
-            formattedAmount: e.target.value
-          })
-          break
-        case ActionType.Withdraw:
-          setWithdrawAmount({
-            ...withdrawAmount,
-            amount: parseNumber(e.target.value, tokenDecimals),
-            formattedAmount: e.target.value
-          })
-          break
+      try {
+        switch (actionType) {
+          case ActionType.AddFunds:
+            setAddFundsAmount({
+              ...addFundsAmount,
+              amount: parseNumber(e.target.value, tokenDecimals),
+              formattedAmount: e.target.value
+            })
+            break
+          case ActionType.Withdraw:
+            setWithdrawAmount({
+              ...withdrawAmount,
+              amount: parseNumber(e.target.value, tokenDecimals),
+              formattedAmount: e.target.value
+            })
+            break
+        }
+      } catch (error) {
+        toast({
+          title: 'Error: ' + capitalizeFirstLetter(actionType) + ' failed',
+          description: ERROR_DESC_INFORMATION_INCORRECT,
+          status: 'error',
+          ...toastConfig
+        })
       }
     },
-    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, tokenDecimals, withdrawAmount]
+    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, toast, tokenDecimals, withdrawAmount]
   )
 
   const handleMaxAmountToAddFunds = useCallback(() => {
     if (!accountDetails) return
-    const fullAmount = parseInt(accountDetails.data.free, 16)
-    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
-    setAddFundsAmount({
-      ...addFundsAmount,
-      amount: amount.toString(),
-      formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
-    })
-  }, [accountDetails, addFundsAmount, setAddFundsAmount, tokenDecimals])
+    try {
+      const fullAmount = parseInt(accountDetails.data.free, 16)
+      const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
+      setAddFundsAmount({
+        ...addFundsAmount,
+        amount: amount.toString(),
+        formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
+      })
+    } catch (error) {
+      toast({
+        title: 'Error: ' + capitalizeFirstLetter(ActionType.AddFunds) + ' failed',
+        description: ERROR_DESC_INFORMATION_INCORRECT,
+        status: 'error',
+        ...toastConfig
+      })
+    }
+  }, [accountDetails, addFundsAmount, setAddFundsAmount, toast, tokenDecimals])
 
   const handleMaxAmountToWithdraw = useCallback(() => {
-    const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
-    const amount = operator ? parseInt(operator.operatorDetail.currentTotalStake) : 0
-    setWithdrawAmount({
-      ...withdrawAmount,
-      amount: amount.toString(),
-      formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
-    })
-  }, [setWithdrawAmount, stakingConstants.operators, tokenDecimals, withdrawAmount])
+    try {
+      const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
+      const amount = operator ? parseInt(operator.operatorDetail.currentTotalStake) : 0
+      setWithdrawAmount({
+        ...withdrawAmount,
+        amount: amount.toString(),
+        formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
+      })
+    } catch (error) {
+      toast({
+        title: 'Error: ' + capitalizeFirstLetter(ActionType.Withdraw) + ' failed',
+        description: ERROR_DESC_INFORMATION_INCORRECT,
+        status: 'error',
+        ...toastConfig
+      })
+    }
+  }, [setWithdrawAmount, stakingConstants.operators, toast, tokenDecimals, withdrawAmount])
 
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {

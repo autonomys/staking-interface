@@ -2,7 +2,13 @@ import { useToast } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
-import { AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT, ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
+import {
+  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
+  ERROR_DESC_INFORMATION_INCORRECT,
+  ERROR_REGISTRATION_FAILED,
+  ROUTES,
+  toastConfig
+} from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { Option } from '../types'
@@ -50,23 +56,32 @@ export const useRegister = () => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target
-      if (name === 'minimumNominatorStake')
-        saveCurrentRegistration({
-          ...currentRegistration,
-          minimumNominatorStake: parseNumber(value, tokenDecimals),
-          formattedMinimumNominatorStake: value
+      try {
+        const { name, value } = e.target
+        if (name === 'minimumNominatorStake')
+          saveCurrentRegistration({
+            ...currentRegistration,
+            minimumNominatorStake: parseNumber(value, tokenDecimals),
+            formattedMinimumNominatorStake: value
+          })
+        else if (name === 'amountToStake')
+          saveCurrentRegistration({
+            ...currentRegistration,
+            amountToStake: parseNumber(value, tokenDecimals),
+            formattedAmountToStake: value
+          })
+        else saveCurrentRegistration({ ...currentRegistration, [name]: value })
+        setErrorsField(name, detectError(name, value))
+      } catch (error) {
+        toast({
+          title: 'Error: Register as operator failed',
+          description: ERROR_DESC_INFORMATION_INCORRECT,
+          status: 'error',
+          ...toastConfig
         })
-      else if (name === 'amountToStake')
-        saveCurrentRegistration({
-          ...currentRegistration,
-          amountToStake: parseNumber(value, tokenDecimals),
-          formattedAmountToStake: value
-        })
-      else saveCurrentRegistration({ ...currentRegistration, [name]: value })
-      setErrorsField(name, detectError(name, value))
+      }
     },
-    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, tokenDecimals]
+    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, toast, tokenDecimals]
   )
 
   const handleDomainChange = useCallback(
@@ -80,14 +95,23 @@ export const useRegister = () => {
 
   const handleMaxAmountToStake = useCallback(() => {
     if (!accountDetails) return
-    const fullAmount = parseInt(accountDetails.data.free, 16)
-    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
-    saveCurrentRegistration({
-      ...currentRegistration,
-      amountToStake: amount.toString(),
-      formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
-    })
-  }, [accountDetails, currentRegistration, saveCurrentRegistration, tokenDecimals])
+    try {
+      const fullAmount = parseInt(accountDetails.data.free, 16)
+      const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
+      saveCurrentRegistration({
+        ...currentRegistration,
+        amountToStake: amount.toString(),
+        formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
+      })
+    } catch (error) {
+      toast({
+        title: 'Error: Register as operator failed',
+        description: ERROR_DESC_INFORMATION_INCORRECT,
+        status: 'error',
+        ...toastConfig
+      })
+    }
+  }, [accountDetails, currentRegistration, saveCurrentRegistration, toast, tokenDecimals])
 
   const handleSubmit = useCallback(async () => {
     try {
