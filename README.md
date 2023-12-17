@@ -4,6 +4,10 @@
 
 This is a next.js web app that is used to interact with the Subspace Chain to stake and unstake tSSC.
 
+## Live Web App
+
+- [Staking Interface](https://staking.subspace.tools/)
+
 ## Getting Started
 
 First, install dependencies:
@@ -12,8 +16,19 @@ First, install dependencies:
 yarn
 ```
 
-Second, run the development server:
+Second, rename `.env.example` to `.env` and fill in the values as follows:
+
+| Variables                  | Description                             |
+| -------------------------- | --------------------------------------- |
+| `NEXT_PUBLIC_PROVIDER_URL` | RPC Url of the Subspace Consensus chain |
+| `NEXT_PUBLIC_DOMAIN_ID`    | Domain Id of the EVM (Nova) Network     |
+
+Finally, run the development server:
 
 ```bash
 yarn dev
 ```
+
+## One click deployment to Netlify
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/subspace/staking-interface/)
