@@ -4,6 +4,9 @@
 
 This is a next.js web app that is used to interact with the Subspace Chain to stake and unstake tSSC.
 
+[![image](https://github.com/subspace/staking-interface/assets/82244926/cb220873-67b2-41c9-8df1-b90b53b470dc)](https://staking.subspace.tools/)
+
+
 ## Live Web App
 
 - [Staking Interface](https://staking.subspace.tools/)
