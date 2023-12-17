@@ -105,7 +105,7 @@ export const MobileMenu: React.FC = () => {
                   </Button>
                 </Link>
               </Box>
-              <Spacer h={48} />
+              <ConnectWallet />
               <WalletDetails />
             </VStack>
           </DrawerBody>
@@ -123,32 +123,9 @@ export const Header: React.FC = () => {
 
   return isMobile ? (
     <HStack {...layoutStyles} w='90vw' h='10vh' flexDir='row' m='auto' align='center'>
-      {/* <Spacer />
-      <Link href={ROUTES.HOME}>
-        <Subspace />
-      </Link> */}
       <Spacer />
-      {/* <Link href={ROUTES.REGISTER}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Stake as a pool operator
-        </Button>
-      </Link>
-      <Link href={ROUTES.MANAGE}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Manage your stake
-        </Button>
-      </Link>
-      <Link href={ROUTES.STATS}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Stats
-        </Button>
-      </Link> */}
       <Spacer />
       <ConnectWallet />
-      {/* <Spacer maxW='18px' />
-      <WalletDetails />
-      <Spacer maxW='18px' />
-      <TransactionsSpotter /> */}
       <MobileMenu />
     </HStack>
   ) : (
