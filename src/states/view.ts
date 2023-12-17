@@ -22,7 +22,12 @@ export const useView = create<ViewState>()(
       operatorsListType: OperatorListType.LIST,
       operatorsOrderBy: ViewOrderBy.OperatorId,
       operatorsOrderByDirection: ViewOrderDirection.Ascending,
-      setIsMobile: (isMobile: boolean) => set(() => ({ isMobile })),
+      setIsMobile: (isMobile: boolean) => {
+        set(() => ({ isMobile }))
+        isMobile
+          ? set(() => ({ operatorsListType: OperatorListType.CARD_GRID }))
+          : set(() => ({ operatorsListType: OperatorListType.LIST }))
+      },
       setOperatorsListTypeList: () => set(() => ({ operatorsListType: OperatorListType.LIST })),
       setOperatorsListTypeCardGrid: () => set(() => ({ operatorsListType: OperatorListType.CARD_GRID })),
       setOperatorsOrderBy: (operatorsOrderBy: ViewOrderBy) => set(() => ({ operatorsOrderBy })),
