@@ -58,20 +58,21 @@ export const useRegister = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       try {
         const { name, value } = e.target
+        const _value = value === '' ? '0' : value
         if (name === 'minimumNominatorStake')
           saveCurrentRegistration({
             ...currentRegistration,
-            minimumNominatorStake: parseNumber(value, tokenDecimals),
-            formattedMinimumNominatorStake: value
+            minimumNominatorStake: parseNumber(_value, tokenDecimals),
+            formattedMinimumNominatorStake: _value
           })
         else if (name === 'amountToStake')
           saveCurrentRegistration({
             ...currentRegistration,
-            amountToStake: parseNumber(value, tokenDecimals),
-            formattedAmountToStake: value
+            amountToStake: parseNumber(_value, tokenDecimals),
+            formattedAmountToStake: _value
           })
-        else saveCurrentRegistration({ ...currentRegistration, [name]: value })
-        setErrorsField(name, detectError(name, value))
+        else saveCurrentRegistration({ ...currentRegistration, [name]: _value })
+        setErrorsField(name, detectError(name, _value))
       } catch (error) {
         toast({
           title: 'Error: Register as operator failed',

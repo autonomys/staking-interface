@@ -62,19 +62,20 @@ export const useManage = () => {
   const handleChangeAmount = useCallback(
     (actionType: ActionType, e: React.ChangeEvent<HTMLInputElement>) => {
       try {
+        const formattedAmount = e.target.value === '' ? '0' : e.target.value
         switch (actionType) {
           case ActionType.AddFunds:
             setAddFundsAmount({
               ...addFundsAmount,
-              amount: parseNumber(e.target.value, tokenDecimals),
-              formattedAmount: e.target.value
+              amount: parseNumber(formattedAmount, tokenDecimals),
+              formattedAmount
             })
             break
           case ActionType.Withdraw:
             setWithdrawAmount({
               ...withdrawAmount,
-              amount: parseNumber(e.target.value, tokenDecimals),
-              formattedAmount: e.target.value
+              amount: parseNumber(formattedAmount, tokenDecimals),
+              formattedAmount
             })
             break
         }
