@@ -10,7 +10,7 @@ interface OperatorsListProps {
 }
 
 export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsListProps) => {
-  const { stakingConstants } = useExtension((state) => state)
+  const { stakingConstants } = useExtension()
   const { operatorsOrderBy, operatorsOrderByDirection } = useView()
 
   const operators = useMemo(() => {
@@ -27,10 +27,10 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
     }
   }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
 
-  const operatorsList = useMemo(
-    () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
-    [fromManage, nominatorsOperators, operators]
-  )
+  const operatorsList = useMemo(() => {
+    const allOperators = fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators
+    return allOperators.filter((operator, index) => allOperators.indexOf(operator) == index)
+  }, [fromManage, nominatorsOperators, operators])
 
   const orderedOperators = useMemo(() => {
     switch (operatorsOrderBy) {
