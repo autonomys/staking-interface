@@ -7,6 +7,7 @@ This is a next.js web app that is used to interact with the Subspace Chain to st
 ## Live Web App
 
 - [Staking Interface](https://staking.subspace.tools/)
+- [Staking Interface (DevNet)](https://devnet-staking-interface.netlify.app/)
 
 ## Getting Started
 
