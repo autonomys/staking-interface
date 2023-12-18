@@ -19,11 +19,12 @@ import {
   Text,
   Tooltip,
   VStack,
-  useDisclosure
+  useDisclosure,
+  useMediaQuery
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { EXTERNAL_ROUTES, ROUTES, layoutStyles, textStyles } from '../constants'
 import { useView } from '../states/view'
 import { ConnectWallet } from './buttons'
@@ -37,6 +38,13 @@ interface LayoutProps {
 
 export const MobileMenu: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { setIsMobile } = useView()
+
+  const [isLargerThan800] = useMediaQuery('(min-width: 800px)', { ssr: true, fallback: false })
+
+  useEffect(() => {
+    setIsMobile(!isLargerThan800)
+  }, [isLargerThan800, setIsMobile])
 
   return (
     <>
@@ -97,7 +105,7 @@ export const MobileMenu: React.FC = () => {
                   </Button>
                 </Link>
               </Box>
-              <Spacer h={48} />
+              <ConnectWallet />
               <WalletDetails />
             </VStack>
           </DrawerBody>
@@ -115,32 +123,9 @@ export const Header: React.FC = () => {
 
   return isMobile ? (
     <HStack {...layoutStyles} w='90vw' h='10vh' flexDir='row' m='auto' align='center'>
-      {/* <Spacer />
-      <Link href={ROUTES.HOME}>
-        <Subspace />
-      </Link> */}
       <Spacer />
-      {/* <Link href={ROUTES.REGISTER}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Stake as a pool operator
-        </Button>
-      </Link>
-      <Link href={ROUTES.MANAGE}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Manage your stake
-        </Button>
-      </Link>
-      <Link href={ROUTES.STATS}>
-        <Button bg='#241235' color='#FFF' borderRadius='9999' pl='16px' pr='16px' pt='8px' pb='7px'>
-          Stats
-        </Button>
-      </Link> */}
       <Spacer />
       <ConnectWallet />
-      {/* <Spacer maxW='18px' />
-      <WalletDetails />
-      <Spacer maxW='18px' />
-      <TransactionsSpotter /> */}
       <MobileMenu />
     </HStack>
   ) : (

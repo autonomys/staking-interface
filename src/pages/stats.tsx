@@ -34,8 +34,8 @@ const Page: React.FC = () => {
         <Heading {...headingStyles.page}>Stats</Heading>
       </HStack>
       <OperatorsTotal />
-      <ViewSelector />
       <PieGraph />
+      <ViewSelector />
       {operatorsListType === OperatorListType.CARD_GRID && <OperatorsCards />}
       {operatorsListType === OperatorListType.LIST && <OperatorsList />}
     </Box>
