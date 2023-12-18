@@ -99,7 +99,9 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
               _hover={{
                 bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
               }}>
-              <Text ml='2'>{capitalizeFirstLetter(action)}</Text>
+              <Text ml='2' color={action === ActionType.Deregister ? 'red' : undefined}>
+                {capitalizeFirstLetter(action)}
+              </Text>
             </MenuItem>
           ))}
         </MenuList>
