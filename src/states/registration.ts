@@ -15,6 +15,8 @@ export const useRegistration = create<RegistrationState>((set) => ({
   isErrorsField: {},
   saveCurrentRegistration: (currentRegistration) => set(() => ({ currentRegistration })),
   clearCurrentRegistration: () => set(() => ({ currentRegistration: initialRegistrationValues })),
-  setErrorsField: (errorsField, isError) =>
+  setErrorsField: (errorsField, isError) => {
     set((state) => ({ isErrorsField: { ...state.isErrorsField, [errorsField]: isError } }))
+    set(() => ({ isErrorsField: {} }))
+  }
 }))
