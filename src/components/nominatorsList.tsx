@@ -75,11 +75,11 @@ export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => 
                     operator &&
                     extension.data &&
                     extension.data.accounts.find((a) => encodeAddress(a.address, ss58Format) === operator.operatorOwner)
+                  const isOperator = operator?.operatorOwner === nominator.nominatorOwner
                   const accountLabel =
-                    findMatchingAccount && findMatchingAccount.meta.name
+                    findMatchingAccount && findMatchingAccount.meta.name && isOperator
                       ? `(${findMatchingAccount.meta.name}) ${formatAddress(nominator.nominatorOwner)}`
                       : formatAddress(nominator.nominatorOwner)
-                  const isOperator = operator?.operatorOwner === nominator.nominatorOwner
                   const fundsInStake = calculateSharedToStake(
                     nominator.shares,
                     operator?.operatorDetail.totalShares ?? '0x0',
