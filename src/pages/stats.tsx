@@ -1,4 +1,5 @@
 import { Box, HStack, Heading } from '@chakra-ui/react'
+import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
 import { Wallet } from '../components/icons'
 import { OperatorsCards } from '../components/operatorsCards'
@@ -8,6 +9,8 @@ import { ViewSelector } from '../components/viewSelector'
 import { OperatorListType, headingStyles, pageStyles } from '../constants'
 import { useOnchainData } from '../hooks/useOnchainData'
 import { useView } from '../states/view'
+
+const PieGraph = dynamic(() => import('../components/pieGraph').then((m) => m.PieGraph), { ssr: false })
 
 const Page: React.FC = () => {
   const [clientSide, setClientSide] = useState(false)
@@ -31,6 +34,7 @@ const Page: React.FC = () => {
         <Heading {...headingStyles.page}>Stats</Heading>
       </HStack>
       <OperatorsTotal />
+      <PieGraph />
       <ViewSelector />
       {operatorsListType === OperatorListType.CARD_GRID && <OperatorsCards />}
       {operatorsListType === OperatorListType.LIST && <OperatorsList />}

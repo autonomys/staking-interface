@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ROUTES, headingStyles, tHeadStyles, tableStyles, textStyles } from '../constants'
 import { useOrderedOperators } from '../hooks/useOrderedOperators'
 import { useExtension } from '../states/extension'
@@ -16,10 +16,16 @@ interface OperatorsListProps {
 }
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
-  const { extension, subspaceAccount, chainDetails, stakingConstants } = useExtension((state) => state)
+  const [clientSide, setClientSide] = useState(false)
+  const { extension, subspaceAccount, chainDetails, stakingConstants } = useExtension()
   const { ss58Format } = chainDetails
-
   const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
+
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
 
   return (
     <Box>
@@ -35,6 +41,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
         <Table {...tableStyles}>
           <Thead {...tHeadStyles}>
             <Tr>
+              <Th isNumeric />
               <Th>OperatorID</Th>
               <Th>Signing key</Th>
               <Th>Operator Account</Th>
@@ -49,7 +56,7 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
             <Tbody>
               {[0].map((_, key) => (
                 <Tr key={key}>
-                  <Td {...textStyles.text} colSpan={subspaceAccount ? 7 : 6}>
+                  <Td {...textStyles.text} colSpan={subspaceAccount ? 8 : 7}>
                     <Text>No operators found</Text>
                     {subspaceAccount === operatorOwner && (
                       <Text>
@@ -76,6 +83,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                 return (
                   <Tr key={key}>
                     <Td {...textStyles.text} isNumeric>
+                      {key + 1}
+                    </Td>
+                    <Td {...textStyles.text} isNumeric>
                       {operator.operatorId}
                     </Td>
                     <Td {...textStyles.text}>{formatAddress(operator.operatorDetail.signingKey)}</Td>
@@ -85,7 +95,9 @@ export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fro
                       </Link>
                     </Td>
                     <Td {...textStyles.link} isNumeric>
-                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>{nominatorsCount}</Link>
+                      <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>
+                        {nominatorsCount > 0 ? nominatorsCount : ''}
+                      </Link>
                     </Td>
                     <Td {...textStyles.text} isNumeric>
                       {operator.operatorDetail.nominationTax}%

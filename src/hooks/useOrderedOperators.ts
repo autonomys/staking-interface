@@ -10,7 +10,7 @@ interface OperatorsListProps {
 }
 
 export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsListProps) => {
-  const { stakingConstants } = useExtension((state) => state)
+  const { stakingConstants } = useExtension()
   const { operatorsOrderBy, operatorsOrderByDirection } = useView()
 
   const operators = useMemo(() => {
@@ -27,10 +27,10 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
     }
   }, [fromManage, stakingConstants.nominators, stakingConstants.operators, operatorOwner])
 
-  const operatorsList = useMemo(
-    () => (fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators),
-    [fromManage, nominatorsOperators, operators]
-  )
+  const operatorsList = useMemo(() => {
+    const allOperators = fromManage && nominatorsOperators ? [...operators, ...nominatorsOperators] : operators
+    return allOperators.filter((operator, index) => allOperators.indexOf(operator) == index)
+  }, [fromManage, nominatorsOperators, operators])
 
   const orderedOperators = useMemo(() => {
     switch (operatorsOrderBy) {
@@ -40,6 +40,16 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
             ? a.operatorDetail.nominationTax - b.operatorDetail.nominationTax
             : b.operatorDetail.nominationTax - a.operatorDetail.nominationTax
         )
+      case ViewOrderBy.NominatorCount:
+        return operatorsList.sort((a, b) => {
+          const nominatorsCountA =
+            stakingConstants.nominators.filter((nominator) => nominator.operatorId === a.operatorId).length - 1
+          const nominatorsCountB =
+            stakingConstants.nominators.filter((nominator) => nominator.operatorId === b.operatorId).length - 1
+          return operatorsOrderByDirection === ViewOrderDirection.Ascending
+            ? nominatorsCountA - nominatorsCountB
+            : nominatorsCountB - nominatorsCountA
+        })
       case ViewOrderBy.MinimumNominatorStake:
         return operatorsList.sort((a, b) =>
           operatorsOrderByDirection === ViewOrderDirection.Ascending
@@ -60,7 +70,7 @@ export const useOrderedOperators = ({ operatorOwner, fromManage }: OperatorsList
             : Number(b.operatorId) - Number(a.operatorId)
         )
     }
-  }, [operatorsList, operatorsOrderBy, operatorsOrderByDirection])
+  }, [operatorsList, operatorsOrderBy, operatorsOrderByDirection, stakingConstants.nominators])
 
   return { orderedOperators }
 }

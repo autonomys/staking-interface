@@ -2,7 +2,13 @@ import { useToast } from '@chakra-ui/react'
 import type { SingleValue } from 'chakra-react-select'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
-import { AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT, ERROR_REGISTRATION_FAILED, ROUTES, toastConfig } from '../constants'
+import {
+  AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT,
+  ERROR_DESC_INFORMATION_INCORRECT,
+  ERROR_REGISTRATION_FAILED,
+  ROUTES,
+  toastConfig
+} from '../constants'
 import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 import { Option } from '../types'
@@ -23,15 +29,15 @@ export const useRegister = () => {
   const detectError = useCallback((key: string, value: string) => {
     switch (key) {
       case 'domainId':
-        return value.length < 1
+        return value.length < 1 || isNaN(parseInt(value))
       case 'minimumNominatorStake':
-        return parseInt(value) < 0
+        return parseInt(value) < 0 || isNaN(parseInt(value))
       case 'amountToStake':
-        return value.length < 1
+        return value.length < 1 || isNaN(parseInt(value))
       case 'nominatorTax':
-        return parseInt(value) < 0 && parseInt(value) > 100 && value.length < 1 && !isNaN(parseInt(value))
+        return parseInt(value) < 0 || parseInt(value) > 100 || value.length < 1 || isNaN(parseInt(value))
       case 'signingKey':
-        return value.length < 1 && isValidSr25519PublicKey(value)
+        return value.length < 1 || !isValidSr25519PublicKey(value)
       default:
         return false
     }
@@ -51,20 +57,25 @@ export const useRegister = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
-      if (name === 'minimumNominatorStake')
-        saveCurrentRegistration({
-          ...currentRegistration,
-          minimumNominatorStake: parseNumber(value, tokenDecimals),
-          formattedMinimumNominatorStake: value
-        })
-      else if (name === 'amountToStake')
-        saveCurrentRegistration({
-          ...currentRegistration,
-          amountToStake: parseNumber(value, tokenDecimals),
-          formattedAmountToStake: value
-        })
-      else saveCurrentRegistration({ ...currentRegistration, [name]: value })
-      setErrorsField(name, detectError(name, value))
+      try {
+        const _value = value === '' ? '0' : value
+        if (name === 'minimumNominatorStake')
+          saveCurrentRegistration({
+            ...currentRegistration,
+            minimumNominatorStake: parseNumber(_value, tokenDecimals),
+            formattedMinimumNominatorStake: _value
+          })
+        else if (name === 'amountToStake')
+          saveCurrentRegistration({
+            ...currentRegistration,
+            amountToStake: parseNumber(_value, tokenDecimals),
+            formattedAmountToStake: _value
+          })
+        else saveCurrentRegistration({ ...currentRegistration, [name]: _value })
+        setErrorsField(name, detectError(name, _value))
+      } catch (error) {
+        setErrorsField(name, true)
+      }
     },
     [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, tokenDecimals]
   )
@@ -80,14 +91,23 @@ export const useRegister = () => {
 
   const handleMaxAmountToStake = useCallback(() => {
     if (!accountDetails) return
-    const fullAmount = parseInt(accountDetails.data.free, 16)
-    const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
-    saveCurrentRegistration({
-      ...currentRegistration,
-      amountToStake: amount.toString(),
-      formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
-    })
-  }, [accountDetails, currentRegistration, saveCurrentRegistration, tokenDecimals])
+    try {
+      const fullAmount = parseInt(accountDetails.data.free, 16)
+      const amount = fullAmount > 0 ? fullAmount - AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT : 0
+      saveCurrentRegistration({
+        ...currentRegistration,
+        amountToStake: amount.toString(),
+        formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
+      })
+    } catch (error) {
+      toast({
+        title: 'Error: Register as operator failed',
+        description: ERROR_DESC_INFORMATION_INCORRECT,
+        status: 'error',
+        ...toastConfig
+      })
+    }
+  }, [accountDetails, currentRegistration, saveCurrentRegistration, toast, tokenDecimals])
 
   const handleSubmit = useCallback(async () => {
     try {

@@ -1,7 +1,7 @@
 import { Box, Card, Grid, GridItem, HStack, Heading, Tag, Text, VStack } from '@chakra-ui/react'
 import { encodeAddress } from '@polkadot/keyring'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ROUTES, headingStyles, textStyles } from '../constants'
 import { useOrderedOperators } from '../hooks/useOrderedOperators'
 import { useExtension } from '../states/extension'
@@ -16,10 +16,17 @@ interface operatorsCardsProps {
 }
 
 export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, fromManage }) => {
-  const { extension, subspaceAccount, chainDetails } = useExtension((state) => state)
+  const [clientSide, setClientSide] = useState(false)
+  const { extension, subspaceAccount, chainDetails, stakingConstants } = useExtension((state) => state)
   const { ss58Format } = chainDetails
 
   const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
+
+  useEffect(() => {
+    setClientSide(true)
+  }, [])
+
+  if (!clientSide) return null
 
   return (
     <Box>
@@ -51,6 +58,9 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
                 findMatchingAccount && findMatchingAccount.meta.name
                   ? `(${findMatchingAccount.meta.name}) ${formatAddress(operatorOwner ?? operator.operatorOwner)}`
                   : formatAddress(operatorOwner ?? operator.operatorOwner)
+              const nominatorsCount =
+                stakingConstants.nominators.filter((nominator) => nominator.operatorId === operator.operatorId).length -
+                1
               return (
                 <GridItem key={key} w='100%'>
                   <Card m={2} p={2} border='1px' borderX='#EDECEC' borderY='#DFDCDC' borderStyle='solid'>
@@ -68,6 +78,15 @@ export const OperatorsCards: React.FC<operatorsCardsProps> = ({ operatorOwner, f
                           </Tag>
                         </Link>
                       </HStack>
+                      {nominatorsCount > 0 && (
+                        <HStack>
+                          <Text {...textStyles.text}>
+                            <Link href={`${ROUTES.NOMINATORS_STATS}/${operator.operatorId}`}>
+                              {nominatorsCount} Nominators
+                            </Link>
+                          </Text>
+                        </HStack>
+                      )}
                       <HStack>
                         <Text {...textStyles.text}>Nominator Tax</Text>
                         <Text {...textStyles.text}>{operator.operatorDetail.nominationTax}%</Text>

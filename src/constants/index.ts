@@ -44,9 +44,9 @@ export const MAX_BLOCKS_TO_FETCH_FOR_TRANSACTIONS_SPOTTER = 30
 export const AMOUNT_TO_SUBTRACT_FROM_MAX_AMOUNT = 5000000000000000
 
 export enum ActionType {
-  Deregister = 'deregister',
   AddFunds = 'addFunds',
-  Withdraw = 'withdraw'
+  Withdraw = 'withdraw',
+  Deregister = 'deregister'
 }
 
 export const initialRegistrationValues: Registration = {
@@ -111,6 +111,7 @@ export enum OperatorListType {
 export enum ViewOrderBy {
   OperatorId = 'OperatorId',
   NominatorTax = 'NominatorTax',
+  NominatorCount = 'NominatorCount',
   MinimumNominatorStake = 'MinimumNominatorStake',
   TotalStake = 'TotalStake'
 }

@@ -1,5 +1,6 @@
 import { Box, HStack, Heading } from '@chakra-ui/react'
 import { GetStaticPaths } from 'next'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo } from 'react'
 import { Wallet } from '../../components/icons'
@@ -10,6 +11,8 @@ import { ViewSelector } from '../../components/viewSelector'
 import { OperatorListType, headingStyles, pageStyles } from '../../constants'
 import { useOnchainData } from '../../hooks/useOnchainData'
 import { useView } from '../../states/view'
+
+const PieGraph = dynamic(() => import('../../components/pieGraph').then((m) => m.PieGraph), { ssr: false })
 
 const Page: React.FC = () => {
   const { handleOnchainData } = useOnchainData()
@@ -32,6 +35,7 @@ const Page: React.FC = () => {
         <Heading {...headingStyles}>Stats</Heading>
       </HStack>
       <OperatorsTotal operatorOwner={operatorOwner} />
+      <PieGraph operatorOwner={operatorOwner} />
       <ViewSelector />
       {operatorsListType === OperatorListType.CARD_GRID && <OperatorsCards operatorOwner={operatorOwner} />}
       {operatorsListType === OperatorListType.LIST && <OperatorsList operatorOwner={operatorOwner} />}
