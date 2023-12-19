@@ -27,7 +27,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { ActionType, ROUTES, actionButtonStyles } from '../constants'
 import { useManage } from '../hooks/useManage'
 import { useExtension } from '../states/extension'
-import { useRegistration } from '../states/registration'
+import { useManageState } from '../states/manage'
 import { capitalizeFirstLetter } from '../utils'
 
 interface ActionsProps {
@@ -37,9 +37,8 @@ interface ActionsProps {
 export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
   const finalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { subspaceAccount, stakingConstants, chainDetails } = useExtension()
   const [actionSelected, setActionSelected] = useState<ActionType | null>(null)
-  const isErrorsField = useRegistration((state) => state.isErrorsField)
   const {
     addFundsAmount,
     withdrawAmount,
@@ -49,6 +48,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
     handleMaxAmountToWithdraw,
     handleSubmit
   } = useManage()
+  const { isErrorsField } = useManageState()
   const { tokenSymbol } = chainDetails
 
   const operator = useMemo(
@@ -126,7 +126,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
               </Text>
               {actionSelected === ActionType.Deregister && <Text>Do you really want to de-register as operator?</Text>}
               {actionSelected === ActionType.AddFunds && (
-                <FormControl isInvalid={isErrorsField['amount']}>
+                <FormControl isInvalid={isErrorsField[ActionType.AddFunds]}>
                   <InputGroup size='md' mt='4' w='100%'>
                     <Input
                       name='amount'
@@ -143,7 +143,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {isErrorsField['amount'] ? (
+                  {isErrorsField[ActionType.AddFunds] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (
                     <FormHelperText h='10'></FormHelperText>
@@ -151,7 +151,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
                 </FormControl>
               )}
               {actionSelected === ActionType.Withdraw && (
-                <FormControl isInvalid={isErrorsField['amount']}>
+                <FormControl isInvalid={isErrorsField[ActionType.Withdraw]}>
                   <InputGroup size='md' mt='4' w='100%'>
                     <Input
                       name='amount'
@@ -168,7 +168,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {isErrorsField['amount'] ? (
+                  {isErrorsField[ActionType.Withdraw] ? (
                     <FormErrorMessage h='10'>The amount you enter is not valid</FormErrorMessage>
                   ) : (
                     <FormHelperText h='10'></FormHelperText>

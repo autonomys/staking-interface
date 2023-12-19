@@ -13,7 +13,7 @@ import { useTx } from './useTx'
 
 export const useManage = () => {
   const toast = useToast()
-  const { accountDetails, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { accountDetails, stakingConstants, chainDetails } = useExtension()
   const {
     deregister,
     addFundsAmount,
@@ -23,10 +23,16 @@ export const useManage = () => {
     setWithdrawOperator,
     setAddFundsAmount,
     setWithdrawAmount,
-    clearInput
-  } = useManageState((state) => state)
+    clearInput,
+    setErrorsField
+  } = useManageState()
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
   const { tokenDecimals } = chainDetails
+
+  const detectError = useCallback(
+    (value: string) => parseInt(value) < 0 || value.length < 1 || isNaN(Number(value)),
+    []
+  )
 
   const operatorId = useCallback(
     (actionType: ActionType) => {
@@ -79,16 +85,12 @@ export const useManage = () => {
             })
             break
         }
+        setErrorsField(actionType, detectError(e.target.value))
       } catch (error) {
-        toast({
-          title: 'Error: ' + capitalizeFirstLetter(actionType) + ' failed',
-          description: ERROR_DESC_INFORMATION_INCORRECT,
-          status: 'error',
-          ...toastConfig
-        })
+        setErrorsField(actionType, true)
       }
     },
-    [addFundsAmount, setAddFundsAmount, setWithdrawAmount, toast, tokenDecimals, withdrawAmount]
+    [addFundsAmount, detectError, setAddFundsAmount, setErrorsField, setWithdrawAmount, tokenDecimals, withdrawAmount]
   )
 
   const handleMaxAmountToAddFunds = useCallback(() => {

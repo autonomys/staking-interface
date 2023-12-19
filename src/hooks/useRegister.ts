@@ -29,15 +29,15 @@ export const useRegister = () => {
   const detectError = useCallback((key: string, value: string) => {
     switch (key) {
       case 'domainId':
-        return value.length < 1
+        return value.length < 1 || isNaN(parseInt(value))
       case 'minimumNominatorStake':
-        return parseInt(value) < 0
+        return parseInt(value) < 0 || isNaN(parseInt(value))
       case 'amountToStake':
-        return value.length < 1
+        return value.length < 1 || isNaN(parseInt(value))
       case 'nominatorTax':
-        return parseInt(value) < 0 && parseInt(value) > 100 && value.length < 1 && !isNaN(parseInt(value))
+        return parseInt(value) < 0 || parseInt(value) > 100 || value.length < 1 || isNaN(parseInt(value))
       case 'signingKey':
-        return value.length < 1 && isValidSr25519PublicKey(value)
+        return value.length < 1 || !isValidSr25519PublicKey(value)
       default:
         return false
     }
@@ -56,8 +56,8 @@ export const useRegister = () => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
       try {
-        const { name, value } = e.target
         const _value = value === '' ? '0' : value
         if (name === 'minimumNominatorStake')
           saveCurrentRegistration({
@@ -74,15 +74,10 @@ export const useRegister = () => {
         else saveCurrentRegistration({ ...currentRegistration, [name]: _value })
         setErrorsField(name, detectError(name, _value))
       } catch (error) {
-        toast({
-          title: 'Error: Register as operator failed',
-          description: ERROR_DESC_INFORMATION_INCORRECT,
-          status: 'error',
-          ...toastConfig
-        })
+        setErrorsField(name, true)
       }
     },
-    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, toast, tokenDecimals]
+    [currentRegistration, detectError, saveCurrentRegistration, setErrorsField, tokenDecimals]
   )
 
   const handleDomainChange = useCallback(
