@@ -19,10 +19,8 @@ import { useTx } from './useTx'
 export const useRegister = () => {
   const toast = useToast()
   const { push } = useRouter()
-  const { currentRegistration, saveCurrentRegistration, clearCurrentRegistration, setErrorsField } = useRegistration(
-    (state) => state
-  )
-  const { accountDetails, stakingConstants, chainDetails } = useExtension((state) => state)
+  const { currentRegistration, saveCurrentRegistration, clearCurrentRegistration, setErrorsField } = useRegistration()
+  const { accountDetails, stakingConstants, chainDetails } = useExtension()
   const { handleRegisterOperator } = useTx()
   const { tokenDecimals } = chainDetails
 
@@ -74,6 +72,7 @@ export const useRegister = () => {
         else saveCurrentRegistration({ ...currentRegistration, [name]: _value })
         setErrorsField(name, detectError(name, _value))
       } catch (error) {
+        console.error('Error: ', error)
         setErrorsField(name, true)
       }
     },
@@ -100,6 +99,7 @@ export const useRegister = () => {
         formattedAmountToStake: formatNumber(amount / 10 ** tokenDecimals)
       })
     } catch (error) {
+      console.error('Error: ', error)
       toast({
         title: 'Error: Register as operator failed',
         description: ERROR_DESC_INFORMATION_INCORRECT,
@@ -116,6 +116,7 @@ export const useRegister = () => {
       clearCurrentRegistration()
       push(ROUTES.MANAGE)
     } catch (error) {
+      console.error('Error: ', error)
       toast({
         ...ERROR_REGISTRATION_FAILED,
         status: 'error',
