@@ -87,6 +87,7 @@ export const useManage = () => {
         }
         setErrorsField(actionType, detectError(e.target.value))
       } catch (error) {
+        console.error('Error: ', error)
         setErrorsField(actionType, true)
       }
     },
@@ -104,6 +105,7 @@ export const useManage = () => {
         formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
       })
     } catch (error) {
+      console.error('Error: ', error)
       toast({
         title: 'Error: ' + capitalizeFirstLetter(ActionType.AddFunds) + ' failed',
         description: ERROR_DESC_INFORMATION_INCORRECT,
@@ -123,6 +125,7 @@ export const useManage = () => {
         formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
       })
     } catch (error) {
+      console.error('Error: ', error)
       toast({
         title: 'Error: ' + capitalizeFirstLetter(ActionType.Withdraw) + ' failed',
         description: ERROR_DESC_INFORMATION_INCORRECT,
@@ -148,6 +151,7 @@ export const useManage = () => {
         }
         clearInput(actionType)
       } catch (error) {
+        console.error('Error: ', error)
         toast({
           title: 'Error: ' + capitalizeFirstLetter(actionType) + ' failed',
           description: ERROR_DESC_INFORMATION_INCORRECT,

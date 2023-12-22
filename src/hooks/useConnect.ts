@@ -1,8 +1,8 @@
-import { useDisclosure } from '@chakra-ui/react'
+import { useDisclosure, useToast } from '@chakra-ui/react'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { encodeAddress } from '@polkadot/keyring'
-import { useCallback, useEffect } from 'react'
-import { SUBSPACE_EXTENSION_ID, initialExtensionValues } from '../constants'
+import { useCallback, useEffect, useState } from 'react'
+import { SUBSPACE_EXTENSION_ID, initialExtensionValues, toastConfig } from '../constants'
 import { useExtension, useLastConnection } from '../states/extension'
 import { AccountDetails } from '../types'
 
@@ -16,12 +16,12 @@ export const useConnect = () => {
     setSubspaceAccount,
     setInjectedExtension,
     setAccountDetails
-  } = useExtension((state) => state)
-  const { subspaceAccount: lastSubspaceAccount, setSubspaceAccount: setLastSubspaceAccount } = useLastConnection(
-    (state) => state
-  )
+  } = useExtension()
+  const toast = useToast()
+  const { subspaceAccount: lastSubspaceAccount, setSubspaceAccount: setLastSubspaceAccount } = useLastConnection()
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
   const { ss58Format } = chainDetails
+  const [walletsTypeSet, setWalletsTypeSet] = useState<Set<string>>(new Set())
 
   const handleConnect = useCallback(async () => {
     setExtension({ ...initialExtensionValues, loading: true })
@@ -36,6 +36,8 @@ export const useConnect = () => {
       })
       .then(async (accounts) => {
         if (!accounts.length) return Promise.reject(new Error('NO_ACCOUNTS'))
+
+        setWalletsTypeSet(new Set(accounts.map((account) => account.meta.source)))
 
         const lastAccount = accounts.find((account) => account.address === lastSubspaceAccount)
         const defaultAccount = lastAccount ? lastAccount : accounts[0]
@@ -116,6 +118,16 @@ export const useConnect = () => {
     if (lastSubspaceAccount && !subspaceAccount) handleConnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (walletsTypeSet.size > 1)
+      toast({
+        title: 'Multiple wallet extensions detected',
+        description: 'In some cases, having multiple wallet extensions enabled at the same time can cause issues.',
+        status: 'warning',
+        ...toastConfig
+      })
+  }, [toast, walletsTypeSet])
 
   return {
     handleConnect,
