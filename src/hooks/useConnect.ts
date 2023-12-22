@@ -122,8 +122,8 @@ export const useConnect = () => {
   useEffect(() => {
     if (walletsTypeSet.size > 1)
       toast({
-        title: 'Multiple wallets extensions detected',
-        description: 'In some cases, having multiple wallets extensions enabled at the same time can cause issues.',
+        title: 'Multiple wallet extensions detected',
+        description: 'In some cases, having multiple wallet extensions enabled at the same time can cause issues.',
         status: 'warning',
         ...toastConfig
       })
