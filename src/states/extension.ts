@@ -1,5 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import { InjectedExtension } from '@polkadot/extension-inject/types'
+import type { MetamaskSnapApi } from '@subspace/metamask-subspace-adapter/src/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { TransactionStatus, initialChainDetails, initialExtensionValues, initialStakingConstants } from '../constants'
@@ -7,6 +8,7 @@ import { AccountDetails, ChainDetails, ExtensionState, NewTransaction, StakingCo
 
 interface RegistrationState {
   api: ApiPromise | undefined
+  mmApi: MetamaskSnapApi | undefined
   extension: ExtensionState
   subspaceAccount: string | undefined
   injectedExtension: InjectedExtension | undefined
@@ -14,6 +16,7 @@ interface RegistrationState {
   chainDetails: ChainDetails
   stakingConstants: StakingConstants
   setApi: (api: ApiPromise) => void
+  setMMApi: (mmApi: MetamaskSnapApi) => void
   setExtension: (registration: ExtensionState) => void
   setSubspaceAccount: (subspaceAccount: string) => void
   setInjectedExtension: (injectedExtension: InjectedExtension) => void
@@ -35,6 +38,7 @@ interface TransactionsState {
 
 export const useExtension = create<RegistrationState>((set) => ({
   api: undefined,
+  mmApi: undefined,
   extension: initialExtensionValues,
   subspaceAccount: undefined,
   injectedExtension: undefined,
@@ -42,6 +46,7 @@ export const useExtension = create<RegistrationState>((set) => ({
   chainDetails: initialChainDetails,
   stakingConstants: initialStakingConstants,
   setApi: (api) => set(() => ({ api })),
+  setMMApi: (mmApi) => set(() => ({ mmApi })),
   setExtension: (extension) => set(() => ({ extension })),
   setSubspaceAccount: (subspaceAccount) => set(() => ({ subspaceAccount })),
   setInjectedExtension: (injectedExtension) => set(() => ({ injectedExtension })),
