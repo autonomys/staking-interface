@@ -72,7 +72,7 @@ export const Actions: React.FC<ActionsProps> = ({ operatorId }) => {
       setActionSelected(action)
       onOpen()
     },
-    [handleChangeOperatorId, onOpen, operatorId]
+    [handleChangeOperatorId, onOpen, setActionSelected, operatorId]
   )
 
   const handleCloseModal = useCallback(() => {
