@@ -7,11 +7,8 @@ import { Registration } from '../types'
 
 export const useTx = () => {
   const toast = useToast()
-  const api = useExtension((state) => state.api)
-  const extension = useExtension((state) => state.extension)
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
-  const injectedExtension = useExtension((state) => state.injectedExtension)
-  const addTransactionToWatch = useTransactions((state) => state.addTransactionToWatch)
+  const { api, extension, subspaceAccount, injectedExtension } = useExtension()
+  const { addTransactionToWatch } = useTransactions()
 
   const handleRegisterOperator = useCallback(
     async (registration: Registration) => {

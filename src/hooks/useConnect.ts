@@ -11,7 +11,7 @@ export const useConnect = () => {
     api,
     extension,
     subspaceAccount,
-    chainDetails,
+    chainDetails: { ss58Format },
     setExtension,
     setSubspaceAccount,
     setInjectedExtension,
@@ -20,7 +20,6 @@ export const useConnect = () => {
   const toast = useToast()
   const { subspaceAccount: lastSubspaceAccount, setSubspaceAccount: setLastSubspaceAccount } = useLastConnection()
   const { isOpen: isConnectOpen, onOpen: onConnectOpen, onClose: onConnectClose } = useDisclosure()
-  const { ss58Format } = chainDetails
   const [walletsTypeSet, setWalletsTypeSet] = useState<Set<string>>(new Set())
 
   const handleConnect = useCallback(async () => {

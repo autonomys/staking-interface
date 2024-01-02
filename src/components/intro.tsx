@@ -6,8 +6,9 @@ import { useExtension } from '../states/extension'
 import { Wallet } from './icons'
 
 export const Intro: React.FC = () => {
-  const chainDetails = useExtension((state) => state.chainDetails)
-  const { tokenSymbol } = chainDetails
+  const {
+    chainDetails: { tokenSymbol }
+  } = useExtension()
 
   return (
     <Box>

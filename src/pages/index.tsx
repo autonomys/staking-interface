@@ -13,7 +13,7 @@ import { useExtension } from '../states/extension'
 const PieGraph = dynamic(() => import('../components/pieGraph').then((m) => m.PieGraph), { ssr: false })
 
 const Page: React.FC = () => {
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const { subspaceAccount } = useExtension()
   const { extension, handleConnect } = useWallet()
   const { handleOnchainData } = useOnchainData()
 

@@ -6,8 +6,11 @@ import { formatNumber, hexToNumber } from '../utils'
 import { TokenBalance, TokenStaked } from './icons'
 
 const TokenBalanceSection: React.FC = () => {
-  const { subspaceAccount, accountDetails, chainDetails } = useExtension((state) => state)
-  const { tokenDecimals, tokenSymbol } = chainDetails
+  const {
+    subspaceAccount,
+    accountDetails,
+    chainDetails: { tokenDecimals, tokenSymbol }
+  } = useExtension()
 
   const accountBalance = useMemo(
     () => formatNumber(accountDetails ? parseInt(accountDetails.data.free) / 10 ** tokenDecimals : 0, 2),
@@ -31,8 +34,11 @@ const TokenBalanceSection: React.FC = () => {
 }
 
 const TokenStakedSection: React.FC = () => {
-  const { subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
-  const { tokenDecimals, tokenSymbol } = chainDetails
+  const {
+    subspaceAccount,
+    stakingConstants,
+    chainDetails: { tokenDecimals, tokenSymbol }
+  } = useExtension()
 
   const accountBalanceStaked = useMemo(() => {
     return formatNumber(

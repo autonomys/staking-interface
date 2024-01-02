@@ -24,7 +24,7 @@ interface ActionsProps {
 }
 
 export const FundsInStake: React.FC<ActionsProps> = ({ operatorId }) => {
-  const { chainDetails, stakingConstants } = useExtension((state) => state)
+  const { chainDetails, stakingConstants } = useExtension()
 
   const operator = useMemo(
     () => stakingConstants.operators.find((operator) => operator.operatorId === operatorId),

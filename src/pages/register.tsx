@@ -26,13 +26,16 @@ import { useExtension } from '../states/extension'
 import { useRegistration } from '../states/registration'
 
 const Page: React.FC = () => {
-  const chainDetails = useExtension((state) => state.chainDetails)
-  const { tokenSymbol } = chainDetails
+  const {
+    chainDetails: { tokenSymbol }
+  } = useExtension()
   const { extension, handleConnect } = useWallet()
   const { domainsOptions, handleChange, handleDomainChange, handleMaxAmountToStake, handleSubmit } = useRegister()
   const { handleOnchainData } = useOnchainData()
-  const { currentRegistration, isErrorsField } = useRegistration((state) => state)
-  const { formattedAmountToStake, signingKey, formattedMinimumNominatorStake, nominatorTax } = currentRegistration
+  const {
+    currentRegistration: { formattedAmountToStake, signingKey, formattedMinimumNominatorStake, nominatorTax },
+    isErrorsField
+  } = useRegistration()
 
   useEffect(() => {
     handleOnchainData()

@@ -13,7 +13,7 @@ import { useExtension } from '../states/extension'
 import { useView } from '../states/view'
 
 const Page: React.FC = () => {
-  const subspaceAccount = useExtension((state) => state.subspaceAccount)
+  const { subspaceAccount } = useExtension()
   const { handleConnect } = useWallet()
   const { handleOnchainData } = useOnchainData()
   const { operatorsListType } = useView()

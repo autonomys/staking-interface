@@ -7,9 +7,12 @@ import { Transaction } from '../types'
 import { capitalizeFirstLetter } from '../utils'
 
 export const TransactionsSpotter: React.FC = () => {
-  const { api, subspaceAccount, chainDetails } = useExtension((state) => state)
-  const { transactions, changeTransactionStatus } = useTransactions((state) => state)
-  const { tokenDecimals, tokenSymbol } = chainDetails
+  const {
+    api,
+    subspaceAccount,
+    chainDetails: { tokenDecimals, tokenSymbol }
+  } = useExtension()
+  const { transactions, changeTransactionStatus } = useTransactions()
 
   const userTransactions = useMemo(
     () => transactions.filter((transaction) => transaction.sender === subspaceAccount).reverse(),

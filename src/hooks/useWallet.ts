@@ -4,11 +4,9 @@ import { useExtension } from '../states/extension'
 
 export const useWallet = () => {
   const { push } = useRouter()
-  const extension = useExtension((state) => state.extension)
+  const { extension } = useExtension()
 
-  const handleConnect = () => {
-    push(ROUTES.REGISTER)
-  }
+  const handleConnect = () => push(ROUTES.REGISTER)
 
   return {
     extension,
