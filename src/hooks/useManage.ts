@@ -13,7 +13,11 @@ import { useTx } from './useTx'
 
 export const useManage = () => {
   const toast = useToast()
-  const { accountDetails, stakingConstants, chainDetails } = useExtension()
+  const {
+    accountDetails,
+    stakingConstants,
+    chainDetails: { tokenDecimals }
+  } = useExtension()
   const {
     deregister,
     addFundsAmount,
@@ -27,7 +31,6 @@ export const useManage = () => {
     setErrorsField
   } = useManageState()
   const { handleDeregister, handleAddFunds, handleWithdraw } = useTx()
-  const { tokenDecimals } = chainDetails
 
   const detectError = useCallback(
     (value: string) => parseInt(value) < 0 || value.length < 1 || isNaN(Number(value)),

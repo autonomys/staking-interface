@@ -39,7 +39,6 @@ interface LayoutProps {
 export const MobileMenu: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { setIsMobile } = useView()
-
   const [isLargerThan800] = useMediaQuery('(min-width: 800px)', { ssr: true, fallback: false })
 
   useEffect(() => {

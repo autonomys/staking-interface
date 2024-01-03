@@ -46,7 +46,11 @@ const ExtensionIcon: React.FC<ExtensionIconProps> = ({ extension }) => {
 }
 
 export const ConnectWallet = () => {
-  const { extension, subspaceAccount, chainDetails } = useExtension((state) => state)
+  const {
+    extension,
+    subspaceAccount,
+    chainDetails: { ss58Format }
+  } = useExtension()
   const {
     handleSelectFirstWalletFromExtension,
     handleSelectWallet,
@@ -56,7 +60,6 @@ export const ConnectWallet = () => {
     onConnectClose
   } = useConnect()
   const finalRef = useRef(null)
-  const { ss58Format } = chainDetails
 
   return (
     <>

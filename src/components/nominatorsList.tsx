@@ -15,8 +15,12 @@ interface OperatorsListProps {
 
 export const NominatorsList: React.FC<OperatorsListProps> = ({ operatorId }) => {
   const [clientSide, setClientSide] = useState(false)
-  const { extension, subspaceAccount, stakingConstants, chainDetails } = useExtension((state) => state)
-  const { ss58Format } = chainDetails
+  const {
+    extension,
+    subspaceAccount,
+    stakingConstants,
+    chainDetails: { ss58Format }
+  } = useExtension()
 
   const nominators = useMemo(() => {
     if (operatorId) return stakingConstants.nominators.filter((operator) => operator.operatorId === operatorId)

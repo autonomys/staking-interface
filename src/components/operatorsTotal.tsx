@@ -11,8 +11,9 @@ interface OperatorsTotalProps {
 }
 
 export const OperatorsTotal: React.FC<OperatorsTotalProps> = ({ operatorOwner }) => {
-  const { chainDetails } = useExtension((state) => state)
-  const { tokenSymbol } = chainDetails
+  const {
+    chainDetails: { tokenSymbol }
+  } = useExtension()
   const {
     totalFundsInStake,
     totalFundsInStakeAvailable,

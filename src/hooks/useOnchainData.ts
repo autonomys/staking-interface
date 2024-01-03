@@ -13,7 +13,7 @@ import {
 } from '../types'
 
 export const useOnchainData = () => {
-  const { setApi, setChainDetails, setStakingConstants } = useExtension((state) => state)
+  const { setApi, setChainDetails, setStakingConstants } = useExtension()
 
   const domainIdFiltering = useMemo(() => parseInt(process.env.NEXT_PUBLIC_DOMAIN_ID || '0'), [])
 

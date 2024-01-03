@@ -17,8 +17,12 @@ interface OperatorsListProps {
 
 export const OperatorsList: React.FC<OperatorsListProps> = ({ operatorOwner, fromManage }) => {
   const [clientSide, setClientSide] = useState(false)
-  const { extension, subspaceAccount, chainDetails, stakingConstants } = useExtension()
-  const { ss58Format } = chainDetails
+  const {
+    extension,
+    subspaceAccount,
+    chainDetails: { ss58Format },
+    stakingConstants
+  } = useExtension()
   const { orderedOperators } = useOrderedOperators({ operatorOwner, fromManage })
 
   useEffect(() => {

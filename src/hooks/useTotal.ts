@@ -3,8 +3,10 @@ import { useExtension } from '../states/extension'
 import { calculateSharedToStake, hexToNumber } from '../utils'
 
 export const useTotal = (operatorOwner?: string) => {
-  const { stakingConstants, chainDetails } = useExtension((state) => state)
-  const { tokenDecimals } = chainDetails
+  const {
+    stakingConstants,
+    chainDetails: { tokenDecimals }
+  } = useExtension()
 
   const operatorOwnerId = useMemo(
     () =>

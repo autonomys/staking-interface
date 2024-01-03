@@ -20,9 +20,12 @@ export const useRegister = () => {
   const toast = useToast()
   const { push } = useRouter()
   const { currentRegistration, saveCurrentRegistration, clearCurrentRegistration, setErrorsField } = useRegistration()
-  const { accountDetails, stakingConstants, chainDetails } = useExtension()
+  const {
+    accountDetails,
+    stakingConstants,
+    chainDetails: { tokenDecimals }
+  } = useExtension()
   const { handleRegisterOperator } = useTx()
-  const { tokenDecimals } = chainDetails
 
   const detectError = useCallback((key: string, value: string) => {
     switch (key) {
