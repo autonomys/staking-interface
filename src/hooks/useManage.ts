@@ -14,6 +14,7 @@ import { useTx } from './useTx'
 export const useManage = () => {
   const toast = useToast()
   const {
+    subspaceAccount,
     accountDetails,
     stakingConstants,
     chainDetails: { tokenDecimals }
@@ -121,7 +122,17 @@ export const useManage = () => {
   const handleMaxAmountToWithdraw = useCallback(() => {
     try {
       const operator = stakingConstants.operators[parseInt(withdrawAmount.operatorId)]
-      const amount = operator ? parseInt(operator.operatorDetail.currentTotalStake) : 0
+      const nominator = stakingConstants.nominators.find(
+        (nominator) =>
+          nominator.operatorId === withdrawAmount.operatorId && nominator.nominatorOwner === subspaceAccount
+      )
+      if (!operator || !nominator) return
+      const amount = operator
+        ? Number(
+            (BigInt(operator.operatorDetail.currentTotalStake) / BigInt(operator.operatorDetail.totalShares)) *
+              BigInt(nominator.shares)
+          )
+        : 0
       setWithdrawAmount({
         ...withdrawAmount,
         amount: amount.toString(),
@@ -136,7 +147,15 @@ export const useManage = () => {
         ...toastConfig
       })
     }
-  }, [setWithdrawAmount, stakingConstants.operators, toast, tokenDecimals, withdrawAmount])
+  }, [
+    setWithdrawAmount,
+    stakingConstants.nominators,
+    stakingConstants.operators,
+    subspaceAccount,
+    toast,
+    tokenDecimals,
+    withdrawAmount
+  ])
 
   const handleSubmit = useCallback(
     async (actionType: ActionType) => {
