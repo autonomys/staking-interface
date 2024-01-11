@@ -135,8 +135,8 @@ export const useManage = () => {
         : 0
       setWithdrawAmount({
         ...withdrawAmount,
-        amount: amount.toString(),
-        formattedAmount: formatNumber(amount / 10 ** tokenDecimals)
+        amount: 'max',
+        formattedAmount: `Max (≃${formatNumber(amount / 10 ** tokenDecimals)})`
       })
     } catch (error) {
       console.error('Error: ', error)
