@@ -145,9 +145,7 @@ export const useTx = () => {
       if (extension.data) {
         const block = await api.rpc.chain.getBlock()
         const hash = await api.tx.domains
-          .withdrawStake(operatorId, {
-            Some: amount
-          })
+          .withdrawStake(operatorId, amount === 'max' ? { All: null } : { Some: amount })
           .signAndSend(extension.data?.defaultAccount.address, { signer: injectedExtension.signer })
         addTransactionToWatch({
           extrinsicHash: hash.toString(),
