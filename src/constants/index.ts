@@ -14,7 +14,7 @@ export const ROUTES = {
 }
 
 export const EXTERNAL_ROUTES = {
-  OPERATORS_DOCS: 'https://docs.subspace.network/docs/farming-&-staking/staking/operators',
+  OPERATORS_DOCS: 'https://docs.subspace.network/docs/farming-&-staking/staking/operators/register-operator',
   STAKING_INCENTIVES: 'https://docs.subspace.network/docs/farming-&-staking/staking/intro',
   STAKING_INFORMATION: 'https://docs.subspace.network/docs/farming-&-staking/staking/',
   RISK: 'https://docs.subspace.network/docs/learn/security',
