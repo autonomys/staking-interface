@@ -1,0 +1,23 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+a {
+  color: #00bfff; /* Light blue */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
