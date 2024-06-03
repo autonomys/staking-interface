@@ -2,6 +2,12 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/607da4e9-0ed7-40a7-b1c6-b105e4280cd1/deploy-status)](https://app.netlify.com/sites/stakinginterface/deploys)
 
+## Repository Archived
+
+The Staking interface has changed address and is now part of [Astral Block Explorer](https://github.com/subspace/astral).
+
+## Overview
+
 This is a next.js web app that is used to interact with the Subspace Chain to stake and unstake tSSC.
 
 [![image](https://github.com/subspace/staking-interface/assets/82244926/cb220873-67b2-41c9-8df1-b90b53b470dc)](https://staking.subspace.tools/)
